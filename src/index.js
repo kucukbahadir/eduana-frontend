@@ -6,6 +6,8 @@ import { BrowserRouter } from 'react-router-dom';
 import './index.css';
 
 
+
+
 // This is where the HTML gets rendered and added to "index.html"
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
