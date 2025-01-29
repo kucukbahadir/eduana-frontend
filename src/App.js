@@ -10,6 +10,7 @@ import Login from "./pages/login";
 import Navbar from "./components/Navbar";
 import NoPage from "./pages/noPage.js";
 import StudentDashboard from './pages/dashboards/studentDashboard';
+import ParentDashboard from './pages/dashboards/parentDashboard';
 
 function App() {
     return (
@@ -19,7 +20,8 @@ function App() {
                 <Routes>
                     <Route exact path="/" element={<Home/>}/>
                     <Route path="/login" element={<Login/>}/>
-                    <Route path="/dashboard" element={<StudentDashboard/>}/>
+                    <Route path="/dashboard/student" element={<StudentDashboard/>}/>
+                    <Route path="/dashboard/parent" element={<ParentDashboard/>}/>
                     <Route path="*" element={<NoPage/>}/>
                 </Routes>
             </main>
