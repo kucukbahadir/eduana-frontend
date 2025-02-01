@@ -78,7 +78,7 @@ function TeacherDashboard() {
                 <p className="font-semibold text-black">{nextLesson.tag}</p>
                 <p className="text-black"> {nextLesson.date}</p>
                 <p className="text-black"> {nextLesson.location}</p>
-                <Progress value={nextLesson.progress} />
+                <Progress value={nextLesson.progress}/>
                 <p className="mt-2 text-sm text-black">{nextLesson.progress}% completed</p>
                 <p className={`mt-2 text-black`}>
                     {nextLesson.prepared ? "Prepared" : "Not Prepared"}

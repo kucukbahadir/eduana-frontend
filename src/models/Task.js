@@ -40,10 +40,10 @@ class Task {
         //let newTask = {...JSON.parse(string)};
         const parsedString = JSON.parse(string);
         const newTask = new Task(parsedString.taskName,
-                                 parsedString.taskDescription,
-                                 parsedString.taskPriority,
-                                 parsedString.taskOwner,
-                                 parsedString.taskDone);
+            parsedString.taskDescription,
+            parsedString.taskPriority,
+            parsedString.taskOwner,
+            parsedString.taskDone);
         return newTask;
     }
 }

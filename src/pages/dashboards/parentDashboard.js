@@ -1,14 +1,14 @@
 import React from 'react';
-import { Bar } from 'react-chartjs-2';
-import { Chart as ChartJS, CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend } from 'chart.js';
+import {Bar} from 'react-chartjs-2';
+import {Chart as ChartJS, CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend} from 'chart.js';
 
 ChartJS.register(CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend);
 
 const studentProgressData = [
-    { lesson: 'Scratch', progress: 75 },
-    { lesson: 'Microbits', progress: 45 },
-    { lesson: 'Unity', progress: 60 },
-    { lesson: 'Lego WeDo 2.0', progress: 85 },
+    {lesson: 'Scratch', progress: 75},
+    {lesson: 'Microbits', progress: 45},
+    {lesson: 'Unity', progress: 60},
+    {lesson: 'Lego WeDo 2.0', progress: 85},
 ];
 
 const chartData = {
@@ -27,7 +27,7 @@ const chartData = {
 const chartOptions = {
     responsive: true,
     plugins: {
-        legend: { position: 'top' },
+        legend: {position: 'top'},
         tooltip: {
             callbacks: {
                 label: function (tooltipItem) {
@@ -47,7 +47,7 @@ function ParentDashboard() {
 
             <div className="bg-white shadow-lg rounded-lg p-6 mb-8">
                 <h2 className="text-xl font-semibold text-gray-700 mb-4">Student Progress Overview</h2>
-                <Bar data={chartData} options={chartOptions} />
+                <Bar data={chartData} options={chartOptions}/>
             </div>
 
             <div className="bg-white shadow-lg rounded-lg p-6">
@@ -57,7 +57,7 @@ function ParentDashboard() {
                         <div className="w-full bg-gray-200 rounded-full h-4">
                             <div
                                 className="bg-blue-500 h-4 rounded-full"
-                                style={{ width: `${data.progress}%` }}
+                                style={{width: `${data.progress}%`}}
                             ></div>
                         </div>
                         <p className="text-sm text-gray-500 mt-2">Progress: {data.progress}%</p>
