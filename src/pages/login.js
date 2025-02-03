@@ -33,13 +33,13 @@ function Login() {
     }
 
     return (
-        <form method="get" onSubmit={handleLogin}>
+        <form method="get" onSubmit={handleLogin} className="flex flex-col space-y-4">
             <input 
-                className="form-control text-gray-800"
+                className="form-control text-gray-800 bg-gray-100 border border-gray-400 p-3 rounded-lg shadow-sm"
                 type="text" 
                 name="name" 
                 value={name} 
-                placeholder="Name?"
+                placeholder="Enter your name..."
                 onChange={(e) => setName(e.target.value)} // Update useState of "name" when input changes
             />
         </form>
