@@ -35,7 +35,7 @@ function Login() {
     return (
         <form method="get" onSubmit={handleLogin}>
             <input 
-                className="form-control"
+                className="form-control text-gray-800"
                 type="text" 
                 name="name" 
                 value={name} 
