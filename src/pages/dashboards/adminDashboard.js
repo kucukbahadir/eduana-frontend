@@ -1,7 +1,6 @@
 import React from "react";
 import Card from "../../components/uiDashboard/Card";
 import Table from "../../components/uiDashboard/Table";
-// import Progress from "../../components/uiDashboard/Progress";
 import Chart from "../../components/uiDashboard/Chart";
 
 const AdminDashboard = () => {

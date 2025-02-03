@@ -1,6 +1,5 @@
 import React from "react";
 import Card from "../../components/uiDashboard/Card";
-import Button from "../../components/uiDashboard/Button";
 import Progress from "../../components/uiDashboard/Progress";
 import Table from "../../components/uiDashboard/Table";
 
