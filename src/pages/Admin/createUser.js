@@ -4,24 +4,24 @@ import Table from "../../components/uiDashboard/Table";
 
 const CreateUser = () => {
     return (
-        <section className="create-user">
-            <form className="bg-white flex-col p-4 ">
+        <section className="">
+            <form className="bg-white col p-4 m-2 rounded-lg max-w-900px">
                 <h2>Create User</h2>
                 <div className="create-user-info">
-                    <label htmlFor="username" className="form-label">Username</label>
-                    <input type="text" className="field" placeholder='Username' required/>
+                    <label htmlFor="username" className="flexS">Username</label>
+                    <input type="text" className="border w-full text-base m-auto px-2 py-1 rounded-lg focus:ring-0 focus:border-gray-600" placeholder='Username' required/>
                 </div>
                 <div className="create-user-info">
                     <label htmlFor="Email" className="form-label">Email</label>
-                    <input type="text" className="field" placeholder='Email' required/>
+                    <input type="text" className="border w-full text-base px-2 py-1 rounded-lg focus:ring-0 focus:border-gray-600" placeholder='Email' required/>
                 </div>
                 <div className="create-user-info">
                     <label htmlFor="Password" className="form-label">Username</label>
-                    <input type="password" className="field" placeholder='Password' required/>
+                    <input type="password" className="border w-full text-base px-2 py-1 rounded-lg focus:ring-0 focus:border-gray-600" placeholder='Password' required/>
                 </div>
                 <div className="create-user-info">
                     <label htmlFor="Role" className="form-label">Role</label>
-                    <select className="field" placeholder='Role' required>
+                    <select className="border w-full text-base px-2 py-1 rounded-lg focus:ring-0 focus:border-gray-600" required>
                         <option value="admin">Admin</option>
                         <option value="student">Student</option>
                         <option value="teacher">Teacher</option>
