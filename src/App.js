@@ -13,7 +13,7 @@ import StudentDashboard from './pages/dashboards/studentDashboard';
 import ParentDashboard from './pages/dashboards/parentDashboard';
 import TeacherDashboard from './pages/dashboards/teacherDashboard';
 import CoordinatorDashboard from './pages/dashboards/coordinatorDashboard';
-import AdminDashboard from './pages/dashboards/adminDashboard';  // ✅ Added Admin Dashboard
+import AdminDashboard from './pages/dashboards/adminDashboard';
 import './index.css';
 
 function App() {
@@ -28,7 +28,7 @@ function App() {
                     <Route path="/dashboard/parent" element={<ParentDashboard/>}/>
                     <Route path="/dashboard/teacher" element={<TeacherDashboard/>}/>
                     <Route path="/dashboard/coordinator" element={<CoordinatorDashboard/>}/>
-                    <Route path="/dashboard/admin" element={<AdminDashboard/>}/> {/* ✅ Added Admin Route */}
+                    <Route path="/dashboard/admin" element={<AdminDashboard/>}/>
                     <Route path="*" element={<NoPage/>}/>
                 </Routes>
             </main>

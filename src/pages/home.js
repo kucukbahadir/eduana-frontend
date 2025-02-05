@@ -2,7 +2,6 @@ import React from "react";
 
 import logo from '../logo.svg';
 
-// Due to the router being nested in "App-main", it also takes its CSS, found in "App.css"
 const Home = () => {
     return (
         <div>
