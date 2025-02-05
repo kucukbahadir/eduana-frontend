@@ -1,13 +1,14 @@
 import React from "react";
-import { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import {useState} from "react";
+import {useNavigate} from "react-router-dom";
 
 const tasksJimmy = [
-    {   id: 1,
-        title: "To do 1", 
+    {
+        id: 1,
+        title: "To do 1",
         description: "Text",
         dueDate: new Date(),
-        priority: "Low" 
+        priority: "Low"
     },
 ];
 
@@ -17,7 +18,7 @@ function Login() {
 
     function handleLogin(event) {
         event.preventDefault();  // Prevent reloading the page
-        
+
         if (name === "Jimmy") {
             // sets the user's name in the session storage
             console.log(name);
@@ -27,23 +28,23 @@ function Login() {
             localStorage.setItem("tasksUser", JSON.stringify(tasksJimmy));
             //nav("/todo/${name}");
             nav("/home");
-        } else { 
-            alert("Invalid"); 
+        } else {
+            alert("Invalid");
         }
     }
 
     return (
         <form method="get" onSubmit={handleLogin}>
-            <input 
+            <input
                 className="form-control"
-                type="text" 
-                name="name" 
-                value={name} 
+                type="text"
+                name="name"
+                value={name}
                 placeholder="Name?"
                 onChange={(e) => setName(e.target.value)} // Update useState of "name" when input changes
             />
         </form>
     );
 }
- 
+
 export default Login;
