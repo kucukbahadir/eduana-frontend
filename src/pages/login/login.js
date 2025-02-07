@@ -5,7 +5,7 @@ function Login() {
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
     const [rememberMe, setRememberMe] = useState(false);
-    const [alertMessage, setAlertMessage] = useState("");  // <-- Added state for alert message
+    const [alertMessage, setAlertMessage] = useState("");
     const navigate = useNavigate();
 
     useEffect(() => {
@@ -43,9 +43,9 @@ function Login() {
             <div className="w-full max-w-md bg-white p-8 rounded-lg shadow-lg">
                 <h2 className="text-2xl font-bold text-center text-gray-700 mb-6">Sign in to Eduana</h2>
 
-                {alertMessage && (  // <-- Conditionally render alert
+                {alertMessage && (
                     <div className="p-4 mb-4 text-sm text-red-800 rounded-lg bg-red-50" role="alert">
-                        <span className="font-medium">Error:</span> {alertMessage}
+                        {alertMessage}
                     </div>
                 )}
 
