@@ -6,8 +6,7 @@ import {
 } from "react-router-dom";
 
 import Home from "./pages/home";
-import Login from "./pages/login/login";
-import TabbedLogin from "./pages/login/tabbedLogin";
+import Login from "./pages/login";
 import Navbar from "./components/Navbar";
 import NoPage from "./pages/noPage";
 import StudentDashboard from './pages/dashboards/studentDashboard';
@@ -25,7 +24,6 @@ function App() {
                 <Routes>
                     <Route exact path="/" element={<Home/>}/>
                     <Route path="/login" element={<Login/>}/>
-                    <Route path="/tabbed-login" element={<TabbedLogin/>}/>
                     <Route path="/dashboard/student" element={<StudentDashboard/>}/>
                     <Route path="/dashboard/parent" element={<ParentDashboard/>}/>
                     <Route path="/dashboard/teacher" element={<TeacherDashboard/>}/>
