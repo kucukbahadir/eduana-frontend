@@ -2,7 +2,7 @@ export class UserService {
     // Login function to authenticate users
     async login(userType, credentials) {
         try {
-            const response = await fetch(`http://localhost:8080/api/login/${userType}`, {
+            const response = await fetch(`http://localhost:8080/api/users/login/${userType}`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
