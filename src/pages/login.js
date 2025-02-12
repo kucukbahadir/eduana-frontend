@@ -1,5 +1,6 @@
-import React, {useState, useEffect} from "react";
-import {useNavigate} from "react-router-dom";
+import React, { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
+import { UserService } from '../services/userService'; // Import the login service
 
 function TabbedLogin() {
     const [activeTab, setActiveTab] = useState(localStorage.getItem("activeTab") || "Student");
@@ -10,6 +11,8 @@ function TabbedLogin() {
     const [rememberMe, setRememberMe] = useState(false);
     const [alertMessage, setAlertMessage] = useState("");
     const navigate = useNavigate();
+
+    const userService = new UserService();
 
     useEffect(() => {
         localStorage.setItem("studentName", studentName);
@@ -27,43 +30,29 @@ function TabbedLogin() {
         localStorage.setItem("password", password);
     }, [password]);
 
-    const handleLogin = (event) => {
+    const handleLogin = async (event) => {
         event.preventDefault();
         setAlertMessage("");
 
+        // Prepare credentials based on the active tab
         const credentials = {
-            Student: {name: "Christian", code: "1234", redirect: "/dashboard/student"},
-            Parent: {email: "jan@gmail.com", password: "Jan1", redirect: "/dashboard/parent"},
-            Educators: {
-                admin: {email: "admin@gmail.com", password: "Admin1", redirect: "/dashboard/admin"},
-                coordinator: {
-                    email: "coordinator@gmail.com",
-                    password: "Coordinator1",
-                    redirect: "/dashboard/coordinator"
-                },
-                teacher: {email: "brenda@gmail.com", password: "Brenda1", redirect: "/dashboard/teacher"}
-            }
+            Student: { name: studentName, code: studentCode },
+            Parent: { email: email, password: password },
+            Educators: { email: email, password: password },
         };
 
-        if (activeTab === "Student") {
-            if (studentName === credentials.Student.name && studentCode === credentials.Student.code) {
-                navigate(credentials.Student.redirect);
+        try {
+            let userType = activeTab.toUpperCase(); // Determine the user type: "student", "parent", or "educators"
+            console.log(userType);
+            const data = await userService.login(userType, credentials[activeTab]);
+
+            if (data.success) {
+                navigate(data.redirect); // Redirect based on the response from the backend
             } else {
-                setAlertMessage("Wrong student name or code");
+                setAlertMessage(data.message || "Login failed. Please try again.");
             }
-        } else if (activeTab === "Parent") {
-            if (email === credentials.Parent.email && password === credentials.Parent.password) {
-                navigate(credentials.Parent.redirect);
-            } else {
-                setAlertMessage("Wrong credentials or password");
-            }
-        } else if (activeTab === "Educators") {
-            const educator = Object.values(credentials.Educators).find((user) => user.email === email && user.password === password);
-            if (educator) {
-                navigate(educator.redirect);
-            } else {
-                setAlertMessage("Wrong credentials or password");
-            }
+        } catch (error) {
+            setAlertMessage(error.message || "An unexpected error occurred.");
         }
     };
 
@@ -140,8 +129,7 @@ function TabbedLogin() {
                         />
                         <span className="text-sm text-gray-600">Remember Me</span>
                     </div>
-                    <button type="submit"
-                            className="w-full bg-indigo-600 text-white py-2 rounded-lg hover:bg-indigo-700 transition duration-200">
+                    <button type="submit" className="w-full bg-indigo-600 text-white py-2 rounded-lg hover:bg-indigo-700 transition duration-200">
                         Sign In
                     </button>
                 </form>
