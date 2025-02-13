@@ -4,10 +4,10 @@ import {
     Routes,
     Route,
 } from "react-router-dom";
-import header from "./components/header";
 
 import Home from "./pages/home";
 import Login from "./pages/login";
+import Header from "./components/Header";
 import Navbar from "./components/Navbar";
 import NoPage from "./pages/noPage";
 import StudentDashboard from './pages/dashboards/studentDashboard';
@@ -20,6 +20,7 @@ import './index.css';
 function App() {
     return (
         <div className="App">
+            <Header/>
             <Navbar/>
             <main className="App-main">
                 <Routes>

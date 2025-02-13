@@ -1,20 +1,24 @@
 import React from "react";
-import {Link} from 'react-router-dom';
-import '../main.css';
+import { Link } from "react-router-dom";
+import "../main.css";
 
 const Navbar = () => {
     return (
-        <nav className="bg-gray-200 p-4">
-            <ul className="flex space-x-4">
+        <nav className="bg-gray-200 w-60 h-screen fixed left-0 top-0 p-6 shadow-lg">
+            <ul className="flex flex-col space-y-4">
                 <li>
-                    <Link to="/" className="bg-gray-700 text-white p-3 rounded-lg">Home</Link>
+                    <Link to="/" className="block bg-gray-700 text-white p-3 rounded-lg hover:bg-gray-600">
+                        Home
+                    </Link>
                 </li>
                 <li>
-                    <Link to="/login" className="text-gray border-b-2 p-2 hover:border-sky-600">Login</Link>
+                    <Link to="/login" className="block text-gray-700 p-3 rounded-lg hover:bg-gray-300">
+                        Login
+                    </Link>
                 </li>
             </ul>
         </nav>
     );
-}
+};
 
 export default Navbar;
