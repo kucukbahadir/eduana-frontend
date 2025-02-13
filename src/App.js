@@ -4,11 +4,10 @@ import {
     Routes,
     Route,
 } from "react-router-dom";
+import Header from "./components/Header";
 
 import Home from "./pages/home";
 import Login from "./pages/login";
-import Header from "./components/Header";
-import Navbar from "./components/Navbar";
 import NoPage from "./pages/noPage";
 import StudentDashboard from './pages/dashboards/studentDashboard';
 import ParentDashboard from './pages/dashboards/parentDashboard';
@@ -19,9 +18,8 @@ import './index.css';
 
 function App() {
     return (
-        <div className="App">
+        <div className="App flex flex-col min-h-screen">
             <Header/>
-            <Navbar/>
             <main className="App-main">
                 <Routes>
                     <Route exact path="/" element={<Home/>}/>
