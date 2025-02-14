@@ -5,6 +5,7 @@ import {
     Route,
 } from "react-router-dom";
 import Header from "./components/Header";
+import Navbar from "./components/Navbar";
 
 import Home from "./pages/home";
 import Login from "./pages/login";
@@ -20,7 +21,8 @@ function App() {
     return (
         <div className="App flex flex-col min-h-screen">
             <Header/>
-            <main className="App-main">
+            <Navbar/>
+            <main className="App-main ml-60 mt-16 p-4">
                 <Routes>
                     <Route exact path="/" element={<Home/>}/>
                     <Route path="/login" element={<Login/>}/>
@@ -35,5 +37,6 @@ function App() {
         </div>
     );
 }
+
 
 export default App;
