@@ -4,7 +4,7 @@ import "../main.css";
 
 const Navbar = () => {
     return (
-        <nav className="bg-gray-200 w-60 h-screen fixed left-0 top-[4rem] p-6 shadow-lg">
+        <nav className="bg-gray-800 w-60 h-screen fixed left-0 top-[4rem] p-6 shadow-lg">
             <ul className="flex flex-col space-y-4">
                 <li>
                     <Link to="/" className="block bg-gray-700 text-white p-3 rounded-lg hover:bg-gray-600">
