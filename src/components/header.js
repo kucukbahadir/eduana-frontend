@@ -13,7 +13,7 @@ const Header = () => {
                 {/* Search Bar */}
                 <div className="relative flex-1 max-w-md">
                     <img 
-                        src="/images/searchIcon.png" 
+                        src="/images/icons/searchIcon.svg" 
                         alt="Search Icon" 
                         className="absolute left-3 top-1/2 transform -translate-y-1/2 h-5 w-5 opacity-50"
                     />
