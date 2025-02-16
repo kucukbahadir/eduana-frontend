@@ -11,11 +11,18 @@ const Header = () => {
                 <img src="/images/placeHolders/logo_text.png" alt="Eduana" className="h-4 w-auto" />
                 
                 {/* Search Bar */}
-                <input
-                    type="text"
-                    placeholder="Search"
-                    className="border px-4 py-2 rounded-lg w-full max-w-md ml-6"
-                />
+                <div className="relative flex-1 max-w-md">
+                    <img 
+                        src="/images/searchIcon.png" 
+                        alt="Search Icon" 
+                        className="absolute left-3 top-1/2 transform -translate-y-1/2 h-5 w-5 opacity-50"
+                    />
+                    <input
+                        type="text"
+                        placeholder="Search"
+                        className="border px-10 py-2 rounded-lg w-full"
+                    />
+                </div>
             </div>
 
             {/* Links */}
