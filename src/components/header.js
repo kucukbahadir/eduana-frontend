@@ -7,7 +7,7 @@ const Header = () => {
         <header className="bg-white text-black h-16 px-6 fixed top-0 left-0 w-full z-10 flex items-center justify-between shadow-md">
             {/* Logo and Brand Name */}
             <div className="flex items-center space-x-9 flex-1"> 
-                <img src="/images/placeHolders/logoPlaceholder.jpg" alt="Logo" className="h-10 w-10" />
+                <img src="/logo192.png" alt="Logo" className="h-10 w-10" />
                 <img src="/images/placeHolders/logo_text.png" alt="Eduana" className="h-4 w-auto" />
                 
                 {/* Search Bar */}

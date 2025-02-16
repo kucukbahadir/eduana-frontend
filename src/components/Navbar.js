@@ -10,7 +10,7 @@ const Navbar = () => {
                 {/* Links with Icons */}
                 <li>
                     <Link to="/" className="flex items-center group-hover:justify-start justify-center w-full text-gray-400 hover:text-white">
-                        <img src="/images/placeHolders/logoPlaceholder.jpg" alt="Home" className="h-6 w-6" />
+                        <img src="/logo192.png" alt="Home" className="h-6 w-6" />
                         <span className="hidden group-hover:inline-block ml-3 text-white transition-opacity duration-300">Home</span>
                     </Link>
                 </li>
