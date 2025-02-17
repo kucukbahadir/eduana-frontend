@@ -25,7 +25,7 @@ const Navbar = () => {
                     </Link>
                 </li>
                 <li>
-                    <Link to="/admin-dashboard" className="flex items-center group-hover:justify-start justify-center w-full text-gray-400 hover:text-white">
+                    <Link to="./pages/dashboards/adminDashboard" className="flex items-center group-hover:justify-start justify-center w-full text-gray-400 hover:text-white">
                         <img src="/images/icons/overviewIcon.svg" alt="Overview" className="h-6 w-6" />
                         <span className="hidden group-hover:inline-block ml-3 text-white transition-opacity duration-300">Overview</span>
                     </Link>
@@ -49,7 +49,7 @@ const Navbar = () => {
                                     ${isUsersOpen ? "max-h-40 opacity-100" : "max-h-0 opacity-0"} space-y-2 mt-2 ml-9`}
                     >
                         <li>
-                            <Link to="/admin/createUser" className="flex items-center text-gray-400 hover:text-white">
+                            <Link to="./pages/admin/createUser" className="flex items-center text-gray-400 hover:text-white">
                                 <span className="text-sm"> Create Users</span>
                             </Link>
                         </li>
