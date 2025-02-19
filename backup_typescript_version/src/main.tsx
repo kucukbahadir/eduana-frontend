@@ -16,7 +16,7 @@ createRoot(document.getElementById('root')!).render(
   <StrictMode>
     <BrowserRouter>
       <Navbar />
-      <main className="mx-auto w-full max-w-5xl p-4">
+      <main className="p-4">
         <Routes>
           <Route path="/" element={<App />} />
           <Route path="/login" element={<TabbedLogin />} />

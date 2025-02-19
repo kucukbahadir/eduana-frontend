@@ -4,8 +4,8 @@ import { Bell, Blocks, Moon, Search } from 'lucide-react';
 
 const Navbar = () => {
   return (
-    <nav className="flex justify-between items-center py-2 border-b-1">
-      <div className='flex justify-between items-center mx-auto px-4 w-full max-w-7xl'>
+    <nav className="py-2 px-4 border-b bg-background">
+      <div className='flex justify-between items-center mx-auto max-w-6xl'>
         <div className='flex gap-8'>
           <Link to="/" className='text-primary font-semibold'>Home</Link>
           <Link to="/login" className='text-primary font-semibold'>Login</Link>
