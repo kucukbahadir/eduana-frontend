@@ -1,37 +1,11 @@
 import React, {useState} from "react";
 import {useNavigate} from "react-router-dom";
-import {ChevronRight, ChevronLeft} from "lucide-react";
+import {ChevronRight} from "lucide-react";
+import {regularCourses, brightMindsCourses} from "../data/courseData";
 
-import img1 from "../assets/img/regularCourses/essential-coding-skills.jpg";
-import img2 from "../assets/img/regularCourses/essential-robotics-skills.jpg";
-import img3 from "../assets/img/regularCourses/navigating-fundamental-electronics.jpg";
-import img4 from "../assets/img/regularCourses/navigating-computer-hardware-curriculum.jpg";
-import img5 from "../assets/img/regularCourses/essential-artificial-intelligence.jpg";
-import img6 from "../assets/img/regularCourses/internet-essentials.jpg";
-import img7 from "../assets/img/regularCourses/essential-coding-skills-lvl2.jpg";
-import img8 from "../assets/img/regularCourses/essential-robotics-skills-Lvl2.jpg";
+// import { allCourses } from "../data/courseData";  // ✅ Correct Import
 
-const regularCourses = [
-    {id: 1, title: "Essential Coding Skills - Level 1", image: img1},
-    {id: 2, title: "Essential Robotics Skills - Level 1", image: img2},
-    {id: 3, title: "Essential Fundamental Electronic Skills - Level 1", image: img3},
-    {id: 4, title: "Navigating Computer Hardware - Level 1", image: img4},
-    {id: 5, title: "Essential Artificial Intelligence Level 1", image: img5},
-    {id: 6, title: "Internet Essentials - Level 1", image: img6},
-    {id: 7, title: "Essential Coding Skills - Level 2", image: img7},
-    {id: 8, title: "Essential Robotics Skills - Level 2", image: img8},
-];
 
-const brightMindsCourses = [
-    {id: 9, title: "Space Exploration", image: img1},
-    {id: 10, title: "Ocean Exploration", image: img2},
-    {id: 11, title: "Ecosystem", image: img3},
-    {id: 12, title: "Weather and Climate", image: img4},
-    {id: 13, title: "Human Body and Health", image: img5},
-    {id: 14, title: "Botany and Plant Growth", image: img6},
-    {id: 15, title: "Sustainable Cities", image: img7},
-    {id: 16, title: "Air and Atmospheric", image: img8},
-];
 
 export default function CourseOverview() {
     const [courses, setCourses] = useState(regularCourses);
