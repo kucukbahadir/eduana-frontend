@@ -14,7 +14,8 @@ import ParentDashboard from './pages/dashboards/parentDashboard';
 import TeacherDashboard from './pages/dashboards/teacherDashboard';
 import CoordinatorDashboard from './pages/dashboards/coordinatorDashboard';
 import AdminDashboard from './pages/dashboards/adminDashboard';
-import CourseOverview from './pages/courseOverview'; // ✅ Import CourseOverview
+import CourseOverview from './pages/courseOverview';
+import CourseDetail from './pages/courseDetail';
 import './index.css';
 
 function App() {
@@ -31,6 +32,7 @@ function App() {
                     <Route path="/dashboard/coordinator" element={<CoordinatorDashboard/>}/>
                     <Route path="/dashboard/admin" element={<AdminDashboard/>}/>
                     <Route path="/courses" element={<CourseOverview/>}/>
+                    <Route path="/manage/:id" element={<CourseDetail/>}/>
                     <Route path="*" element={<NoPage/>}/>
                 </Routes>
             </main>
