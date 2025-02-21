@@ -3,8 +3,6 @@ import {useNavigate} from "react-router-dom";
 import {ChevronRight} from "lucide-react";
 import {regularCourses, brightMindsCourses} from "../data/courseData";
 
-// import { allCourses } from "../data/courseData";  // ✅ Correct Import
-
 
 
 export default function CourseOverview() {
