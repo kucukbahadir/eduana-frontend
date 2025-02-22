@@ -102,7 +102,7 @@
   }
 
   h1 {
-    @apply scroll-m-20 text-4xl font-extrabold tracking-tight lg:text-5xl;
+    @apply scroll-m-20 text-4xl font-extrabold tracking-tight;
   }
 
   h2 {
@@ -118,7 +118,15 @@
   }
 
   p {
-    @apply leading-7 [&:not(:first-child)]:mt-6
+    @apply leading-snug [&:not(:first-child)]:mt-6
+  }
+
+  strong {
+    @apply text-lg font-semibold
+  }
+
+  small {
+    @apply text-sm font-medium leading-none
   }
 }
 

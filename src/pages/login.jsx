@@ -88,6 +88,7 @@ function TabbedLogin() {
               setAlertMessage("");
             }}
             variant={activeTab === tab ? "default" : "outline"}
+            size={"sm"}
           >
             {tab}
           </Button>
@@ -100,58 +101,50 @@ function TabbedLogin() {
             <>
               <label className="flex flex-col gap-2 text-primary text-sm">
                 Name
-                <div className="relative">
-                  <User size={12} className="absolute left-0 top-0 m-3.5 pointer-events-none" />
-                  <Input
-                    type="text"
-                    placeholder="Enter your name"
-                    value={studentName}
-                    onChange={(e) => setStudentName(e.target.value)}
-                    className="pl-10"
-                  />
-                </div>
+                <Input
+                  icon={User}
+                  type="text"
+                  placeholder="Enter your name"
+                  value={studentName}
+                  onChange={(e) => setStudentName(e.target.value)}
+                  className="pl-10"
+                />
               </label>
               <label className="flex flex-col gap-2 text-primary text-sm">
                 Code
-                <div className="relative">
-                  <Lock size={12} className="absolute left-0 top-0 m-3.5 pointer-events-none" />
-                  <Input
-                    type="text"
-                    placeholder="Enter your school code"
-                    value={studentCode}
-                    onChange={(e) => setStudentCode(e.target.value)}
-                    className="pl-10"
-                  />
-                </div>
+                <Input
+                  icon={Lock}
+                  type="text"
+                  placeholder="Enter your school code"
+                  value={studentCode}
+                  onChange={(e) => setStudentCode(e.target.value)}
+                  className="pl-10"
+                />
               </label>
             </>
           ) : (
             <>
               <label className="flex flex-col gap-2 text-primary text-sm">
                 Email
-                <div className="relative">
-                  <Mail size={12} className="absolute left-0 top-0 m-3.5 pointer-events-none" />
-                  <Input
-                    type="email"
-                    placeholder="Enter your email"
-                    value={email}
-                    onChange={(e) => setEmail(e.target.value)}
-                    className="pl-10"
-                  />
-                </div>
+                <Input
+                  icon={Mail}
+                  type="email"
+                  placeholder="Enter your email"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  className="pl-10"
+                />
               </label>
               <label className="flex flex-col gap-2 text-primary text-sm">
                 Password
-                <div className="relative">
-                  <Lock size={12} className="absolute left-0 top-0 m-3.5 pointer-events-none" />
-                  <Input
-                    type="password"
-                    placeholder="Enter your password"
-                    value={password}
-                    onChange={(e) => setPassword(e.target.value)}
-                    className="pl-10"
-                  />
-                </div>
+                <Input
+                  icon={Lock}
+                  type="password"
+                  placeholder="Enter your password"
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  className="pl-10"
+                />
               </label>
             </>
           )}

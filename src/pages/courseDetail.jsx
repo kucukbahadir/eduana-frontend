@@ -1,5 +1,5 @@
 import React from "react";
-import {useParams} from "react-router-dom";
+import {useParams} from "react-router";
 import {allCourses} from "../data/courseData";
 import Accordion from "../components/Accordion";
 
