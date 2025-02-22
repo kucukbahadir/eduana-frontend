@@ -12,6 +12,7 @@ import AdminDashboard from './pages/dashboards/adminDashboard'
 import CoordinatorDashboard from './pages/dashboards/coordinatorDashboard'
 import TeacherDashboard from './pages/dashboards/teacherDashboard'
 import CourseOverview from './pages/courseOverview'
+import CourseDetail from './pages/courseDetail'
 import NoPage from './pages/noPage'
 
 createRoot(document.getElementById('root')).render(
@@ -28,6 +29,7 @@ createRoot(document.getElementById('root')).render(
           <Route path='/dashboard/coordinator' element={<CoordinatorDashboard />} />
           <Route path='/dashboard/teacher' element={<TeacherDashboard />} />
           <Route path='/courses' element={<CourseOverview />} />
+          <Route path='/courses/:id/manage' element={<CourseDetail />} />
           <Route path='*' element={<NoPage />} />
         </Routes>
       </main>
