@@ -21,7 +21,7 @@ export default function CourseOverview() {
     };
 
     const handleManageClick = (id) => {
-        navigate(`/manage/${id}`);
+        navigate(`/courses/${id}/manage`);
     };
 
     return (
