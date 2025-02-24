@@ -1,4 +1,4 @@
-export class UserService {
+export default class UserService {
     // Login function to authenticate users
     async login(userType, credentials) {
         try {
