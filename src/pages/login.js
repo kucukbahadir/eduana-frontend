@@ -1,13 +1,13 @@
-import React, {useState, useEffect} from "react";
-import {useNavigate} from "react-router-dom";
-import {UserService} from '../services/userService';
+import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { UserService } from '../services/userService';
 
 function TabbedLogin() {
-    const [activeTab, setActiveTab] = useState(localStorage.getItem("activeTab") || "Student");
-    const [studentName, setStudentName] = useState(localStorage.getItem("studentName") || "");
-    const [studentCode, setStudentCode] = useState(localStorage.getItem("studentCode") || "");
-    const [email, setEmail] = useState(localStorage.getItem("email") || "");
-    const [password, setPassword] = useState(localStorage.getItem("password") || "");
+    const [activeTab, setActiveTab] = useState("Student");
+    const [studentName, setStudentName] = useState("");
+    const [studentCode, setStudentCode] = useState("");
+    const [email, setEmail] = useState("");
+    const [password, setPassword] = useState("");
     const [rememberMe, setRememberMe] = useState(false);
     const [alertMessage, setAlertMessage] = useState("");
     const [educatorRole, setEducatorRole] = useState("");
@@ -15,35 +15,18 @@ function TabbedLogin() {
 
     const userService = new UserService();
 
-    useEffect(() => {
-        localStorage.setItem("studentName", studentName);
-    }, [studentName]);
-
-    useEffect(() => {
-        localStorage.setItem("studentCode", studentCode);
-    }, [studentCode]);
-
-    useEffect(() => {
-        localStorage.setItem("email", email);
-    }, [email]);
-
-    useEffect(() => {
-        localStorage.setItem("password", password);
-    }, [password]);
-
     const handleLogin = async (event) => {
         event.preventDefault();
         setAlertMessage("");
 
         const credentials = {
-            Student: {name: studentName, code: studentCode},
-            Parent: {email: email, password: password},
-            Educators: {email: email, password: password, role: educatorRole},
+            Student: { name: studentName, code: studentCode },
+            Parent: { email: email, password: password },
+            Educators: { email: email, password: password, role: educatorRole },
         };
 
         try {
             let userType = activeTab.toUpperCase();
-            console.log(userType);
             const data = await userService.login(userType, credentials[activeTab]);
 
             if (data.success) {
@@ -67,7 +50,6 @@ function TabbedLogin() {
                             className={`px-4 py-2 font-semibold rounded-lg ${activeTab === tab ? "bg-indigo-600 text-white" : "bg-gray-200 text-gray-600"}`}
                             onClick={() => {
                                 setActiveTab(tab);
-                                localStorage.setItem("activeTab", tab);
                                 setAlertMessage("");
                             }}
                         >
@@ -135,7 +117,6 @@ function TabbedLogin() {
                                 onChange={(e) => setPassword(e.target.value)}
                                 className="w-full px-4 py-2 border rounded-lg mb-4"
                             />
-
                         </>
                     )}
                     <div className="flex items-center mb-4">
