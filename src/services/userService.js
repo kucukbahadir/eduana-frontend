@@ -15,10 +15,21 @@ export default class UserService {
                 throw new Error(errorData.message || 'Invalid credentials');
             }
 
-            return await response.json(); // Return backend response (e.g., token, success message)
+            const data = await response.json();
+
+            // Store the token in localStorage
+            localStorage.setItem('token', data.token);
+
+            console.log("Login successful, token stored in localStorage:", data.token);
+
+            // Redirect user to their respective dashboard
+            window.location.href = data.redirect;
+
+            return data; // Return response in case further handling is needed
         } catch (error) {
             throw new Error('Login failed: ' + error.message);
         }
     }
+
 }
 
