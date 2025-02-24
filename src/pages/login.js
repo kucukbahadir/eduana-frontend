@@ -1,6 +1,6 @@
-import React, { useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
-import { UserService } from '../services/userService'; // Import the login service
+import React, {useState, useEffect} from "react";
+import {useNavigate} from "react-router-dom";
+import {UserService} from '../services/userService';
 
 function TabbedLogin() {
     const [activeTab, setActiveTab] = useState(localStorage.getItem("activeTab") || "Student");
@@ -10,6 +10,7 @@ function TabbedLogin() {
     const [password, setPassword] = useState(localStorage.getItem("password") || "");
     const [rememberMe, setRememberMe] = useState(false);
     const [alertMessage, setAlertMessage] = useState("");
+    const [educatorRole, setEducatorRole] = useState("");
     const navigate = useNavigate();
 
     const userService = new UserService();
@@ -34,20 +35,19 @@ function TabbedLogin() {
         event.preventDefault();
         setAlertMessage("");
 
-        // Prepare credentials based on the active tab
         const credentials = {
-            Student: { name: studentName, code: studentCode },
-            Parent: { email: email, password: password },
-            Educators: { email: email, password: password },
+            Student: {name: studentName, code: studentCode},
+            Parent: {email: email, password: password},
+            Educators: {email: email, password: password, role: educatorRole},
         };
 
         try {
-            let userType = activeTab.toUpperCase(); // Determine the user type: "student", "parent", or "educators"
+            let userType = activeTab.toUpperCase();
             console.log(userType);
             const data = await userService.login(userType, credentials[activeTab]);
 
             if (data.success) {
-                navigate(data.redirect); // Redirect based on the response from the backend
+                navigate(data.redirect);
             } else {
                 setAlertMessage(data.message || "Login failed. Please try again.");
             }
@@ -75,6 +75,23 @@ function TabbedLogin() {
                         </button>
                     ))}
                 </div>
+                <div>
+                    {activeTab === "Educators" && (
+                        <div className="mb-4">
+                            {["Admin", "Coordinator", "Teacher"].map((role) => (
+                                <button
+                                    key={role}
+                                    type="button"
+                                    className={`px-4 py-2 m-1 font-semibold rounded-lg ${educatorRole === role ? "bg-indigo-600 text-white" : "bg-gray-200 text-gray-600"}`}
+                                    onClick={() => setEducatorRole(role)}
+                                >
+                                    {role}
+                                </button>
+                            ))}
+                        </div>
+                    )}
+                </div>
+
                 {alertMessage && (
                     <div className="p-4 mb-4 text-sm text-red-800 rounded-lg bg-red-50" role="alert">
                         {alertMessage}
@@ -118,6 +135,7 @@ function TabbedLogin() {
                                 onChange={(e) => setPassword(e.target.value)}
                                 className="w-full px-4 py-2 border rounded-lg mb-4"
                             />
+
                         </>
                     )}
                     <div className="flex items-center mb-4">
@@ -129,7 +147,8 @@ function TabbedLogin() {
                         />
                         <span className="text-sm text-gray-600">Remember Me</span>
                     </div>
-                    <button type="submit" className="w-full bg-indigo-600 text-white py-2 rounded-lg hover:bg-indigo-700 transition duration-200">
+                    <button type="submit"
+                            className="w-full bg-indigo-600 text-white py-2 rounded-lg hover:bg-indigo-700 transition duration-200">
                         Sign In
                     </button>
                 </form>
