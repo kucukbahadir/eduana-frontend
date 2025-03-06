@@ -1,68 +1,79 @@
-import React from "react";
-import { Bar } from "react-chartjs-2";
-import { Chart as ChartJS, CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend } from "chart.js";
+import React, { useEffect } from "react";
+import ApexCharts from "apexcharts";
 
-ChartJS.register(CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend);
-
-const studentProgressData = [
-  { lesson: "Scratch", progress: 75 },
-  { lesson: "Microbits", progress: 45 },
-  { lesson: "Unity", progress: 60 },
-  { lesson: "Lego WeDo 2.0", progress: 85 },
-];
-
-const chartData = {
-  labels: studentProgressData.map((data) => data.lesson),
-  datasets: [
-    {
-      label: "Progress",
-      data: studentProgressData.map((data) => data.progress),
-      backgroundColor: "rgba(75, 192, 192, 0.6)",
-      borderColor: "rgba(75, 192, 192, 1)",
-      borderWidth: 1,
-    },
-  ],
-};
-
-const chartOptions = {
-  responsive: true,
-  plugins: {
-    legend: { position: "top" },
-    tooltip: {
-      callbacks: {
-        label: function (tooltipItem) {
-          return tooltipItem.raw + "%";
-        },
+const Dashboard = () => {
+  const getChartOptions = () => {
+    return {
+      series: [90, 85, 70],
+      colors: ["#1C64F2", "#16BDCA", "#FDBA8C"],
+      chart: {
+        height: "350px",
+        width: "100%",
+        type: "radialBar",
+        sparkline: {
+          enabled: true
+        }
       },
-    },
-  },
-};
+      plotOptions: {
+        radialBar: {
+          track: {
+            background: "#E5E7EB"
+          },
+          dataLabels: {
+            show: false
+          },
+          hollow: {
+            margin: 0,
+            size: "32%"
+          }
+        }
+      },
+      grid: {
+        show: false,
+        strokeDashArray: 4,
+        padding: {
+          left: 2,
+          right: 2,
+          top: -23,
+          bottom: -20
+        }
+      },
+      labels: ["Done", "In progress", "To do"],
+      legend: {
+        show: true,
+        position: "bottom",
+        fontFamily: "Inter, sans-serif"
+      },
+      tooltip: {
+        enabled: true,
+        x: {
+          show: false
+        }
+      },
+      yaxis: {
+        show: false,
+        labels: {
+          formatter: function(value) {
+            return value + "%";
+          }
+        }
+      }
+    };
+  };
 
-function ParentDashboard() {
+  useEffect(() => {
+    const chartElement = document.getElementById("radial-chart");
+    if (chartElement && typeof ApexCharts !== "undefined") {
+      const chart = new ApexCharts(chartElement, getChartOptions());
+      chart.render();
+    }
+  }, []);
+
   return (
-    <div className="max-w-5xl mx-auto mt-4">
-      <div className="mb-6 flex justify-between items-center">
-        <h1 className="text-3xl font-bold text-primary m-auto">Parent Dashboard</h1>
-      </div>
-
-      <div className="bg-white shadow-lg rounded-lg p-6 mb-8">
-        <h2 className="text-xl font-semibold text-gray-700 mb-4">Student Progress Overview</h2>
-        <Bar data={chartData} options={chartOptions} />
-      </div>
-
-      <div className="bg-white shadow-lg rounded-lg p-6">
-        {studentProgressData.map((data, index) => (
-          <div key={index} className="mb-6">
-            <h2 className="text-xl font-semibold text-gray-700 mb-2">{data.lesson} Progress</h2>
-            <div className="w-full bg-gray-200 rounded-full h-4">
-              <div className="bg-blue-500 h-4 rounded-full" style={{ width: `${data.progress}%` }}></div>
-            </div>
-            <p className="text-sm text-gray-500 mt-2">Progress: {data.progress}%</p>
-          </div>
-        ))}
-      </div>
+    <div className="p-6 bg-gray-100 min-h-screen">
+      <div id="radial-chart"></div>
     </div>
   );
-}
+};
 
-export default ParentDashboard;
+export default Dashboard;
