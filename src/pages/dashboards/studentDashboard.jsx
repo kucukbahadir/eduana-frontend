@@ -4,15 +4,15 @@ import Card, { CardContent } from "../../components/Card.jsx";
 
 const Dashboard = () => {
   const leaderboard = [
-    { rank: 1, name: "Ефим", status: "Member" },
-    { rank: 2, name: "hacked", status: "Member" },
-    { rank: 3, name: "cowou1234", status: "Member" },
-    { rank: 4, name: "kl matria 88", status: "Member" },
-    { rank: 5, name: "SARTHAK SAVANI", status: "Member" },
-    { rank: 6, name: "Lemon4ik", status: "Member" },
-    { rank: 7, name: "Eduardoo", status: "Member" },
-    { rank: 8, name: "Cristian", status: "Member" },
-    { rank: 9, name: "greatkoroglu", status: "Member" }
+    { rank: 1, name: "Christian1", status: "Beginner" },
+    { rank: 2, name: "Christian2", status: "Beginner" },
+    { rank: 3, name: "Christian3", status: "Beginner" },
+    { rank: 4, name: "Christian4", status: "Beginner" },
+    { rank: 5, name: "Christian5", status: "Beginner" },
+    { rank: 6, name: "Christian6", status: "Beginner" },
+    { rank: 7, name: "Christian7", status: "Beginner" },
+    { rank: 8, name: "Christian8", status: "Beginner" },
+    { rank: 9, name: "Christian9", status: "Beginner" }
   ];
 
   const stats = [
@@ -32,7 +32,47 @@ const Dashboard = () => {
   ];
 
   return (
-
+    <div className="flex min-h-screen bg-gray-100 p-6 gap-6">
+      <Card className="w-1/3 bg-gray-900 text-white p-6 rounded-lg shadow-md">
+        <h2 className="text-2xl font-bold mb-4">Leaderboard</h2>
+        <CardContent>
+          <ul>
+            {leaderboard.map(({ rank, name, status }) => (
+              <li
+                key={rank}
+                className="flex justify-between items-center bg-gray-800 p-3 rounded-lg mb-2"
+              >
+                <span className="font-semibold">#{rank}</span>
+                <span>{name}</span>
+                <span className="text-gray-400 text-sm">{status}</span>
+              </li>
+            ))}
+          </ul>
+        </CardContent>
+      </Card>
+      <Card className="flex-1 bg-white p-6 shadow-lg rounded-lg">
+        <h2 className="text-3xl font-bold mb-4">Student Dashboard</h2>
+        <CardContent className="grid grid-cols-3 gap-6 text-center">
+          {stats.map(({ label, value }, index) => (
+            <Card key={index} className="p-4 bg-gray-200 rounded-lg shadow">
+              <p className="text-xl font-bold">{value}</p>
+              <p className="text-gray-600">{label}</p>
+            </Card>
+          ))}
+        </CardContent>
+        <h3 className="text-2xl font-bold mt-6">Programming Skills</h3>
+        <CardContent className="mt-4">
+          {skills.map(({ skill, width }, index) => (
+            <div key={index} className="mb-3">
+              <p className="text-gray-700 font-medium mb-1">{skill}</p>
+              <div className="w-full bg-gray-300 h-2 rounded-full">
+                <div className={`bg-blue-500 h-2 rounded-full ${width}`}></div>
+              </div>
+            </div>
+          ))}
+        </CardContent>
+      </Card>
+    </div>
   );
 };
 
