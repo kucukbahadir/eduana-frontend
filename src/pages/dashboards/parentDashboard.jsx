@@ -87,12 +87,16 @@ const Dashboard = () => {
             <CardContent>
               <h2 className="text-lg font-semibold">Your team's progress</h2>
               <div className="grid grid-cols-3 gap-3 mb-2">
-                {["To do", "In progress", "Done"].map((status, index) => (
+                {[
+                  { count: 12, label: "To do", bg: "bg-orange-50", text: "text-orange-600", dot: "bg-orange-100" },
+                  { count: 23, label: "In progress", bg: "bg-teal-50", text: "text-teal-600", dot: "bg-teal-100" },
+                  { count: 64, label: "Done", bg: "bg-blue-50", text: "text-blue-600", dot: "bg-blue-100" }
+                ].map((item, index) => (
                   <dl key={index}
-                      className="bg-gray-200 dark:bg-gray-600 rounded-lg flex flex-col items-center justify-center h-[78px]">
+                      className={`${item.bg} dark:bg-gray-600 rounded-lg flex flex-col items-center justify-center h-[78px]`}>
                     <dt
-                      className="w-8 h-8 rounded-full bg-gray-300 text-gray-700 text-sm font-medium flex items-center justify-center mb-1">{[12, 23, 64][index]}</dt>
-                    <dd className="text-gray-700 dark:text-gray-300 text-sm font-medium">{status}</dd>
+                      className={`w-8 h-8 rounded-full ${item.dot} dark:bg-gray-500 ${item.text} dark:text-gray-300 text-sm font-medium flex items-center justify-center mb-1`}>{item.count}</dt>
+                    <dd className={`${item.text} dark:text-gray-300 text-sm font-medium`}>{item.label}</dd>
                   </dl>
                 ))}
               </div>
@@ -126,7 +130,20 @@ const Dashboard = () => {
               ))}
             </CardContent>
           </Card>
-          
+          <Card className="mt-4">
+            <CardContent>
+              <h2 className="text-lg font-semibold">Courses</h2>
+              <ul>
+                {["Computer Hardware - Level 1", "Electronic Skills - Level 1", "Robotics Skills - Level 1", "Coding Skills - Level 1"].map((course, index) => (
+                  <li key={index} className="flex justify-between border-b py-2">
+                    <span>{course}</span>
+                    <span
+                      className={["text-green-500", "text-green-500", "text-orange-500", "text-blue-500"][index]}>{["Completed", "Completed", "Signed up", "Ongoing"][index]}</span>
+                  </li>
+                ))}
+              </ul>
+            </CardContent>
+          </Card>
         </div>
       </div>
     </div>
