@@ -85,7 +85,7 @@ const Dashboard = () => {
         <div className="flex-shrink-0 w-1/2">
           <Card>
             <CardContent>
-              <h2 className="text-lg font-semibold">Your team's progress</h2>
+              <h2 className="text-lg font-semibold">Henkie’s progress</h2>
               <br/>
               <div className="grid grid-cols-3 gap-3 mb-2">
                 <dl
@@ -120,6 +120,7 @@ const Dashboard = () => {
           <Card className="col-span-2">
             <CardContent>
               <h2 className="text-lg font-semibold">Overview</h2>
+              <br/>
               <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
                 <p><strong>4500</strong> minutes of lesson time</p>
                 <p><strong>50</strong> lessons in total</p>
