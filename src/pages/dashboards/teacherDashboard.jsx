@@ -1,11 +1,8 @@
 import React from "react";
 import Card from "../../components/uiDashboard/Card";
 import Progress from "../../components/uiDashboard/Progress";
-import Table from "../../components/uiDashboard/Table";
 import {TeacherClasses} from "@/pages/dashboards/teacherDashboard/teacherClasses.jsx";
 import { TeacherCourses } from "@/pages/dashboards/teacherDashboard/teacherCourses.jsx";
-
-
 
 const nextLesson = {
   tag: "NLAMS02-20250106-RC-00300",
