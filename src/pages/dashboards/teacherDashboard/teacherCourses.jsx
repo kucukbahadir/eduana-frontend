@@ -1,6 +1,5 @@
 import Table from "@/components/uiDashboard/Table.jsx";
 import Card from "@/components/uiDashboard/Card.jsx";
-import React from "react";
 
 const coursesData = [
   { name: "Essential Coding Skills", level: 1, type: "Regular", period: 1, lessons: 6 },
@@ -11,20 +10,34 @@ const coursesData = [
 export function TeacherCourses() {
   return (
     <div>
-      <Card>
-        <h2 className="text-2xl font-bold mb-4 text-black">Courses</h2>
-        <Table
-          headers={["NAME", "LEVEL", "TYPE", "PERIOD", "# OF LESSONS"]}
-          data={coursesData.map((course) => ({
-            name: course.name,
-            level: course.level,
-            type: <span className="text-black">{course.type}</span>,
-            period: course.period,
-            lessons: course.lessons
-          }))}
-          className="table-auto w-full text-black"
-        />
-      </Card>
+      <h2 className="text-5xl font-bold mb-4 text-black">Courses</h2>
+      <div>
+        <Card>
+          <Table
+            headers={["NAME", "LEVEL", "TYPE", "PERIOD", "# OF LESSONS"]}
+            data={coursesData.map((course) => ({
+              name: <span className="text-black font-medium">{course.name}</span>,
+              level: <span className="text-gray-700">{course.level}</span>,
+              type: (
+                <span
+                  className={`px-2 py-1 rounded-md text-sm font-semibold ${
+                    course.type === "Regular" ? "bg-green-100 text-green-700" : "bg-purple-100 text-purple-700"
+                  }`}
+                >
+              {course.type}
+            </span>
+              ),
+              period: <span className="text-gray-700">{course.period}</span>,
+              lessons: <span className="text-gray-700">{course.lessons}</span>,
+            }))}
+            className="table-auto w-full text-black"
+          />
+        </Card>
+      </div>
+      <button className="mt-4 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700">
+        View more →
+      </button>
     </div>
+
   );
 }

@@ -1,6 +1,5 @@
 import Card from "@/components/uiDashboard/Card.jsx";
 import Table from "@/components/uiDashboard/Table.jsx";
-import React from "react";
 
 const classesData = [
   {
@@ -23,21 +22,39 @@ const classesData = [
 export function TeacherClasses() {
   return (
     <div>
-      <Card>
-        <h2 className="text-2xl font-bold mb-4 text-black">Your Classes</h2>
-        <Table
-          headers={["TAG", "LOCATION", "COURSE", "PERIOD", "LEVEL/GROUP"]}
-          data={classesData.map((cls) => ({
-            tag: cls.tag,
-            location: cls.location,
-            course: <span className="font-bold text-black">{cls.course}</span>,
-            period: <span className="text-black">{cls.period}</span>,
-            level: cls.level
-          }))}
-          className="table-auto w-full text-black"
-        />
-      </Card>
+      <h2 className="text-5xl font-bold mb-4 text-black">Your Classes</h2>
+      <div>
+        <Card>
+          <Table
+            headers={["TAG", "LOCATION", "COURSE", "PERIOD", "LEVEL/GROUP"]}
+            data={classesData.map((cls) => ({
+              tag: <span className="text-black">{cls.tag}</span>,
+              location: <span className="text-gray-700">{cls.location}</span>,
+              course: <span className="font-bold text-black">{cls.course}</span>,
+              period: (
+                <span
+                  className={`px-2 py-1 rounded-md text-sm font-semibold ${
+                    cls.period === "Completed"
+                      ? "bg-green-100 text-green-700"
+                      : cls.period === "Cancelled"
+                        ? "bg-red-100 text-red-700"
+                        : "bg-gray-100 text-gray-700"
+                  }`}
+                >
+              {cls.period}
+            </span>
+              ),
+              level: <span className="text-gray-700">{cls.level}</span>,
+            }))}
+            className="table-auto w-full text-black"
+          />
+        </Card>
+      </div>
+      <button className="mt-4 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700">
+        View more →
+      </button>
     </div>
+
   );
 }
 
