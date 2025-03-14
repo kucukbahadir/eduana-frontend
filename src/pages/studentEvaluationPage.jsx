@@ -1,4 +1,4 @@
-import { useState } from "react";
+import React, { useState } from "react";
 
 const StudentEvaluation = () => {
   const [students, setStudents] = useState([
@@ -21,6 +21,10 @@ const StudentEvaluation = () => {
     const updatedStudents = [...students];
     updatedStudents[index][field] = value;
     setStudents(updatedStudents);
+  };
+
+  const handleEndLesson = () => {
+    console.log("Final Student Evaluations:", students);
   };
 
   return (
@@ -139,7 +143,10 @@ const StudentEvaluation = () => {
         </table>
 
         <div className="text-center mt-6">
-          <button className="bg-blue-600 text-white px-6 py-2 rounded-lg text-sm font-medium hover:bg-blue-700 transition">
+          <button
+            className="bg-blue-600 text-white px-6 py-2 rounded-lg text-sm font-medium hover:bg-blue-700 transition"
+            onClick={handleEndLesson}
+          >
             End Lesson
           </button>
         </div>
