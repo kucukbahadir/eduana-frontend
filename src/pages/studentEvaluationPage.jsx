@@ -1,11 +1,22 @@
-import React, { useState } from "react";
+import { useState, useEffect } from "react";
 
 const StudentEvaluation = () => {
-  const [students, setStudents] = useState([
-    { name: "Bonnie Green", attendance: "Present", independence: "Independent", taskCompletion: "", creativity: 7, persistence: "Persistent", adherence: "Good", notes: "" },
-    { name: "John Smith", attendance: "Absent", independence: "", taskCompletion: "", creativity: "", persistence: "", adherence: "", notes: "Vacation" },
-    { name: "Erik Kemp", attendance: "Present", independence: "Occasionally", taskCompletion: "Step 7", creativity: 9, persistence: "Average", adherence: "Bad", notes: "" },
-  ]);
+  const STORAGE_KEY = "studentEvaluations";
+
+  // Load students from localStorage or default values
+  const [students, setStudents] = useState(() => {
+    const savedStudents = localStorage.getItem(STORAGE_KEY);
+    return savedStudents ? JSON.parse(savedStudents) : [
+      { name: "Bonnie Green", attendance: "Present", independence: "Independent", taskCompletion: "", creativity: 7, persistence: "Persistent", adherence: "Good", notes: "" },
+      { name: "John Smith", attendance: "Absent", independence: "", taskCompletion: "", creativity: "", persistence: "", adherence: "", notes: "Vacation" },
+      { name: "Erik Kemp", attendance: "Present", independence: "Occasionally", taskCompletion: "Step 7", creativity: 9, persistence: "Average", adherence: "Bad", notes: "" },
+    ];
+  });
+
+  // Save to localStorage whenever students change
+  useEffect(() => {
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(students));
+  }, [students]);
 
   const getColorClass = (category, value) => {
     const colorMap = {
