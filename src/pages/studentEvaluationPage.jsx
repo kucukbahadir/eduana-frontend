@@ -36,6 +36,9 @@ const StudentEvaluation = () => {
 
   const handleEndLesson = () => {
     console.log("Final Student Evaluations:", students);
+    localStorage.removeItem(STORAGE_KEY); // Clear data from localStorage
+    setStudents([]); // Clear state
+    console.log("Lesson ended. Data cleared.");
   };
 
   return (
@@ -59,97 +62,105 @@ const StudentEvaluation = () => {
           </tr>
           </thead>
           <tbody>
-          {students.map((student, index) => (
-            <tr key={index} className="border-b">
-              <td className="p-3">{student.name}</td>
+          {students.length > 0 ? (
+            students.map((student, index) => (
+              <tr key={index} className="border-b">
+                <td className="p-3">{student.name}</td>
 
-              {/* Attendance Select */}
-              <td className="p-3">
-                <select
-                  value={student.attendance}
-                  onChange={(e) => handleChange(index, "attendance", e.target.value)}
-                  className={`px-2 py-1 border rounded text-sm ${getColorClass("attendance", student.attendance)}`}
-                >
-                  <option value="Present">Present</option>
-                  <option value="Absent">Absent</option>
-                </select>
-              </td>
+                {/* Attendance Select */}
+                <td className="p-3">
+                  <select
+                    value={student.attendance}
+                    onChange={(e) => handleChange(index, "attendance", e.target.value)}
+                    className={`px-2 py-1 border rounded text-sm ${getColorClass("attendance", student.attendance)}`}
+                  >
+                    <option value="Present">Present</option>
+                    <option value="Absent">Absent</option>
+                  </select>
+                </td>
 
-              {/* Independence Select */}
-              <td className="p-3">
-                <select
-                  value={student.independence}
-                  onChange={(e) => handleChange(index, "independence", e.target.value)}
-                  className={`px-2 py-1 border rounded text-sm ${getColorClass("independence", student.independence)}`}
-                >
-                  <option value="">Select</option>
-                  <option value="Independent">Independent</option>
-                  <option value="Occasionally">Occasionally</option>
-                  <option value="Hardly">Hardly</option>
-                </select>
-              </td>
+                {/* Independence Select */}
+                <td className="p-3">
+                  <select
+                    value={student.independence}
+                    onChange={(e) => handleChange(index, "independence", e.target.value)}
+                    className={`px-2 py-1 border rounded text-sm ${getColorClass("independence", student.independence)}`}
+                  >
+                    <option value="">Select</option>
+                    <option value="Independent">Independent</option>
+                    <option value="Occasionally">Occasionally</option>
+                    <option value="Hardly">Hardly</option>
+                  </select>
+                </td>
 
-              {/* Task Completion Input */}
-              <td className="p-3">
-                <input
-                  type="text"
-                  value={student.taskCompletion}
-                  onChange={(e) => handleChange(index, "taskCompletion", e.target.value)}
-                  className="px-2 py-1 border rounded w-full text-sm"
-                  placeholder="Enter step..."
-                />
-              </td>
+                {/* Task Completion Input */}
+                <td className="p-3">
+                  <input
+                    type="text"
+                    value={student.taskCompletion}
+                    onChange={(e) => handleChange(index, "taskCompletion", e.target.value)}
+                    className="px-2 py-1 border rounded w-full text-sm"
+                    placeholder="Enter step..."
+                  />
+                </td>
 
-              {/* Creativity Input (Number) */}
-              <td className="p-3">
-                <input
-                  type="number"
-                  value={student.creativity}
-                  onChange={(e) => handleChange(index, "creativity", e.target.value)}
-                  className="px-2 py-1 border rounded w-16 text-center text-sm"
-                />
-              </td>
+                {/* Creativity Input (Number) */}
+                <td className="p-3">
+                  <input
+                    type="number"
+                    value={student.creativity}
+                    onChange={(e) => handleChange(index, "creativity", e.target.value)}
+                    className="px-2 py-1 border rounded w-16 text-center text-sm"
+                  />
+                </td>
 
-              {/* Persistence Select */}
-              <td className="p-3">
-                <select
-                  value={student.persistence}
-                  onChange={(e) => handleChange(index, "persistence", e.target.value)}
-                  className={`px-2 py-1 border rounded text-sm ${getColorClass("persistence", student.persistence)}`}
-                >
-                  <option value="">Select</option>
-                  <option value="Persistent">Persistent</option>
-                  <option value="Average">Average</option>
-                  <option value="Quickly gives up">Quickly gives up</option>
-                </select>
-              </td>
+                {/* Persistence Select */}
+                <td className="p-3">
+                  <select
+                    value={student.persistence}
+                    onChange={(e) => handleChange(index, "persistence", e.target.value)}
+                    className={`px-2 py-1 border rounded text-sm ${getColorClass("persistence", student.persistence)}`}
+                  >
+                    <option value="">Select</option>
+                    <option value="Persistent">Persistent</option>
+                    <option value="Average">Average</option>
+                    <option value="Quickly gives up">Quickly gives up</option>
+                  </select>
+                </td>
 
-              {/* Adherence Select */}
-              <td className="p-3">
-                <select
-                  value={student.adherence}
-                  onChange={(e) => handleChange(index, "adherence", e.target.value)}
-                  className={`px-2 py-1 border rounded text-sm ${getColorClass("adherence", student.adherence)}`}
-                >
-                  <option value="">Select</option>
-                  <option value="Good">Good</option>
-                  <option value="Average">Average</option>
-                  <option value="Bad">Bad</option>
-                </select>
-              </td>
+                {/* Adherence Select */}
+                <td className="p-3">
+                  <select
+                    value={student.adherence}
+                    onChange={(e) => handleChange(index, "adherence", e.target.value)}
+                    className={`px-2 py-1 border rounded text-sm ${getColorClass("adherence", student.adherence)}`}
+                  >
+                    <option value="">Select</option>
+                    <option value="Good">Good</option>
+                    <option value="Average">Average</option>
+                    <option value="Bad">Bad</option>
+                  </select>
+                </td>
 
-              {/* Notes Input */}
-              <td className="p-3">
-                <input
-                  type="text"
-                  value={student.notes}
-                  onChange={(e) => handleChange(index, "notes", e.target.value)}
-                  className="px-2 py-1 border rounded w-full text-sm"
-                  placeholder="Enter notes..."
-                />
+                {/* Notes Input */}
+                <td className="p-3">
+                  <input
+                    type="text"
+                    value={student.notes}
+                    onChange={(e) => handleChange(index, "notes", e.target.value)}
+                    className="px-2 py-1 border rounded w-full text-sm"
+                    placeholder="Enter notes..."
+                  />
+                </td>
+              </tr>
+            ))
+          ) : (
+            <tr>
+              <td colSpan="8" className="text-center text-gray-500 p-4">
+                No students available. Lesson ended.
               </td>
             </tr>
-          ))}
+          )}
           </tbody>
         </table>
 
