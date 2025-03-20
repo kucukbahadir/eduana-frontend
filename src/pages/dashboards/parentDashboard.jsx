@@ -1,8 +1,9 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import ApexCharts from "apexcharts";
 import Card, { CardContent } from "../../components/Card.jsx";
 
 const Dashboard = () => {
+  // chart data
   const getChartOptions = () => {
     return {
       series: [90, 85, 70],
@@ -61,7 +62,7 @@ const Dashboard = () => {
       }
     };
   };
-
+// chart
   useEffect(() => {
     const chartElement = document.getElementById("radial-chart");
     if (chartElement && !chartElement.chart) {
@@ -70,14 +71,28 @@ const Dashboard = () => {
       chartElement.chart = chart;
     }
   }, []);
-
+// programming skills data
   const skills = [
     { skill: "Scratch", width: "w-full" },
     { skill: "HTML5", width: "w-3/4" },
     { skill: "JavaScript", width: "w-1/2" },
     { skill: "Python", width: "w-1/4" }
   ];
-
+  // course data
+  const courses = [
+    { name: "Navigating Computer Hardware - Level 1", status: "Completed", color: "bg-green-200 text-green-700" },
+    {
+      name: "Essential Fundamental Electronic Skills - Level 1",
+      status: "Completed",
+      color: "bg-green-200 text-green-700"
+    },
+    { name: "Essential Robotics Skills - Level 1", status: "Signed up", color: "bg-red-200 text-red-700" },
+    { name: "Essential Coding Skills - Level 1", status: "Ongoing", color: "bg-purple-200 text-purple-700" }
+  ];
+  const [search, setSearch] = useState("");
+  const filteredCourses = courses.filter((course) =>
+    course.name.toLowerCase().includes(search.toLowerCase())
+  );
   return (
     <div className="p-4 md:p-8 bg-gray-100 min-h-screen">
       <h1 className="text-2xl font-bold mb-2">Progress</h1>
@@ -133,14 +148,24 @@ const Dashboard = () => {
           <Card className="mt-4">
             <CardContent>
               <h2 className="text-lg font-semibold">Courses</h2>
+              <input
+                type="text"
+                placeholder="Search"
+                value={search}
+                onChange={(e) => setSearch(e.target.value)}
+                className="w-full p-2 border rounded mb-4"
+              />
               <ul>
-                {["Computer Hardware - Level 1", "Electronic Skills - Level 1", "Robotics Skills - Level 1", "Coding Skills - Level 1"].map((course, index) => (
-                  <li key={index} className="flex justify-between border-b py-2">
-                    <span>{course}</span>
-                    <span
-                      className={["text-green-500", "text-green-500", "text-orange-500", "text-blue-500"][index]}>{["Completed", "Completed", "Signed up", "Ongoing"][index]}</span>
-                  </li>
-                ))}
+                {filteredCourses.length > 0 ? (
+                  filteredCourses.map((course, index) => (
+                    <li key={index} className="flex justify-between items-center p-3 border-b last:border-b-0">
+                      <span>{course.name}</span>
+                      <span className={`px-2 py-1 rounded text-sm ${course.color}`}>{course.status}</span>
+                    </li>
+                  ))
+                ) : (
+                  <li className="text-gray-500 text-center p-3">No courses found</li>
+                )}
               </ul>
             </CardContent>
           </Card>
