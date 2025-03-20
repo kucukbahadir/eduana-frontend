@@ -1,7 +1,9 @@
+import { Button } from "@/components/ui/button";
 import { useState, useEffect } from "react";
 
 const StudentEvaluation = () => {
   const STORAGE_KEY = "studentEvaluations";
+  const columns = ["student", "attendance", "independence", "task completion", "creativity", "persistence", "adherence", "notes"];
 
   // Load students from localStorage or default values
   const [students, setStudents] = useState(() => {
@@ -42,23 +44,18 @@ const StudentEvaluation = () => {
   };
 
   return (
-    <div className="p-6 bg-gray-100 min-h-screen">
-      <div className="max-w-6xl mx-auto bg-white p-6 rounded-lg shadow-md">
+    <div className="p-6 bg-muted min-h-screen">
+      <div className="max-w-6xl mx-auto bg-background p-6 rounded-lg shadow-md">
         <h2 className="text-2xl font-bold text-center mb-2">03 - Leds and Breadboards</h2>
-        <p className="text-center text-gray-500 mb-6">03 - Navigating Fundamental Electronics Level 1</p>
-        <h3 className="text-center text-blue-500 font-semibold mb-4">Review</h3>
+        <p className="text-center text-muted-foreground mb-6">03 - Navigating Fundamental Electronics Level 1</p>
+        <h3 className="text-center text-primary-button font-semibold mb-4">Review</h3>
 
-        <table className="w-full border border-gray-300 rounded-lg overflow-hidden">
-          <thead className="bg-gray-100 text-gray-700 uppercase text-sm">
+        <table className="w-full border border-border rounded-lg overflow-hidden">
+          <thead className="bg-muted text-primary uppercase text-sm">
           <tr>
-            <th className="p-3 text-left">Student</th>
-            <th className="p-3 text-left">Attendance</th>
-            <th className="p-3 text-left">Independency</th>
-            <th className="p-3 text-left">Task Completion</th>
-            <th className="p-3 text-left">Creativity</th>
-            <th className="p-3 text-left">Persistence</th>
-            <th className="p-3 text-left">Adherence</th>
-            <th className="p-3 text-left">Notes</th>
+            {columns.map((column, index) => (
+              <th key={index} className="p-3 text-left">{column}</th>
+            ))}
           </tr>
           </thead>
           <tbody>
@@ -156,7 +153,7 @@ const StudentEvaluation = () => {
             ))
           ) : (
             <tr>
-              <td colSpan="8" className="text-center text-gray-500 p-4">
+              <td colSpan="8" className="text-center text-muted-foreground p-4">
                 No students available. Lesson ended.
               </td>
             </tr>
@@ -165,12 +162,12 @@ const StudentEvaluation = () => {
         </table>
 
         <div className="text-center mt-6">
-          <button
-            className="bg-blue-600 text-white px-6 py-2 rounded-lg text-sm font-medium hover:bg-blue-700 transition"
+          <Button
+            variant={"primary"}
             onClick={handleEndLesson}
           >
             End Lesson
-          </button>
+          </Button>
         </div>
       </div>
     </div>
