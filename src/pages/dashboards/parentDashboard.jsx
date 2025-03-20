@@ -98,7 +98,7 @@ const Dashboard = () => {
       <h1 className="text-2xl font-bold mb-2">Progress</h1>
       <div className="flex flex-col lg:flex-row space-y-6 lg:space-y-0 lg:space-x-6">
         <div className="w-full lg:w-1/2">
-          <Card>
+          <Card className="h-207.5">
             <CardContent>
               <h2 className="text-lg font-semibold">Your team's progress</h2>
               <div className="grid grid-cols-3 gap-3 mb-2">
@@ -160,7 +160,10 @@ const Dashboard = () => {
                   filteredCourses.map((course, index) => (
                     <li key={index} className="flex justify-between items-center p-3 border-b last:border-b-0">
                       <span>{course.name}</span>
-                      <span className={`px-2 py-1 rounded text-sm ${course.color}`}>{course.status}</span>
+                      <div className="flex items-center gap-2">
+                        <span className={`px-2 py-1 rounded text-sm ${course.color}`}>{course.status}</span>
+                        <a href="#" className="text-gray-500">&gt;</a>
+                      </div>
                     </li>
                   ))
                 ) : (
