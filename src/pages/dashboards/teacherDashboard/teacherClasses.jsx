@@ -1,3 +1,4 @@
+import { Button } from "@/components/ui/button";
 import Card from "@/components/uiDashboard/Card.jsx";
 import Table from "@/components/uiDashboard/Table.jsx";
 
@@ -21,16 +22,16 @@ const classesData = [
 
 export function TeacherClasses() {
   return (
-    <div>
-      <h2 className="text-5xl font-bold mb-4 text-black">Your Classes</h2>
+    <div className="flex flex-col gap-4">
+      <h1 className="text-primary">Your Classes</h1>
       <div>
         <Card>
           <Table
             headers={["TAG", "LOCATION", "COURSE", "PERIOD", "LEVEL/GROUP"]}
             data={classesData.map((cls) => ({
-              tag: <span className="text-black">{cls.tag}</span>,
-              location: <span className="text-gray-700">{cls.location}</span>,
-              course: <span className="font-bold text-black">{cls.course}</span>,
+              tag: <span className="text-primary">{cls.tag}</span>,
+              location: <span className="text-primary/70">{cls.location}</span>,
+              course: <span className="font-bold text-primary">{cls.course}</span>,
               period: (
                 <span
                   className={`px-2 py-1 rounded-md text-sm font-semibold ${
@@ -38,21 +39,21 @@ export function TeacherClasses() {
                       ? "bg-green-100 text-green-700"
                       : cls.period === "Cancelled"
                         ? "bg-red-100 text-red-700"
-                        : "bg-gray-100 text-gray-700"
+                        : "bg-muted text-primary/70"
                   }`}
                 >
               {cls.period}
             </span>
               ),
-              level: <span className="text-gray-700">{cls.level}</span>,
+              level: <span className="text-primary/70">{cls.level}</span>,
             }))}
-            className="table-auto w-full text-black"
+            className="table-auto w-full text-primary"
           />
         </Card>
       </div>
-      <button className="mt-4 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700">
+      <Button variant={"primary"} className={"w-fit"}>
         View more →
-      </button>
+      </Button>
     </div>
 
   );

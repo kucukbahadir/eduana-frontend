@@ -1,5 +1,6 @@
 import Progress from "@/components/uiDashboard/Progress.jsx";
 import Card from "@/components/uiDashboard/Card.jsx";
+import { Button } from "@/components/ui/button";
 
 const nextLesson = {
   tag: "NLAMS02-20250106-RC-00300",
@@ -16,16 +17,16 @@ if (nextLesson.progress === 100) {
 
 export function TeacherNextLesson() {
   return (
-    <div>
-      <h2 className="text-2xl font-bold mb-4 text-black">Next Lesson</h2>
+    <div className="flex flex-col gap-4">
+      <h1 className="text-primary">Next Lesson</h1>
       <Card>
-        <p className="font-semibold text-black">{nextLesson.tag}</p>
-        <p className="text-gray-600">{nextLesson.date}</p>
-        <p className="text-gray-600">{nextLesson.location}</p>
+        <p className="font-semibold text-primary">{nextLesson.tag}</p>
+        <p className="text-primary/60">{nextLesson.date}</p>
+        <p className="text-primary/60">{nextLesson.location}</p>
 
         {/* Progress Bar */}
         <Progress value={nextLesson.progress} className="mt-4" />
-        <p className="mt-2 text-sm text-gray-700">{nextLesson.progress}% completed</p>
+        <p className="mt-2 text-sm text-primary/60">{nextLesson.progress}% completed</p>
 
         {/* Prepared Status */}
         <p
@@ -37,9 +38,9 @@ export function TeacherNextLesson() {
         </p>
 
         {/* Action Button */}
-        <button className="mt-4 px-4 py-2 bg-blue-600 text-white font-semibold rounded-lg hover:bg-blue-700 transition">
+        <Button variant={"primary"} className={"w-fit mt-4"}>
           {nextLesson.prepared ? "Start Lesson" : "Finish Preparation →"}
-        </button>
+        </Button>
       </Card>
     </div>
   );

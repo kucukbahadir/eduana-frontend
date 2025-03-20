@@ -1,5 +1,6 @@
 import Table from "@/components/uiDashboard/Table.jsx";
 import Card from "@/components/uiDashboard/Card.jsx";
+import { Button } from "@/components/ui/button";
 
 const coursesData = [
   { name: "Essential Coding Skills", level: 1, type: "Regular", period: 1, lessons: 6 },
@@ -9,15 +10,15 @@ const coursesData = [
 
 export function TeacherCourses() {
   return (
-    <div>
-      <h2 className="text-5xl font-bold mb-4 text-black">Courses</h2>
+    <div className="flex flex-col gap-4">
+      <h1 className="text-primary">Courses</h1>
       <div>
         <Card>
           <Table
             headers={["NAME", "LEVEL", "TYPE", "PERIOD", "# OF LESSONS"]}
             data={coursesData.map((course) => ({
-              name: <span className="text-black font-medium">{course.name}</span>,
-              level: <span className="text-gray-700">{course.level}</span>,
+              name: <span className="text-primary font-medium">{course.name}</span>,
+              level: <span className="text-primary-70">{course.level}</span>,
               type: (
                 <span
                   className={`px-2 py-1 rounded-md text-sm font-semibold ${
@@ -27,16 +28,16 @@ export function TeacherCourses() {
               {course.type}
             </span>
               ),
-              period: <span className="text-gray-700">{course.period}</span>,
-              lessons: <span className="text-gray-700">{course.lessons}</span>,
+              period: <span className="text-primary-70">{course.period}</span>,
+              lessons: <span className="text-primary-70">{course.lessons}</span>,
             }))}
-            className="table-auto w-full text-black"
+            className="table-auto w-full text-primary"
           />
         </Card>
       </div>
-      <button className="mt-4 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700">
+      <Button variant={"primary"} className={"w-fit"}>
         View more →
-      </button>
+      </Button>
     </div>
 
   );

@@ -6,17 +6,17 @@ function TeacherDashboard() {
   return (
     <div className="max-w-screen-xl mx-auto px-6 py-8 space-y-6">
 
-      <section className="bg-white rounded-xl shadow-md p-6">
+      <section className="bg-background rounded-xl shadow-md p-6">
         <TeacherClasses />
       </section>
 
       <div className="grid grid-cols-3 gap-6">
 
-        <section className="bg-white rounded-xl shadow-md p-6 col-span-2">
+        <section className="bg-background rounded-xl shadow-md p-6 col-span-2">
           <TeacherCourses />
         </section>
 
-        <section className="bg-white rounded-xl shadow-md p-6 col-span-1">
+        <section className="bg-background rounded-xl shadow-md p-6 col-span-1">
           <TeacherNextLesson />
         </section>
 
