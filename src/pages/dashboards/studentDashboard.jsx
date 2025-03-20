@@ -1,7 +1,6 @@
 import React from "react";
 import Card, { CardContent } from "../../components/Card.jsx";
 
-
 const Dashboard = () => {
   const leaderboard = [
     { rank: 1, name: "Christian1", status: "Beginner" },
@@ -14,7 +13,6 @@ const Dashboard = () => {
     { rank: 8, name: "Christian8", status: "Beginner" },
     { rank: 9, name: "Christian9", status: "Beginner" }
   ];
-
   const stats = [
     { label: "Lesson Time", value: "4500 min" },
     { label: "Lessons Total", value: "50" },
@@ -23,14 +21,12 @@ const Dashboard = () => {
     { label: "Team Projects", value: "10" },
     { label: "Classes Total", value: "5" }
   ];
-
   const skills = [
     { skill: "Scratch", width: "w-full" },
     { skill: "HTML5", width: "w-3/4" },
     { skill: "JavaScript", width: "w-1/2" },
     { skill: "Python", width: "w-1/4" }
   ];
-
   return (
     <div className="flex min-h-screen bg-gray-100 p-6 gap-6">
       <Card className="w-1/3 bg-gray-900 text-white p-6 rounded-lg shadow-md">

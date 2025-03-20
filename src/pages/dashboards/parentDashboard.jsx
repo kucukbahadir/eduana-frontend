@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from "react";
 import ApexCharts from "apexcharts";
 import Card, { CardContent } from "../../components/Card.jsx";
-
 const Dashboard = () => {
   // chart data
   const getChartOptions = () => {
