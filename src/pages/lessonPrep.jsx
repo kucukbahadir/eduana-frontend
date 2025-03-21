@@ -17,6 +17,8 @@ const LessonPreparation = () => {
     keywords: false,
     presentation: false,
     kahoot: false,
+    materials: false, // Expanded state for step 2
+    presentationDetails: false, // Step 2 presentation dropdown
   });
 
   const handleCheckboxChange = (key) => {
@@ -31,17 +33,18 @@ const LessonPreparation = () => {
 
   return (
     <div className="max-w-2xl mx-auto p-6">
+      {/* Header */}
       <h2 className="text-2xl font-bold text-center">
-        {step === 1 ? "03 - Leds and Breadboards" : "Next Step Title"}
+        {step === 1 ? "03 - Leds and Breadboards" : "Set Up Materials"}
       </h2>
       <p className="text-center text-sm text-gray-500 mb-6">
         Navigating Fundamental Electronics Level 1
       </p>
 
-      <Card className="p-4">
-        {step === 1 ? (
-          // Step 1 Content
-          Object.keys(checkedItems).map((key) => (
+      {/* Step 1: Lesson Preparation */}
+      {step === 1 ? (
+        <Card className="p-4">
+          {Object.keys(checkedItems).map((key) => (
             <div key={key} className="border-b last:border-b-0 py-2">
               <div className="flex items-center justify-between cursor-pointer" onClick={() => toggleExpand(key)}>
                 <div className="flex items-center gap-2">
@@ -52,34 +55,59 @@ const LessonPreparation = () => {
                       e.stopPropagation();
                       handleCheckboxChange(key);
                     }}
-                    className="form-checkbox h-5 w-5"
+                    className="form-checkbox h-5 w-5 accent-blue-600"
                   />
                   <span className="font-medium capitalize">{key.replace(/([A-Z])/g, " $1").trim()}</span>
                 </div>
                 {expanded[key] ? <ChevronUp size={20} /> : <ChevronDown size={20} />}
               </div>
               {expanded[key] && (
-                <div className="mt-2 text-sm text-gray-600">
-                  <p>Placeholder text for {key} details...</p>
+                <div className="mt-2 text-sm text-gray-600 bg-gray-100 p-3 rounded-md">
+                  <p>Details for {key}...</p>
                 </div>
               )}
             </div>
-          ))
-        ) : (
-          // Step 2 Content (Next Step)
-          <div>
-            <h3 className="text-xl font-bold mb-4">Materials</h3>
-            <ul className="text-gray-600">
-              <li>1. Breadboards (1 for each student)</li>
-              <li>2. LEDs</li>
-              <li>3. Resistors</li>
-              <li>4. Gauge</li>
-              <li>5. Batteries</li>
-            </ul>
+          ))}
+        </Card>
+      ) : (
+        // Step 2: Materials & Presentation
+        <Card className="p-4">
+          {/* Materials Section */}
+          <div className="border-b last:border-b-0 py-2">
+            <div className="flex items-center justify-between cursor-pointer" onClick={() => toggleExpand("materials")}>
+              <span className="font-medium">Materials</span>
+              {expanded.materials ? <ChevronUp size={20} /> : <ChevronDown size={20} />}
+            </div>
+            {expanded.materials && (
+              <div className="mt-2 text-sm text-gray-600 bg-gray-100 p-3 rounded-md">
+                <ul className="list-disc pl-4">
+                  <li>Breadboards (1 per student)</li>
+                  <li>LEDs</li>
+                  <li>Resistors</li>
+                  <li>Gauge</li>
+                  <li>Batteries</li>
+                </ul>
+              </div>
+            )}
           </div>
-        )}
-      </Card>
 
+          {/* Presentation Section */}
+          <div className="border-b last:border-b-0 py-2 mt-4">
+            <div className="flex items-center justify-between cursor-pointer" onClick={() => toggleExpand("presentationDetails")}>
+              <span className="font-medium">Presentation</span>
+              {expanded.presentationDetails ? <ChevronUp size={20} /> : <ChevronDown size={20} />}
+            </div>
+            {expanded.presentationDetails && (
+              <div className="mt-2 text-sm text-gray-600 bg-gray-100 p-3 rounded-md">
+                <p>Slide deck with instructions on how to use breadboards and LEDs.</p>
+                <p>Key topics: Circuit connections, polarity, and resistor usage.</p>
+              </div>
+            )}
+          </div>
+        </Card>
+      )}
+
+      {/* Navigation Buttons */}
       <div className="flex justify-between mt-4">
         {step > 1 && (
           <Button className="bg-gray-500 text-white px-4 py-2 rounded" onClick={() => setStep(step - 1)}>
@@ -88,7 +116,7 @@ const LessonPreparation = () => {
         )}
         {allChecked && (
           <Button className="bg-blue-600 text-white px-4 py-2 rounded" onClick={() => setStep(step + 1)}>
-            Next Step
+            {step === 1 ? "Next Step" : "Finish"}
           </Button>
         )}
       </div>
