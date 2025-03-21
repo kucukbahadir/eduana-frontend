@@ -28,31 +28,31 @@ const Dashboard = () => {
     { skill: "Python", width: "w-1/4" }
   ];
   return (
-    <div className="flex min-h-screen bg-gray-100 p-6 gap-6">
-      <Card className="w-1/3 bg-gray-900 text-white p-6 rounded-lg shadow-md">
+    <div className="flex min-h-screen bg-muted p-6 gap-6">
+      <Card className="w-1/3 bg-primary text-primary-foreground p-6 rounded-lg shadow-md">
         <h2 className="text-2xl font-bold mb-4">Leaderboard</h2>
         <CardContent>
           <ul>
             {leaderboard.map(({ rank, name, status }) => (
               <li
                 key={rank}
-                className="flex justify-between items-center bg-gray-800 p-3 rounded-lg mb-2"
+                className="flex justify-between items-center bg-primary/90 p-3 rounded-lg mb-2"
               >
                 <span className="font-semibold">#{rank}</span>
                 <span>{name}</span>
-                <span className="text-gray-400 text-sm">{status}</span>
+                <span className="text-primary-foreground/60 text-sm">{status}</span>
               </li>
             ))}
           </ul>
         </CardContent>
       </Card>
-      <Card className="flex-1 bg-white p-6 shadow-lg rounded-lg">
-        <h2 className="text-3xl font-bold mb-4">Student Dashboard</h2>
+      <Card className="flex-1 bg-background p-6 shadow-lg rounded-lg">
+        <h1 className="mb-4">Student Dashboard</h1>
         <CardContent className="grid grid-cols-3 gap-6 text-center">
           {stats.map(({ label, value }, index) => (
             <Card key={index} className="p-4 bg-gray-200 rounded-lg shadow">
-              <p className="text-xl font-bold">{value}</p>
-              <p className="text-gray-600">{label}</p>
+              <strong className="text-3xl">{value}</strong>
+              <p className="mt-2 text-sm text-muted-foreground">{label}</p>
             </Card>
           ))}
         </CardContent>
@@ -60,9 +60,9 @@ const Dashboard = () => {
         <CardContent className="mt-4">
           {skills.map(({ skill, width }, index) => (
             <div key={index} className="mb-3">
-              <p className="text-gray-700 font-medium mb-1">{skill}</p>
-              <div className="w-full bg-gray-300 h-2 rounded-full">
-                <div className={`bg-blue-500 h-2 rounded-full ${width}`}></div>
+              <p className="text-primary/70 font-medium mb-1">{skill}</p>
+              <div className="w-full bg-muted h-2 rounded-full">
+                <div className={`bg-primary-button h-2 rounded-full ${width}`}></div>
               </div>
             </div>
           ))}
