@@ -4,25 +4,44 @@ import { Button } from "../components/ui/button";
 import { ChevronDown, ChevronUp } from "lucide-react";
 
 const LessonPreparation = () => {
-  const [step, setStep] = useState(1);
-  const [checkedItems, setCheckedItems] = useState({
-    learningGoals: false,
-    keywords: false,
-    presentation: false,
-    kahoot: false
-  });
+  const lessonData = {
+    subtitle: "Navigating Fundamental Electronics Level 1",
+    steps: [
+      { title: "03 - Leds and Breadboards" },
+      { title: "Set Up Materials" },
+      { title: "Plan Activity" }
+    ],
+    lessonPreparation: {
+      learningGoals: { label: "Learning Goals", content: "Understand how LEDs work and how to use them in circuits." },
+      keywords: { label: "Keywords", content: "Electricity, Current, Resistance, LED, Breadboard, Voltage." },
+      presentation: { label: "Presentation", content: "Slides covering LED circuits, resistors, and safety tips." },
+      kahoot: { label: "Kahoot", content: "Interactive quiz to reinforce concepts." }
+    },
+    materials: [
+      { id: "materials", label: "Materials", content: ["Breadboards", "LEDs", "Resistors", "Batteries"] },
+      { id: "presentationDetails", label: "Presentation", content: "Slide deck with step-by-step instructions on LED circuits." }
+    ],
+    activities: [
+      { id: "partA", label: "Part A", content: "Introduction to circuits and how electricity flows." },
+      { id: "partB", label: "Part B", content: "Building simple circuits using breadboards and LEDs." },
+      { id: "partC", label: "Part C", content: "Testing and troubleshooting circuits." }
+    ]
+  };
 
-  const [expanded, setExpanded] = useState({
-    learningGoals: false,
-    keywords: false,
-    presentation: false,
-    kahoot: false,
-    materials: false,
-    presentationDetails: false,
-    partA: false,
-    partB: false,
-    partC: false
-  });
+  const [step, setStep] = useState(1);
+  const [checkedItems, setCheckedItems] = useState(
+    Object.keys(lessonData.lessonPreparation).reduce((acc, key) => {
+      acc[key] = false;
+      return acc;
+    }, {})
+  );
+
+  const [expanded, setExpanded] = useState(
+    Object.keys(lessonData.lessonPreparation).reduce((acc, key) => {
+      acc[key] = false;
+      return acc;
+    }, {})
+  );
 
   const handleCheckboxChange = (key) => {
     setCheckedItems((prev) => ({ ...prev, [key]: !prev[key] }));
@@ -36,22 +55,17 @@ const LessonPreparation = () => {
 
   return (
     <div className="max-w-2xl mx-auto p-6 font-sans">
-      {/* Header */}
       <h2 className="text-3xl font-bold text-center text-primary mb-2">
-        {step === 1
-          ? "03 - Leds and Breadboards"
-          : step === 2
-            ? "Set Up Materials"
-            : "Plan Activity"}
+        {lessonData.steps[step - 1].title}
       </h2>
       <p className="text-center text-sm text-muted-foreground mb-6">
-        Navigating Fundamental Electronics Level 1
+        {lessonData.subtitle}
       </p>
 
       {/* Step 1: Lesson Preparation */}
       {step === 1 && (
         <Card className="p-4 bg-card border border-border rounded-md shadow-md">
-          {Object.keys(checkedItems).map((key) => (
+          {Object.keys(lessonData.lessonPreparation).map((key) => (
             <div key={key} className="border-b border-muted py-2 last:border-b-0">
               <div className="flex items-center justify-between cursor-pointer" onClick={() => toggleExpand(key)}>
                 <div className="flex items-center gap-2">
@@ -64,13 +78,15 @@ const LessonPreparation = () => {
                     }}
                     className="form-checkbox h-5 w-5 text-primary-button"
                   />
-                  <span className="font-medium capitalize">{key.replace(/([A-Z])/g, " $1").trim()}</span>
+                  <span className="font-medium capitalize">
+                    {lessonData.lessonPreparation[key].label}
+                  </span>
                 </div>
                 {expanded[key] ? <ChevronUp size={20} /> : <ChevronDown size={20} />}
               </div>
               {expanded[key] && (
                 <div className="mt-2 text-sm text-muted-foreground bg-muted p-3 rounded-md">
-                  <p>Details for {key}...</p>
+                  <p>{lessonData.lessonPreparation[key].content}</p>
                 </div>
               )}
             </div>
@@ -81,54 +97,42 @@ const LessonPreparation = () => {
       {/* Step 2: Materials & Presentation */}
       {step === 2 && (
         <Card className="p-4 bg-card border border-border rounded-md shadow-md">
-          {/* Materials Section */}
-          <div className="border-b border-muted py-2">
-            <div className="flex items-center justify-between cursor-pointer" onClick={() => toggleExpand("materials")}>
-              <span className="font-medium text-primary">Materials</span>
-              {expanded.materials ? <ChevronUp size={20} /> : <ChevronDown size={20} />}
-            </div>
-            {expanded.materials && (
-              <div className="mt-2 text-sm text-muted-foreground bg-muted p-3 rounded-md">
-                <ul className="list-disc pl-4">
-                  <li>Breadboards (1 per student)</li>
-                  <li>LEDs</li>
-                  <li>Resistors</li>
-                  <li>Gauge</li>
-                  <li>Batteries</li>
-                </ul>
+          {lessonData.materials.map((section, index) => (
+            <div key={index} className="border-b border-muted py-2">
+              <div className="flex items-center justify-between cursor-pointer" onClick={() => toggleExpand(section.id)}>
+                <span className="font-medium text-primary">{section.label}</span>
+                {expanded[section.id] ? <ChevronUp size={20} /> : <ChevronDown size={20} />}
               </div>
-            )}
-          </div>
-
-          {/* Presentation Section */}
-          <div className="border-b border-muted py-2 mt-4">
-            <div className="flex items-center justify-between cursor-pointer"
-                 onClick={() => toggleExpand("presentationDetails")}>
-              <span className="font-medium text-primary">Presentation</span>
-              {expanded.presentationDetails ? <ChevronUp size={20} /> : <ChevronDown size={20} />}
+              {expanded[section.id] && (
+                <div className="mt-2 text-sm text-muted-foreground bg-muted p-3 rounded-md">
+                  {Array.isArray(section.content) ? (
+                    <ul className="list-disc pl-4">
+                      {section.content.map((item, i) => (
+                        <li key={i}>{item}</li>
+                      ))}
+                    </ul>
+                  ) : (
+                    <p>{section.content}</p>
+                  )}
+                </div>
+              )}
             </div>
-            {expanded.presentationDetails && (
-              <div className="mt-2 text-sm text-muted-foreground bg-muted p-3 rounded-md">
-                <p>Slide deck with instructions on how to use breadboards and LEDs.</p>
-                <p>Key topics: Circuit connections, polarity, and resistor usage.</p>
-              </div>
-            )}
-          </div>
+          ))}
         </Card>
       )}
 
       {/* Step 3: Plan Activity */}
       {step === 3 && (
         <Card className="p-4 bg-card border border-border rounded-md shadow-md">
-          {["partA", "partB", "partC"].map((part) => (
-            <div key={part} className="border-b border-muted py-2 last:border-b-0">
-              <div className="flex items-center justify-between cursor-pointer" onClick={() => toggleExpand(part)}>
-                <span className="font-medium text-primary">{part.replace("part", "Part ")}</span>
-                {expanded[part] ? <ChevronUp size={20} /> : <ChevronDown size={20} />}
+          {lessonData.activities.map((activity, index) => (
+            <div key={index} className="border-b border-muted py-2 last:border-b-0">
+              <div className="flex items-center justify-between cursor-pointer" onClick={() => toggleExpand(activity.id)}>
+                <span className="font-medium text-primary">{activity.label}</span>
+                {expanded[activity.id] ? <ChevronUp size={20} /> : <ChevronDown size={20} />}
               </div>
-              {expanded[part] && (
+              {expanded[activity.id] && (
                 <div className="mt-2 text-sm text-muted-foreground bg-muted p-3 rounded-md">
-                  <p>Content for {part}...</p>
+                  <p>{activity.content}</p>
                 </div>
               )}
             </div>
