@@ -134,7 +134,7 @@
   }
 
   strong {
-    @apply text-lg font-semibold
+    @apply text-lg font-bold
   }
 
   small {
