@@ -23,7 +23,7 @@ function Progress() {
 
   return (
     <div className="flex flex-col gap-5 py-4 max-w-7xl mx-auto">
-      <div className="flex flex-col gap-5">
+      <div className="flex flex-col gap-5 px-2.5">
         <h1>Progress</h1>
         {students == null ? (
           <div className="flex text-muted-foreground items-center gap-2.5">
@@ -34,15 +34,15 @@ function Progress() {
           <Tabs defaultValue={students[0].name} className={"w-full"}>
             {students.length > 1 && (
               <div className="flex w-full items-center justify-between">
-                <TabsList className={`flex w-full max-w-sm overflow-x-scroll`}>
+                <TabsList className={`flex w-full lg:max-w-sm overflow-x-scroll`}>
                   {students.map((student) => (
                     <TabsTrigger key={student.name} value={student.name}>
                       {student.name}
                     </TabsTrigger>
                   ))}
                 </TabsList>
-                <Button variant="link" onClick={refreshData} className={"h-fit gap-2"}>
-                  <RefreshCcw /> Refresh
+                <Button variant="link" onClick={refreshData} className={"h-fit gap-2 hidden lg:inline-flex"}>
+                  <RefreshCcw className="hidden lg:inline-flex" /> Refresh
                 </Button>
               </div>
             )}

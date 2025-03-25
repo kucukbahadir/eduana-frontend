@@ -5,10 +5,10 @@ import { Button, buttonVariants } from "@/components/ui/button";
 
 const Navbar = () => {
   return (
-    <nav className="p-1.5 border-b bg-background w-full">
-      <div className="flex justify-between items-center mx-auto max-w-6xl">
-        <div className="flex">
-          <Link to="/" className={buttonVariants({ variant: "link" })}>
+    <nav className="py-1.5 border-b bg-background w-full">
+      <div className="flex justify-between items-center mx-auto px-2.5 max-w-7xl">
+        <div className="flex gap-2.5">
+          <Link to="/" className={buttonVariants({ variant: "link" }) + " p-0!"}>
             Home
           </Link>
           <Link to="/login" className={buttonVariants({ variant: "link" })}>
