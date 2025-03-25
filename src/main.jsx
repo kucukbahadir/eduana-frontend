@@ -16,6 +16,7 @@ import CourseDetail from "./pages/courseDetail";
 import Notifications from "./pages/notifications.jsx";
 import NoPage from "./pages/noPage";
 import Progress from "./pages/parent/progress/index";
+import CertificatesOverview from "./pages/parent/certificates";
 
 createRoot(document.getElementById("root")).render(
   <StrictMode>
@@ -28,6 +29,7 @@ createRoot(document.getElementById("root")).render(
           <Route path="/dashboard/student" element={<StudentDashboard />} />
           <Route path="/dashboard/parent" element={<ParentDashboard />} />
           <Route path="/progress" element={<Progress />} />
+          <Route path="/certificates" element={<CertificatesOverview />} />
           <Route path="/dashboard/admin" element={<AdminDashboard />} />
           <Route path="/dashboard/coordinator" element={<CoordinatorDashboard />} />
           <Route path="/dashboard/teacher" element={<TeacherDashboard />} />
