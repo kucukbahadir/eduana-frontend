@@ -1,9 +1,9 @@
 import * as React from "react";
 import { cn } from "@/lib/utils";
 
-function Input({ className, type, icon: Icon, ...props }) {
+function Input({ className, type, icon: Icon, wrapperClassName, ...props }) {
   return (
-    <div className="relative w-full">
+    <div className={cn("relative w-full", wrapperClassName)}>
       {Icon && (
         <div className="absolute left-4 top-1/2 -translate-y-1/2 text-muted-foreground">
           <Icon className="size-3" />

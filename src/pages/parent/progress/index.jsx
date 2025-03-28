@@ -22,8 +22,7 @@ function Progress() {
   }
 
   return (
-    <div className="flex flex-col gap-5 py-4 max-w-7xl mx-auto">
-      <div className="flex flex-col gap-5 px-2.5">
+    <div className="flex flex-col gap-5 py-4 px-5 max-w-5xl mx-auto">
         <h1>Progress</h1>
         {students == null ? (
           <div className="flex text-muted-foreground items-center gap-2.5">
@@ -48,7 +47,7 @@ function Progress() {
             )}
             {students.map((student, i) => (
               <TabsContent className={"flex flex-col lg:flex-row gap-2.5"} value={student.name} key={student.name}>
-                <Card title={`${student.name}'s progress`}>
+                <Card title={`${student.name}'s progress`} className={"min-w-sm"}>
                   <div className="flex flex-col bg-muted rounded-md p-2.5">
                     <div className="grid grid-cols-3 gap-2.5">
                       <ProgressCategory title="To do" progress={student.progress.todo} variant="chart-3" />
@@ -109,7 +108,6 @@ function Progress() {
             ))}
           </Tabs>
         )}
-      </div>
     </div>
   );
 }

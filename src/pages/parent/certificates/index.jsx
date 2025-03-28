@@ -28,7 +28,6 @@ import {
 
 import React, { useEffect, useState } from "react";
 import { students as data } from "../progress/data/studentData";
-import { faker } from "@faker-js/faker";
 
 const sortOptions = {
   date: [
@@ -99,7 +98,7 @@ function CertificatesOverview() {
   };
 
   return (
-    <div className="flex flex-col max-w-2xl mx-auto gap-2.5 p-2.5 px-5 pt-5">
+    <div className="flex flex-col max-w-4xl mx-auto gap-2.5 p-2.5 px-5 pt-5">
       <h1>Certificates</h1>
       <Tabs
         defaultValue={students[0].id}
