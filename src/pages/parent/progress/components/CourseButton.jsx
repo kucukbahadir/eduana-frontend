@@ -8,7 +8,7 @@ function CourseButton({ title, status, last = false }) {
   const variants = {
     "completed": "success",
     "ongoing": "primary",
-    "signed up": "warning",
+    "not started": "warning",
   }
 
   return (
