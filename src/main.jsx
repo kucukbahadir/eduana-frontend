@@ -33,7 +33,7 @@ createRoot(document.getElementById("root")).render(
           <Route path="/courses" element={<CourseOverview />} />
           <Route path="/courses/:id/manage" element={<CourseDetail />} />
           <Route path="/notifications" element={<Notifications />} />
-          <Route path="/classes/:id/manege" element={<ClassManagement />} />
+          <Route path="/classes/manage" element={<ClassManagement />} />
           <Route path="*" element={<NoPage />} />
         </Routes>
       </main>
