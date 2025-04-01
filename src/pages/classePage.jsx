@@ -1,32 +1,24 @@
-import { useState, useEffect } from "react";
-
-const STORAGE_KEY = "classManagement";
+import { useState } from "react";
 
 const ClassManagement = () => {
   const [searchTerm, setSearchTerm] = useState("");
   const [sortOrder, setSortOrder] = useState("asc"); // 'asc' for A-Z, 'desc' for Z-A
-  const [classes] = useState(() => {
-    const savedClasses = localStorage.getItem(STORAGE_KEY);
-    return savedClasses
-      ? JSON.parse(savedClasses)
-      : [
-        { id: 1, name: "NLAMS02-20250106-RC-00300", location: "Amsterdam Oost", course: "Essential Robotics Skills", period: "1", level: "1"},
-        { id: 2, name: "NLDH01-20240102-CC-02000", location: "Amsterdam Oost", course: "Essential Robotics Skills", period: "1", level: "2"},
-        { id: 3, name: "NLAMS02-20250106-RC-00300", location: "Amsterdam Oost", course: "Essential Robotics Skills", period: "1", level: "1"},
-        { id: 4, name: "NLAMS02-20250106-RC-00300", location: "Amsterdam Oost", course: "Essential Robotics Skills", period: "1", level: "2"},
-        { id: 5, name: "NLAMS02-20250106-RC-00300", location: "Amsterdam Oost", course: "Essential Robotics Skills", period: "1", level: "2"},
-      ];
+  const [selectedLocation, setSelectedLocation] = useState(""); // Location filter state
+  const [classes] = useState([
+    { id: 1, name: "NLAMS02-20250106-RC-00300", location: "Amsterdam Oost", course: "Essential Robotics Skills", period: "1", level: "1" },
+    { id: 2, name: "NLAMS02-20250106-RC-00300", location: "Amsterdam Oost", course: "Essential Robotics Skills", period: "1", level: "2" },
+    { id: 3, name: "NLAMS02-20250106-RC-00300", location: "Den Haag", course: "Essential Robotics Skills", period: "1", level: "1" },
+    { id: 4, name: "NLAMS02-20250106-RC-00300", location: "Amstelveen", course: "Essential Robotics Skills", period: "1", level: "2" },
+    { id: 5, name: "NLAMS02-20250106-RC-00300", location: "Amsterdam Oost", course: "Essential Robotics Skills", period: "1", level: "2" },
+  ]);
+
+  // Handle search and location filtering
+  const filteredClasses = classes.filter((clas) => {
+    const matchesSearchTerm = clas.name.toLowerCase().includes(searchTerm.toLowerCase());
+    const matchesLocation =
+      !selectedLocation || clas.location === selectedLocation; // If no location is selected, return all
+    return matchesSearchTerm && matchesLocation;
   });
-
-  // Save classes to localStorage on update
-  useEffect(() => {
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(classes));
-  }, [classes]);
-
-  // Handle search filtering
-  const filteredClasses = classes.filter((clas) =>
-    clas.name.toLowerCase().includes(searchTerm.toLowerCase())
-  );
 
   // Sort the filtered classes based on sortOrder (A-Z or Z-A)
   const sortedClasses = [...filteredClasses].sort((a, b) => {
@@ -50,6 +42,22 @@ const ClassManagement = () => {
           onChange={(e) => setSearchTerm(e.target.value)}
           className="w-full p-2 mb-4 border border-gray-300 rounded-md"
         />
+
+        {/* Location Filter Dropdown */}
+        <div className="mb-4">
+          <label htmlFor="locationFilter" className="mr-2">Location:</label>
+          <select
+            id="locationFilter"
+            value={selectedLocation}
+            onChange={(e) => setSelectedLocation(e.target.value)}
+            className="p-2 border border-gray-300 rounded-md"
+          >
+            <option value="">All Locations</option>
+            <option value="Amsterdam Oost">Amsterdam</option>
+            <option value="Den Haag">Den Haag</option>
+            <option value="Amstelveen">Amstelveen</option>
+          </select>
+        </div>
 
         {/* Sorting Dropdown */}
         <div className="mb-4">
