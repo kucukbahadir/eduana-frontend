@@ -40,7 +40,7 @@ const StudentManagement = () => {
   return (
     <div className="p-6 bg-muted min-h-screen">
       <div className="max-w-5xl mx-auto bg-background p-6 rounded-lg shadow-md">
-        <h2 className="text-2xl font-bold text-center mb-4">Student Management</h2>
+        <h2 className="text-2xl font-bold text-center mb-4 text-primary-foreground">Student Management</h2>
 
         {/* Search Bar */}
         <input
@@ -48,7 +48,7 @@ const StudentManagement = () => {
           placeholder="Search students..."
           value={searchTerm}
           onChange={(e) => setSearchTerm(e.target.value)}
-          className="w-full p-2 mb-4 border border-gray-300 rounded-md"
+          className="w-full p-2 mb-4 border border-border rounded-md"
         />
 
         {/* Student Table */}
@@ -72,6 +72,7 @@ const StudentManagement = () => {
                     type="checkbox"
                     checked={student.selected}
                     onChange={() => toggleSelectStudent(student.id)}
+                    className="cursor-pointer"
                   />
                 </td>
                 <td className="p-3">{student.name}</td>
