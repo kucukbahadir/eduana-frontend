@@ -105,10 +105,7 @@ const StudentManagement = () => {
 
         {/* Start Preparation Button */}
         <div className="text-center mt-6">
-          <Button
-            variant={students.some((s) => s.selected) ? "primary" : "secondary"}
-            disabled={!students.some((s) => s.selected)}
-          >
+          <Button>
             Start Preparation
           </Button>
         </div>
