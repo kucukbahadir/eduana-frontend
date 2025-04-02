@@ -16,7 +16,7 @@ const ClassManagement = () => {
   const filteredClasses = classes.filter((clas) => {
     const matchesSearchTerm = clas.name.toLowerCase().includes(searchTerm.toLowerCase());
     const matchesLocation =
-      !selectedLocation || clas.location === selectedLocation; // If no location is selected, return all
+      !selectedLocation || clas.location === selectedLocation;
     return matchesSearchTerm && matchesLocation;
   });
 
@@ -40,7 +40,7 @@ const ClassManagement = () => {
           placeholder="Search classes..."
           value={searchTerm}
           onChange={(e) => setSearchTerm(e.target.value)}
-          className="w-full p-2 mb-4 border border-gray-300 rounded-md"
+          className="w-full p-2 mb-4 border border-border rounded-md"
         />
 
         {/* Location Filter Dropdown */}
@@ -50,7 +50,7 @@ const ClassManagement = () => {
             id="locationFilter"
             value={selectedLocation}
             onChange={(e) => setSelectedLocation(e.target.value)}
-            className="p-2 border border-gray-300 rounded-md"
+            className="p-2 border border-border rounded-md"
           >
             <option value="">All Locations</option>
             <option value="Amsterdam Oost">Amsterdam</option>
@@ -66,7 +66,7 @@ const ClassManagement = () => {
             id="sortOrder"
             value={sortOrder}
             onChange={(e) => setSortOrder(e.target.value)}
-            className="p-2 border border-gray-300 rounded-md"
+            className="p-2 border border-border rounded-md"
           >
             <option value="asc">A-Z</option>
             <option value="desc">Z-A</option>
@@ -87,7 +87,7 @@ const ClassManagement = () => {
           <tbody>
           {sortedClasses.length > 0 ? (
             sortedClasses.map((clas) => (
-              <tr key={clas.id} className="border-b hover:bg-gray-50">
+              <tr key={clas.id} className="border-b hover:bg-muted/50">
                 <td className="p-3">{clas.name}</td>
                 <td className="p-3">{clas.location}</td>
                 <td className="p-3">{clas.course}</td>
