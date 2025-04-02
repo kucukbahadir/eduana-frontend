@@ -16,6 +16,7 @@ import CourseDetail from "./pages/courseDetail";
 import Notifications from "./pages/notifications.jsx";
 import NoPage from "./pages/noPage";
 import LessonPreparation from "@/pages/lessonPrep.jsx";
+import StudentEvaluationTable from "@/pages/studentEvaluationPage.jsx";
 
 createRoot(document.getElementById("root")).render(
   <StrictMode>
@@ -34,6 +35,7 @@ createRoot(document.getElementById("root")).render(
           <Route path="/courses/:id/manage" element={<CourseDetail />} />
           <Route path="/notifications" element={<Notifications />} />
           <Route path="/lesson-preperation" element={<LessonPreparation/>} />
+          <Route path="/evaluation" element={<StudentEvaluationTable/>} />
           <Route path="*" element={<NoPage />} />
         </Routes>
       </main>
