@@ -20,7 +20,7 @@ createRoot(document.getElementById("root")).render(
   <StrictMode>
     <BrowserRouter>
       <Navbar />
-      <main className="p-4">
+      <main>
         <Routes>
           <Route path="/" element={<App />} />
           <Route path="/login" element={<TabbedLogin />} />
