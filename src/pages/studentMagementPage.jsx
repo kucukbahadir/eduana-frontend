@@ -18,17 +18,14 @@ const StudentManagement = () => {
       ];
   });
 
-  // Save students to localStorage on update
   useEffect(() => {
     localStorage.setItem(STORAGE_KEY, JSON.stringify(students));
   }, [students]);
 
-  // Handle search filtering
   const filteredStudents = students.filter((student) =>
     student.name.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
-  // Toggle selection
   const toggleSelectStudent = (id) => {
     setStudents((prevStudents) =>
       prevStudents.map((student) =>
@@ -42,16 +39,14 @@ const StudentManagement = () => {
       <div className="max-w-5xl mx-auto bg-background p-6 rounded-lg shadow-md">
         <h2 className="text-2xl font-bold text-center mb-4">Student Management</h2>
 
-        {/* Search Bar */}
         <input
           type="text"
           placeholder="Search students..."
           value={searchTerm}
           onChange={(e) => setSearchTerm(e.target.value)}
-          className="w-full p-2 mb-4 border border-gray-300 rounded-md"
+          className="w-full p-2 mb-4 border border-border rounded-md"
         />
 
-        {/* Student Table */}
         <table className="w-full border border-border rounded-lg overflow-hidden">
           <thead className="bg-muted text-primary uppercase text-sm">
           <tr>
@@ -66,7 +61,7 @@ const StudentManagement = () => {
           <tbody>
           {filteredStudents.length > 0 ? (
             filteredStudents.map((student) => (
-              <tr key={student.id} className="border-b hover:bg-gray-50">
+              <tr key={student.id} className="border-b hover:bg-muted/50">
                 <td className="p-3">
                   <input
                     type="checkbox"
@@ -79,12 +74,12 @@ const StudentManagement = () => {
                 <td className="p-3">{student.diet}</td>
                 <td className="p-3">
                     <span
-                      className={`px-2 py-1 rounded text-white ${
+                      className={`px-2 py-1 rounded text-primary-foreground ${
                         student.experience === "High"
-                          ? "bg-green-500"
+                          ? "bg-success"
                           : student.experience === "Low"
-                            ? "bg-red-500"
-                            : "bg-purple-500"
+                            ? "bg-destructive"
+                            : "bg-accent"
                       }`}
                     >
                       {student.experience}
@@ -103,11 +98,8 @@ const StudentManagement = () => {
           </tbody>
         </table>
 
-        {/* Start Preparation Button */}
         <div className="text-center mt-6">
-          <Button>
-            Start Preparation
-          </Button>
+          <Button>Start Preparation</Button>
         </div>
       </div>
     </div>
