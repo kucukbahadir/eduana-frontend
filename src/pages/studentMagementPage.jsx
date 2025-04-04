@@ -1,29 +1,35 @@
 import { Button } from "@/components/ui/button";
 import { useState, useEffect } from "react";
-
-const STORAGE_KEY = "studentManagement";
+import TeacherDashboardService from "@/services/TeacherDashboardService"; // Make sure this is the correct path
 
 const StudentManagement = () => {
   const [searchTerm, setSearchTerm] = useState("");
-  const [students, setStudents] = useState(() => {
-    const savedStudents = localStorage.getItem(STORAGE_KEY);
-    return savedStudents
-      ? JSON.parse(savedStudents)
-      : [
-        { id: 1, name: "Bonnie Green", age: 7, diet: "None", experience: "High", language: "English", selected: false },
-        { id: 2, name: "John Smith", age: 8, diet: "None", experience: "High", language: "Dutch", selected: false },
-        { id: 3, name: "Erik Kemp", age: 9, diet: "None", experience: "Low", language: "Dutch", selected: false },
-        { id: 4, name: "Lana Byrd", age: 9, diet: "Halal", experience: "Very High", language: "Dutch", selected: false },
-        { id: 5, name: "Jese Leos", age: 9, diet: "Vegan", experience: "High", language: "Dutch", selected: false },
-      ];
-  });
+  const [students, setStudents] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState("");
 
   useEffect(() => {
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(students));
-  }, [students]);
+    const fetchStudents = async () => {
+      try {
+        const data = await TeacherDashboardService.getAllStudents();
+        // Ensure each student has a selected field for checkbox control
+        const studentsWithSelection = data.students.map((student) => ({
+          ...student,
+          selected: false,
+        }));
+        setStudents(studentsWithSelection);
+      } catch (err) {
+        setError(err.message);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchStudents();
+  }, []);
 
   const filteredStudents = students.filter((student) =>
-    student.name.toLowerCase().includes(searchTerm.toLowerCase())
+    student.user?.name?.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
   const toggleSelectStudent = (id) => {
@@ -33,6 +39,9 @@ const StudentManagement = () => {
       )
     );
   };
+
+  if (loading) return <div className="text-center p-6">Loading students...</div>;
+  if (error) return <div className="text-center p-6 text-red-600">{error}</div>;
 
   return (
     <div className="p-6 bg-muted min-h-screen">
@@ -69,23 +78,23 @@ const StudentManagement = () => {
                     onChange={() => toggleSelectStudent(student.id)}
                   />
                 </td>
-                <td className="p-3">{student.name}</td>
+                <td className="p-3">{student.user.name}</td>
                 <td className="p-3">{student.age}</td>
-                <td className="p-3">{student.diet}</td>
+                <td className="p-3">{student.dietRestrictions}</td>
                 <td className="p-3">
                     <span
-                      className={`px-2 py-1 rounded text-primary-foreground ${
-                        student.experience === "High"
+                      className={`px-2 py-1 rounded text-black ${
+                        student.previousExperience === "High"
                           ? "bg-success"
-                          : student.experience === "Low"
+                          : student.previousExperience === "Low"
                             ? "bg-destructive"
                             : "bg-accent"
                       }`}
                     >
-                      {student.experience}
+                      {student.previousExperience}
                     </span>
                 </td>
-                <td className="p-3">{student.language}</td>
+                <td className="p-3">{student.languagePreference}</td>
               </tr>
             ))
           ) : (
