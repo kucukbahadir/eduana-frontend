@@ -22,8 +22,8 @@ import StudentEvaluationTable from "@/pages/studentEvaluationPage.jsx";
 createRoot(document.getElementById("root")).render(
   <StrictMode>
     <BrowserRouter>
-      <Navbar />
-      <main className="p-4">
+      <main className="flex flex-col min-h-screen">
+        <Navbar />
         <Routes>
           <Route path="/" element={<App />} />
           <Route path="/login" element={<TabbedLogin />} />
@@ -36,8 +36,8 @@ createRoot(document.getElementById("root")).render(
           <Route path="/courses/:id/manage" element={<CourseDetail />} />
           <Route path="/notifications" element={<Notifications />} />
           <Route path="/classes/manage" element={<ClassManagement />} />
-          <Route path="/lesson-preperation" element={<LessonPreparation/>} />
-          <Route path="/evaluation" element={<StudentEvaluationTable/>} />
+          <Route path="/lesson-preperation" element={<LessonPreparation />} />
+          <Route path="/evaluation" element={<StudentEvaluationTable />} />
           <Route path="*" element={<NoPage />} />
         </Routes>
       </main>
