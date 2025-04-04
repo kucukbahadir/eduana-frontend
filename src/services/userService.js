@@ -1,13 +1,10 @@
 export default class UserService {
-    // Login function to authenticate users
     async login(userType, credentials) {
         try {
-            const response = await fetch(`http://localhost:8080/api/users/login/${userType}`, {
+            const response = await fetch(`http://localhost:3000/api/auth/login`, {
                 method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify(credentials),
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ userType, ...credentials }), // Include userType
             });
 
             if (!response.ok) {
@@ -16,20 +13,12 @@ export default class UserService {
             }
 
             const data = await response.json();
-
-            // Store the token in localStorage
             localStorage.setItem('token', data.token);
-
-            console.log("Login successful, token stored in localStorage:", data.token);
-
-            // Redirect user to their respective dashboard
             window.location.href = data.redirect;
-
-            return data; // Return response in case further handling is needed
+            return data;
         } catch (error) {
             throw new Error('Login failed: ' + error.message);
         }
     }
 
 }
-
