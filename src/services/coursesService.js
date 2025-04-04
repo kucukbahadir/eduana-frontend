@@ -1,8 +1,8 @@
 export default class CoursesService {
 
-  async getAllCourses(teacherId) {
+  static async getAllCourses() {
     try {
-      const response = await fetch(`http://localhost:8080/api/teachers/${teacherId}/classes`, {
+      const response = await fetch(`http://localhost:3000/api/teachers/courses`, {
         method: "GET", // Explicitly specify the GET method
         headers: {
           Authorization: `Bearer ${localStorage.getItem("token")}`,
@@ -24,3 +24,4 @@ export default class CoursesService {
     }
   }
 }
+
