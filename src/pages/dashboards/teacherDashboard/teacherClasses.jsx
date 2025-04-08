@@ -2,7 +2,8 @@ import { useEffect, useState } from "react";
 import Table from "@/components/uiDashboard/Table.jsx";
 import Card from "@/components/uiDashboard/Card.jsx";
 import { Button } from "@/components/ui/button";
-import TeacherDashboardService from "@/services/teacherDashboardService.js"; // Assuming correct import for service
+import TeacherDashboardService from "@/services/teacherDashboardService.js";
+import { useNavigate } from "react-router-dom"; // Assuming correct import for service
 
 export function TeacherClasses() {
   const [classes, setClasses] = useState([]); // Default to an empty array
@@ -35,6 +36,12 @@ export function TeacherClasses() {
     fetchClasses();
   }, []);
 
+  const navigate = useNavigate(); // Initialize useNavigate
+
+  // Function to handle the button click and navigate to the next lesson
+  const handleButtonClick = () => {
+    navigate("/classes/manage");  // Redirect to the "/classes/manage" page
+  };
   return (
     <div className="flex flex-col gap-4">
       <h1 className="text-primary">Your Classes</h1>
@@ -76,7 +83,7 @@ export function TeacherClasses() {
           )}
         </Card>
       </div>
-      <Button variant={"primary"} className={"w-fit"}>
+      <Button variant={"primary"} className={"w-fit"} onClick={handleButtonClick}  >
         View more →
       </Button>
     </div>

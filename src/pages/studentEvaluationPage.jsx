@@ -1,9 +1,11 @@
 import { Button } from "@/components/ui/button";
 import { useState, useEffect } from "react";
+import { useNavigate } from "react-router";
 
 const StudentEvaluation = () => {
   const STORAGE_KEY = "studentEvaluations";
   const columns = ["student", "attendance", "independence", "task completion", "creativity", "persistence", "adherence", "notes"];
+  const navigate = useNavigate(); // Initialize useNavigate
 
   // Load students from localStorage or default values
   const [students, setStudents] = useState(() => {
@@ -41,6 +43,7 @@ const StudentEvaluation = () => {
     localStorage.removeItem(STORAGE_KEY); // Clear data from localStorage
     setStudents([]); // Clear state
     console.log("Lesson ended. Data cleared.");
+    navigate("/teacher/dashboard");
   };
 
   return (

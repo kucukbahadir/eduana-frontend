@@ -1,112 +1,75 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import CoursesService from "@/services/coursesService.js";
+import Card from "@/components/uiDashboard/Card.jsx";
+import Table from "@/components/uiDashboard/Table.jsx";
+import { Button } from "@/components/ui/button.jsx";
 
 const ClassManagement = () => {
-  const [searchTerm, setSearchTerm] = useState("");
-  const [sortOrder, setSortOrder] = useState("asc"); // 'asc' for A-Z, 'desc' for Z-A
-  const [selectedLocation, setSelectedLocation] = useState(""); // Location filter state
-  const [classes] = useState([
-    { id: 1, name: "NLAMS02-20250106-RC-00300", location: "Amsterdam Oost", course: "Essential Robotics Skills", period: "1", level: "1" },
-    { id: 2, name: "NLAMS02-20250106-RC-00300", location: "Amsterdam Oost", course: "Essential Robotics Skills", period: "1", level: "2" },
-    { id: 3, name: "NLAMS02-20250106-RC-00300", location: "Den Haag", course: "Essential Robotics Skills", period: "1", level: "1" },
-    { id: 4, name: "NLAMS02-20250106-RC-00300", location: "Amstelveen", course: "Essential Robotics Skills", period: "1", level: "2" },
-    { id: 5, name: "NLAMS02-20250106-RC-00300", location: "Amsterdam Oost", course: "Essential Robotics Skills", period: "1", level: "2" },
-  ]);
+  const [courses, setCourses] = useState([]); // Default to an empty array
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
 
-  // Handle search and location filtering
-  const filteredClasses = classes.filter((clas) => {
-    const matchesSearchTerm = clas.name.toLowerCase().includes(searchTerm.toLowerCase());
-    const matchesLocation =
-      !selectedLocation || clas.location === selectedLocation;
-    return matchesSearchTerm && matchesLocation;
-  });
+  useEffect(() => {
+    const fetchCourses = async () => {
+      try {
+        const data = await CoursesService.getAllCourses();
 
-  // Sort the filtered classes based on sortOrder (A-Z or Z-A)
-  const sortedClasses = [...filteredClasses].sort((a, b) => {
-    if (sortOrder === "asc") {
-      return a.name.localeCompare(b.name); // Sort A-Z
-    } else {
-      return b.name.localeCompare(a.name); // Sort Z-A
-    }
-  });
+        // Ensure data contains the courses array and handle the structure
+        if (data && Array.isArray(data.courses)) {
+          setCourses(data.courses); // Set courses to the courses array from data
+        } else {
+          setCourses([]); // Set to empty array if no courses found
+        }
+      } catch (err) {
+        setError(err.message);
+        setCourses([]); // Set courses to empty array if there is an error
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchCourses();
+  }, []);
 
   return (
-    <div className="p-6 bg-muted min-h-screen">
-      <div className="max-w-5xl mx-auto bg-background p-6 rounded-lg shadow-md">
-        <h2 className="text-2xl font-bold text-center mb-4">Class Management</h2>
-
-        {/* Search Bar */}
-        <input
-          type="text"
-          placeholder="Search classes..."
-          value={searchTerm}
-          onChange={(e) => setSearchTerm(e.target.value)}
-          className="w-full p-2 mb-4 border border-border rounded-md"
-        />
-
-        {/* Location Filter Dropdown */}
-        <div className="mb-4">
-          <label htmlFor="locationFilter" className="mr-2">Location:</label>
-          <select
-            id="locationFilter"
-            value={selectedLocation}
-            onChange={(e) => setSelectedLocation(e.target.value)}
-            className="p-2 border border-border rounded-md"
-          >
-            <option value="">All Locations</option>
-            <option value="Amsterdam Oost">Amsterdam</option>
-            <option value="Den Haag">Den Haag</option>
-            <option value="Amstelveen">Amstelveen</option>
-          </select>
-        </div>
-
-        {/* Sorting Dropdown */}
-        <div className="mb-4">
-          <label htmlFor="sortOrder" className="mr-2">Sort By:</label>
-          <select
-            id="sortOrder"
-            value={sortOrder}
-            onChange={(e) => setSortOrder(e.target.value)}
-            className="p-2 border border-border rounded-md"
-          >
-            <option value="asc">A-Z</option>
-            <option value="desc">Z-A</option>
-          </select>
-        </div>
-
-        {/* Class Table */}
-        <table className="w-full border border-border rounded-lg overflow-hidden">
-          <thead className="bg-muted text-primary uppercase text-sm">
-          <tr>
-            <th className="p-3 text-left">NAME</th>
-            <th className="p-3 text-left">LOCATION</th>
-            <th className="p-3 text-left">COURSE</th>
-            <th className="p-3 text-left">PERIOD</th>
-            <th className="p-3 text-left">LEVEL</th>
-          </tr>
-          </thead>
-          <tbody>
-          {sortedClasses.length > 0 ? (
-            sortedClasses.map((clas) => (
-              <tr key={clas.id} className="border-b hover:bg-muted/50">
-                <td className="p-3">{clas.name}</td>
-                <td className="p-3">{clas.location}</td>
-                <td className="p-3">{clas.course}</td>
-                <td className="p-3">{clas.period}</td>
-                <td className="p-3">{clas.level}</td>
-              </tr>
-            ))
+    <div className="flex flex-col gap-4">
+      <h1 className="text-primary">Courses</h1>
+      <div>
+        <Card>
+          {loading ? (
+            <p>Loading courses...</p>
+          ) : error ? (
+            <p className="text-red-500">{error}</p>
           ) : (
-            <tr>
-              <td colSpan="6" className="text-center text-muted-foreground p-4">
-                No classes found.
-              </td>
-            </tr>
+            <Table
+              headers={["NAME", "LEVEL", "TYPE", "PERIOD", "# OF LESSONS"]}
+              data={courses.map((course) => ({
+                name: <span className="text-primary font-medium">{course.title}</span>,
+                level: <span className="text-primary-70">{course.curriculum?.level || "N/A"}</span>,
+                type: (
+                  <span
+                    className={`px-2 py-1 rounded-md text-sm font-semibold ${
+                      course.curriculum?.type === "Regular"
+                        ? "bg-green-100 text-green-700"
+                        : "bg-purple-100 text-purple-700"
+                    }`}
+                  >
+                    {course.curriculum?.type || "N/A"}
+                  </span>
+                ),
+                period: <span className="text-primary-70">{course.period || "N/A"}</span>,
+                lessons: <span className="text-primary-70">{course.curriculum?.lessons?.length || 0}</span>,
+              }))}
+              className="table-auto w-full text-primary"
+            />
           )}
-          </tbody>
-        </table>
+        </Card>
       </div>
+      <Button variant={"primary"} className={"w-fit"}>
+        View more →
+      </Button>
     </div>
   );
-};
+}
 
 export default ClassManagement;
