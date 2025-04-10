@@ -33,7 +33,7 @@ function Progress() {
           <Tabs defaultValue={students[0].name} className={"w-full"}>
             {students.length > 1 && (
               <div className="flex w-full items-center justify-between">
-                <TabsList className={`flex w-full lg:max-w-sm overflow-x-scroll`}>
+                <TabsList className={`w-full max-w-xl`}>
                   {students.map((student) => (
                     <TabsTrigger key={student.name} value={student.name}>
                       {student.name}
