@@ -76,14 +76,14 @@ function TabbedLogin() {
   };
 
   return (
-    <div className="flex flex-col lg:grid lg:grid-cols-3 gap-10 lg:gap-2.5 items-center grow lg:p-2.5">
+    <div className="flex flex-col lg:grid lg:grid-cols-3 gap-10 lg:gap-2.5 items-center grow lg:p-5">
       <img
         src={
           !showEducatorRoles
             ? "https://files.elfsightcdn.com/ce2bed6f-1ae6-4bd7-86a5-45cf9bbaa127/dcb76b7f-7ef8-4e87-a832-d79eb0907800/Coder-Camp-Dec-2023-023.jpg"
             : "https://files.elfsightcdn.com/ce2bed6f-1ae6-4bd7-86a5-45cf9bbaa127/063d5d7f-ee55-4ef6-a28a-79b5dc42ee27/_3EM9786.jpg"
         }
-        className="lg:col-span-2 h-50 lg:h-full w-full object-cover lg:rounded-xl overflow-hidden mask-b-from-1 lg:mask-b-from-100% transition-opacity duration-300"
+        className="lg:col-span-2 h-50 lg:h-full w-full object-cover lg:rounded-4xl overflow-hidden mask-b-from-1 lg:mask-b-from-100% transition-opacity duration-300"
       />
       <Tabs value={activeTab} className="mx-auto w-full max-w-lg px-5">
         <h1 className="mb-0 text-center">{headerText[activeTab] || "Welcome to EduAna"}</h1>
@@ -91,7 +91,7 @@ function TabbedLogin() {
 
         <hr className="my-5 mx-40" />
 
-        <TabsList className="w-full rounded-full h-11 mb-5">
+        <TabsList className="w-full rounded-full h-12 mb-5">
           {roles.map((role) => (
             <TabsTrigger value={role} key={role} onClick={() => setActiveTab(role)} className={"rounded-full"}>
               {role[0].toUpperCase() + role.slice(1)}
@@ -138,7 +138,7 @@ function TabbedLogin() {
                 </Label>
                 {alertMessage && <small className="w-full text-right text-destructive">{alertMessage}</small>}
               </div>
-              <Button type="submit" onClick={handleLogin}>
+              <Button type="submit" onClick={handleLogin} variant={"primary"} size={showEducatorRoles ? "default" : "playful"}>
                 Sign in as {role[0].toUpperCase() + role.slice(1)}
               </Button>
 
