@@ -15,13 +15,12 @@ import CourseOverview from "./pages/courseOverview";
 import CourseDetail from "./pages/courseDetail";
 import Notifications from "./pages/notifications.jsx";
 import NoPage from "./pages/noPage";
+import StudentManagement from "@/pages/student/manage/index.jsx";
 import Progress from "./pages/parent/progress/index";
 import CertificatesOverview from "./pages/parent/certificates";
-import StudentManagement from "@/pages/studentMagementPage.jsx";
 import ClassManagement from "@/pages/classePage.jsx";
 import LessonPreparation from "@/pages/lessonPrep.jsx";
 import StudentEvaluationTable from "@/pages/studentEvaluationPage.jsx";
-
 
 createRoot(document.getElementById("root")).render(
   <StrictMode>
