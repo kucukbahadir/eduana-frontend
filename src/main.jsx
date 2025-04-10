@@ -14,7 +14,7 @@ import TeacherDashboard from "./pages/dashboards/teacherDashboard";
 import CourseOverview from "./pages/courseOverview";
 import CourseDetail from "./pages/courseDetail";
 import Notifications from "./pages/notifications.jsx";
-import NoPage from "./pages/noPage";
+import NotFound from "./pages/notFound";
 import StudentManagement from "@/pages/student/manage/index.jsx";
 import Progress from "./pages/parent/progress/index";
 import CertificatesOverview from "./pages/parent/certificates";
@@ -44,7 +44,7 @@ createRoot(document.getElementById("root")).render(
           <Route path="/classes/manage" element={<ClassManagement />} />
           <Route path="/lesson-preperation" element={<LessonPreparation />} />
           <Route path="/evaluation" element={<StudentEvaluationTable />} />
-          <Route path="*" element={<NoPage />} />
+          <Route path="*" element={<NotFound />} />
         </Routes>
       </main>
     </BrowserRouter>
