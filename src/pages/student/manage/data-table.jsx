@@ -72,7 +72,7 @@ export function DataTable({ columns, data }) {
           </DropdownMenuContent>
         </DropdownMenu>
       </div>
-      <div className="border shadow-xs rounded-lg p-2.5">
+      <div className="border shadow-xs rounded-lg px-1.5 py-0.5">
         <Table>
           <TableHeader>
             {table.getHeaderGroups().map((headerGroup) => (
