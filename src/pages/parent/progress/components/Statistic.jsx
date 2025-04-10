@@ -1,9 +1,14 @@
 import React, { useState, useEffect } from "react";
 
-function Statistic({ value, lead }) {
+function Statistic({ value, lead, suffix }) {
   const [displayValue, setDisplayValue] = useState(0);
 
   useEffect(() => {
+    if (isNaN(value)) {
+      setDisplayValue(value);
+      return;
+    }
+
     const interval = setInterval(() => {
       setDisplayValue((current) => {
         if (current >= value) {
@@ -22,7 +27,7 @@ function Statistic({ value, lead }) {
 
   return (
     <div className="flex flex-col items-center justify-center bg-muted rounded-md p-4">
-      <strong className="text-2xl font-bold">{displayValue}</strong>
+      <strong className="text-2xl font-bold">{displayValue}{suffix}</strong>
       <span className="text-sm text-center font-light">{lead}</span>
     </div>
   );

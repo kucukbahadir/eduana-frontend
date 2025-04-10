@@ -1,125 +1,65 @@
-export const students = [
-  {
-    name: "Joerie",
-    progress: {
-      todo: 5,
-      inProgress: 10,
-      done: 18,
-      averageTaskCompletionRate: 80,
-      upcomingClass: new Date("2022-02-28"),
-    },
-    statistics: {
-      lessonTime: 4500,
-      totalLessons: 50,
-      completedCourses: 4,
-      soloProjects: 22,
-      groupProjects: 10,
-      totalClasses: 5,
-    },
-    skills: {
-      scratch: 80,
-      html5: 40,
-      javascript: 20,
-      python: 60,
-    },
-    courses: [
-      { name: "Navigating Computer Hardware - Level 1", status: "completed" },
-      { name: "Essential Fundamental Electronic Skills - Level 1", status: "completed" },
-      { name: "Essential Robotics Skills - Level 1", status: "signed up" },
-      { name: "Essential Coding Skills - Level 1", status: "ongoing" },
-    ],
+import { faker } from '@faker-js/faker';
+
+// Function to generate certificate data (null for ongoing/not started courses)
+const generateCertificate = (status) => {
+  if (status !== 'completed') return null;
+  
+  return {
+    date: faker.date.past(),
+    grade: faker.number.int({ min: 70, max: 100 }),
+    teacher: `${faker.person.prefix()} ${faker.person.lastName()}`
+  };
+};
+
+// Function to generate a course
+const generateCourse = () => {
+  const courseNames = [
+    "Navigating Computer Hardware",
+    "Essential Fundamental Electronic Skills",
+    "Essential Robotics Skills",
+    "Essential Coding Skills",
+    "Advanced Coding Skills",
+    "Web Development Fundamentals",
+    "Introduction to JavaScript",
+    "Introduction to Programming Logic",
+    "Python Basics"
+  ];
+  
+  const status = faker.helpers.arrayElement(['completed', 'ongoing', 'not started']);
+  const level = faker.number.int({ min: 1, max: 3 });
+  
+  return {
+    name: `${faker.helpers.arrayElement(courseNames)} - Level ${level}`,
+    description: faker.lorem.paragraphs(),
+    status,
+    certificate: generateCertificate(status)
+  };
+};
+
+// Generate random student data
+export const students = Array.from({ length: 4 }, (_, index) => ({
+  id: index + 1,
+  name: faker.person.firstName(),
+  progress: {
+    todo: faker.number.int({ min: 2, max: 10 }),
+    inProgress: faker.number.int({ min: 3, max: 15 }),
+    done: faker.number.int({ min: 10, max: 25 }),
+    averageTaskCompletionRate: faker.number.int({ min: 60, max: 95 }),
+    upcomingClass: faker.date.soon(),
   },
-  {
-    name: "Emma",
-    progress: {
-      todo: 3,
-      inProgress: 7,
-      done: 22,
-      averageTaskCompletionRate: 88,
-      upcomingClass: new Date("2022-03-05"),
-    },
-    statistics: {
-      lessonTime: 5200,
-      totalLessons: 62,
-      completedCourses: 5,
-      soloProjects: 18,
-      groupProjects: 14,
-      totalClasses: 8,
-    },
-    skills: {
-      scratch: 95,
-      html5: 70,
-      javascript: 45,
-      python: 30,
-    },
-    courses: [
-      { name: "Navigating Computer Hardware - Level 1", status: "completed" },
-      { name: "Essential Fundamental Electronic Skills - Level 1", status: "completed" },
-      { name: "Advanced Programming Concepts - Level 2", status: "ongoing" },
-      { name: "Web Development Fundamentals - Level 1", status: "ongoing" },
-      { name: "Data Science for Beginners", status: "signed up" },
-    ],
+  statistics: {
+    lessonTime: faker.number.int({ min: 3000, max: 6000 }),
+    totalLessons: faker.number.int({ min: 30, max: 60 }),
+    completedCourses: faker.number.int({ min: 2, max: 6 }),
+    soloProjects: faker.number.int({ min: 10, max: 25 }),
+    groupProjects: faker.number.int({ min: 5, max: 15 }),
+    totalClasses: faker.number.int({ min: 3, max: 8 }),
   },
-  {
-    name: "Lucas",
-    progress: {
-      todo: 8,
-      inProgress: 12,
-      done: 10,
-      averageTaskCompletionRate: 65,
-      upcomingClass: new Date("2022-03-02"),
-    },
-    statistics: {
-      lessonTime: 3800,
-      totalLessons: 42,
-      completedCourses: 2,
-      soloProjects: 14,
-      groupProjects: 8,
-      totalClasses: 6,
-    },
-    skills: {
-      scratch: 75,
-      html5: 25,
-      javascript: 15,
-      python: 50,
-    },
-    courses: [
-      { name: "Navigating Computer Hardware - Level 1", status: "completed" },
-      { name: "Essential Coding Skills - Level 1", status: "completed" },
-      { name: "Essential Robotics Skills - Level 1", status: "ongoing" },
-      { name: "Game Development Basics", status: "signed up" },
-    ],
+  skills: {
+    scratch: faker.number.int({ min: 40, max: 100 }),
+    html5: faker.number.int({ min: 20, max: 80 }),
+    javascript: faker.number.int({ min: 10, max: 70 }),
+    python: faker.number.int({ min: 30, max: 90 }),
   },
-  {
-    name: "Sofia",
-    progress: {
-      todo: 4,
-      inProgress: 15,
-      done: 26,
-      averageTaskCompletionRate: 92,
-      upcomingClass: new Date("2022-02-26"),
-    },
-    statistics: {
-      lessonTime: 6100,
-      totalLessons: 70,
-      completedCourses: 6,
-      soloProjects: 25,
-      groupProjects: 16,
-      totalClasses: 10,
-    },
-    skills: {
-      scratch: 90,
-      html5: 85,
-      javascript: 60,
-      python: 70,
-    },
-    courses: [
-      { name: "Navigating Computer Hardware - Level 1", status: "completed" },
-      { name: "Essential Fundamental Electronic Skills - Level 1", status: "completed" },
-      { name: "Essential Coding Skills - Level 1", status: "completed" },
-      { name: "Advanced Programming Concepts - Level 2", status: "completed" },
-      { name: "AI Principles for Young Coders", status: "ongoing" },
-      { name: "Mobile App Development", status: "signed up" },
-    ],
-  },
-];
+  courses: Array.from({ length: faker.number.int({ min: 3, max: 5 }) }, () => generateCourse()),
+}));
