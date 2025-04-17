@@ -27,6 +27,7 @@ const buttonVariants = cva(
         sm: "h-10 rounded-md px-3 has-[>svg]:px-2.5",
         lg: "h-13 rounded-md px-6 has-[>svg]:px-4",
         icon: "size-12 shrink-0",
+        iconCompact: "h-fit w-fit px-1",
         playful: "h-12 px-4 has-[>svg]:px-4 border-2 border-b-4 border-primary-button-background",
       },
     },

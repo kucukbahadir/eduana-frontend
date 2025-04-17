@@ -18,9 +18,10 @@ import NotFound from "./pages/notFound";
 import StudentManagement from "@/pages/student/manage/index.jsx";
 import Progress from "./pages/parent/progress/index";
 import CertificatesOverview from "./pages/parent/certificates";
-import ClassManagement from "@/pages/classePage.jsx";
 import LessonPreparation from "@/pages/lessonPrep.jsx";
 import StudentEvaluationTable from "@/pages/studentEvaluationPage.jsx";
+import Classes from "@/pages/class";
+import Class from "@/pages/class/[id]";
 
 createRoot(document.getElementById("root")).render(
   <StrictMode>
@@ -41,8 +42,9 @@ createRoot(document.getElementById("root")).render(
           <Route path="/courses/:id/manage" element={<CourseDetail />} />
           <Route path="/notifications" element={<Notifications />} />
           <Route path="/students/manage" element={<StudentManagement />} />
-          <Route path="/classes/manage" element={<ClassManagement />} />
-          <Route path="/lesson-preperation" element={<LessonPreparation />} />
+          <Route path="/classes" element={<Classes />} />
+          <Route path="/classes/:id" element={<Class />} />
+          <Route path="/lesson-preparation" element={<LessonPreparation />} />
           <Route path="/evaluation" element={<StudentEvaluationTable />} />
           <Route path="*" element={<NotFound />} />
         </Routes>

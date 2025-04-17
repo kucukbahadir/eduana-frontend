@@ -1,4 +1,4 @@
-import { faker } from '@faker-js/faker';
+import { fakerNL as faker } from '@faker-js/faker';
 
 // Function to generate certificate data (null for ongoing/not started courses)
 const generateCertificate = (status) => {
@@ -37,9 +37,14 @@ const generateCourse = () => {
 };
 
 // Generate random student data
-export const students = Array.from({ length: 4 }, (_, index) => ({
+export const students = Array.from({ length: 10 }, (_, index) => ({
   id: index + 1,
-  name: faker.person.firstName(),
+  name: faker.person.fullName(),
+  language: faker.helpers.arrayElement(['English', 'Dutch', 'Both']),
+  dietaryRestrictions: faker.helpers.arrayElement(['None', 'Vegetarian', 'Vegan']),
+  allergies: faker.helpers.arrayElement(['None', 'Peanuts', 'Gluten', 'Dairy']),
+  previousExperience: faker.helpers.arrayElement(['None', 'Basic', 'Intermediate', 'Advanced']),
+  parentPhone: faker.phone.number({ style: "international" }),
   progress: {
     todo: faker.number.int({ min: 2, max: 10 }),
     inProgress: faker.number.int({ min: 3, max: 15 }),
