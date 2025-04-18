@@ -8,8 +8,9 @@ import { useState, useEffect } from "react";
  * Component for displaying active or next lesson information
  * @param {Object} props
  * @param {Array} props.allLessons - All scheduled lessons for this class
+ * @param {boolean} props.isCamp - Whether the class is a Coder Camp
  */
-const LessonStatus = ({ allLessons }) => {
+const LessonStatus = ({ allLessons, isCamp = false }) => {
   // Internal state to track current active and next lessons
   const [activeLesson, setActiveLesson] = useState(null);
   const [nextLesson, setNextLesson] = useState(null);
@@ -50,17 +51,17 @@ const LessonStatus = ({ allLessons }) => {
   
   return (
     <Card className={"p-4 gap-2 text-nowrap h-fit justify-between"}>
-      <div className="flex flex-col p-4 gap-2 justify-center text-center">
+      <div className="flex flex-col pt-2 pb-4 gap-2 justify-center text-center">
         {activeLesson ? (
-          <ActiveLessonContent lesson={activeLesson} />
+          <ActiveLessonContent lesson={activeLesson} isCamp={isCamp} />
         ) : nextLesson ? (
-          <NextLessonContent lesson={nextLesson} />
+          <NextLessonContent lesson={nextLesson} isCamp={isCamp} />
         ) : (
-          <span className="text-muted-foreground">No upcoming lessons</span>
+          <span className="text-muted-foreground">No upcoming {isCamp ? "activities" : "lessons"}</span>
         )}
       </div>
       <Link to={"#"} className={buttonVariants({ variant: activeLesson ? "default" : "secondary" })}>
-        <ChevronRight /> {activeLesson ? "Join Active Lesson" : "Go To Lesson"}
+        <ChevronRight /> {activeLesson ? `Join Active ${isCamp ? "Activity" : "Lesson"}` : `Go To ${isCamp ? "Activity" : "Lesson"}`}
       </Link>
     </Card>
   );
@@ -69,7 +70,7 @@ const LessonStatus = ({ allLessons }) => {
 /**
  * Component for displaying active lesson details with accurate countdown
  */
-const ActiveLessonContent = ({ lesson }) => {
+const ActiveLessonContent = ({ lesson, isCamp = false }) => {
   const [remainingTime, setRemainingTime] = useState({ hours: 0, minutes: 0, seconds: 0 });
   
   useEffect(() => {
@@ -112,7 +113,7 @@ const ActiveLessonContent = ({ lesson }) => {
         {new Date(lesson.startDate).toLocaleString("en-US", { dateStyle: "full", timeStyle: "short" })}
       </span>
       <span className="text-warning text-sm">
-        Lesson ends in {remainingTime.hours > 0 ? `${remainingTime.hours}h ` : ""}
+        {isCamp ? "Activity" : "Lesson"} ends in {remainingTime.hours > 0 ? `${remainingTime.hours}h ` : ""}
         {remainingTime.minutes}m {remainingTime.seconds}s
       </span>
     </>
@@ -122,7 +123,7 @@ const ActiveLessonContent = ({ lesson }) => {
 /**
  * Component for displaying next lesson details with accurate countdown
  */
-const NextLessonContent = ({ lesson }) => {
+const NextLessonContent = ({ lesson, isCamp = false }) => {
   const [timeDisplay, setTimeDisplay] = useState("");
   
   useEffect(() => {
@@ -147,13 +148,27 @@ const NextLessonContent = ({ lesson }) => {
       const minutes = Math.floor((totalSeconds % 3600) / 60);
       const seconds = totalSeconds % 60;
       
-      let newTimeDisplay;
+      // Create a more detailed time display that shows more precision
+      let newTimeDisplay = "";
+      
       if (days > 0) {
         newTimeDisplay = `${days} ${days === 1 ? "day" : "days"}`;
+        // Add hours if there are any
+        if (hours > 0) {
+          newTimeDisplay += ` ${hours} ${hours === 1 ? "hour" : "hours"}`;
+        }
       } else if (hours > 0) {
         newTimeDisplay = `${hours} ${hours === 1 ? "hour" : "hours"}`;
+        // Add minutes if there are any
+        if (minutes > 0) {
+          newTimeDisplay += ` ${minutes} ${minutes === 1 ? "minute" : "minutes"}`;
+        }
       } else if (minutes > 0) {
         newTimeDisplay = `${minutes} ${minutes === 1 ? "minute" : "minutes"}`;
+        // Add seconds if less than 5 minutes remaining
+        if (minutes < 5 && seconds > 0) {
+          newTimeDisplay += ` ${seconds} ${seconds === 1 ? "second" : "seconds"}`;
+        }
       } else {
         newTimeDisplay = `${seconds} ${seconds === 1 ? "second" : "seconds"}`;
       }
@@ -164,13 +179,13 @@ const NextLessonContent = ({ lesson }) => {
 
   return (
     <>
-      <span className="text-muted-foreground">Next Lesson</span>
+      <span className="text-muted-foreground">Next {isCamp ? "Activity" : "Lesson"}</span>
       <h2 className="font-extrabold">{lesson.name}</h2>
       <span className="text-muted-foreground">
         {new Date(lesson.startDate).toLocaleString("en-US", { dateStyle: "full", timeStyle: "short" })}
       </span>
       <span className="text-muted-foreground text-sm">
-        Lesson will start in {timeDisplay}
+        {isCamp ? "Activity" : "Lesson"} will start in {timeDisplay}
       </span>
     </>
   );

@@ -89,12 +89,16 @@ const Class = () => {
       </div>
       <hr />
       <div className="flex flex-col grow gap-4">
-        {/* Pass all scheduled items to LessonStatus so it can determine active/next in real-time */}
-        <LessonStatus allLessons={scheduleItems} />
-        {/* Use our StudentTable component */}
-        <StudentTable students={classData.students} />
+        <div className="flex gap-4">
+          <div className="flex flex-col grow gap-4">
+            {/* Pass all scheduled items to LessonStatus so it can determine active/next in real-time */}
+            <LessonStatus allLessons={scheduleItems} isCamp={isCamp} />
+            
+            <StudentTable students={classData.students} />
 
-        {isCamp ? <ActivityList activities={scheduleItems} /> : <LessonsList lessons={scheduleItems} />}
+            {isCamp ? <ActivityList activities={scheduleItems} /> : <LessonsList lessons={scheduleItems} />}
+          </div>
+        </div>
       </div>
     </div>
   );

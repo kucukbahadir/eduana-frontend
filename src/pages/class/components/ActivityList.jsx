@@ -1,7 +1,7 @@
 import { Link } from "react-router";
 import { Card } from "@/components/ui/card";
 import { buttonVariants } from "@/components/ui/button";
-import { Circle, Clock, Calendar } from "lucide-react";
+import { Circle, Clock, Calendar, CircleDashed } from "lucide-react";
 import { useState, useEffect } from "react";
 
 /**
@@ -16,7 +16,7 @@ const ActivityList = ({ activities }) => {
 
   return (
     <Card className={"h-fit p-4 gap-0 grow"}>
-      <h3 className="mb-2">Camp Activities</h3>
+      <h3 className="mb-2">Activities</h3>
       {activities.length < 1 ? (
         <span className="text-muted-foreground">No activities available</span>
       ) : (
@@ -137,7 +137,7 @@ const ActivityItem = ({ activity, index }) => {
   return (
     <Link to={"#"} className={buttonVariants({ variant: "outline" }) + " text-start justify-start mb-1 w-full"}>
       <div className="flex items-center gap-2 w-full">
-        <Circle className={getStatusColor()} size={8} />
+        <CircleDashed className={getStatusColor()} size={8} />
         <span className="flex-1">{activity.name}</span>
         <span className="text-xs text-muted-foreground flex items-center gap-2 ml-2">
           <Clock size={12} />
