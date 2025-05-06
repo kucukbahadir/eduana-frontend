@@ -20,22 +20,24 @@ const ActivityList = ({ activities }) => {
       {activities.length < 1 ? (
         <span className="text-muted-foreground">No activities available</span>
       ) : (
-        <div className="grid grid-cols-2 gap-2">
-          {Object.entries(activitiesByDay).map(([day, dayActivities]) => (
-          <div key={day} className="flex flex-col gap-1">
-            {hasMultipleDays && (
-              <div className="flex items-center gap-2 mb-2 mt-4 border-b pb-2">
-                <Calendar size={16} className="text-primary" />
-                <span className="font-medium">{formatDate(day)}</span>
-              </div>
-            )}
+        <>
+          <div className="grid grid-cols-2 gap-2">
+            {Object.entries(activitiesByDay).map(([day, dayActivities]) => (
+              <div key={day} className="flex flex-col gap-1">
+                {hasMultipleDays && (
+                  <div className="flex items-center gap-2 mb-2 mt-4 border-b pb-2">
+                    <Calendar size={16} className="text-primary" />
+                    <span className="font-medium">{formatDate(day)}</span>
+                  </div>
+                )}
 
-            {dayActivities.map((activity, index) => (
-              <ActivityItem key={activity.id || index} activity={activity} index={index} />
+                {dayActivities.map((activity, index) => (
+                  <ActivityItem key={activity.id || index} activity={activity} index={index} />
+                ))}
+              </div>
             ))}
           </div>
-          ))}
-        </div>
+        </>
       )}
     </Card>
   );

@@ -3,6 +3,7 @@ import { Card } from "@/components/ui/card";
 import { buttonVariants } from "@/components/ui/button";
 import { Check, CircleDashed, CircleDotDashed } from "lucide-react";
 import { useState, useEffect } from "react";
+import { useParams } from "react-router";
 
 /**
  * Component for displaying a list of lessons with their status
@@ -47,6 +48,7 @@ const LessonsList = ({ lessons }) => {
  * Individual lesson item component
  */
 const LessonItem = ({ lesson, index }) => {
+  const { id: classId } = useParams();
   const [status, setStatus] = useState("upcoming");
   
   // Update the status whenever the component renders or timer triggers
@@ -91,7 +93,7 @@ const LessonItem = ({ lesson, index }) => {
   };
 
   return (
-    <Link to={"#"} className={buttonVariants({ variant: "outline" }) + " text-start justify-start"}>
+    <Link to={`/classes/${classId}/lessons/${lesson.id}`} className={buttonVariants({ variant: "outline" }) + " text-start justify-start"}>
       {getStatusIcon()}
       {index + 1 < 10 ? `0${index + 1}` : index + 1} - {lesson.name}
     </Link>

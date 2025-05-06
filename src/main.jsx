@@ -22,6 +22,7 @@ import LessonPreparation from "@/pages/lessonPrep.jsx";
 import StudentEvaluationTable from "@/pages/studentEvaluationPage.jsx";
 import Classes from "@/pages/class";
 import Class from "@/pages/class/[id]";
+import LessonView from "@/pages/lesson/LessonView";
 
 createRoot(document.getElementById("root")).render(
   <StrictMode>
@@ -44,6 +45,7 @@ createRoot(document.getElementById("root")).render(
           <Route path="/students/manage" element={<StudentManagement />} />
           <Route path="/classes" element={<Classes />} />
           <Route path="/classes/:id" element={<Class />} />
+          <Route path="/classes/:classId/lessons/:lessonId" element={<LessonView />} />
           <Route path="/lesson-preparation" element={<LessonPreparation />} />
           <Route path="/evaluation" element={<StudentEvaluationTable />} />
           <Route path="*" element={<NotFound />} />
