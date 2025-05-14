@@ -19,7 +19,7 @@ export default class UserService {
             window.location.href = data.redirect;
             return data;
         } catch (error) {
-            throw new Error('Login failed: ' + error.message);
+            throw new Error(error.message);
         }
     }
 

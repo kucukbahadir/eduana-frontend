@@ -20,13 +20,15 @@ const buttonVariants = cva(
         secondary:
           "bg-secondary text-secondary-foreground shadow-xs hover:bg-secondary/80",
         ghost: "hover:bg-accent hover:text-accent-foreground",
-        link: "text-primary underline-offset-4 hover:underline",
+        link: "text-primary underline-offset-4 hover:underline hover:underline hover:decoration-primary-button",
       },
       size: {
-        default: "h-11 px-4 has-[>svg]:px-4",
+        default: "h-12 px-4 has-[>svg]:px-4",
         sm: "h-10 rounded-md px-3 has-[>svg]:px-2.5",
-        lg: "h-12 rounded-md px-6 has-[>svg]:px-4",
-        icon: "size-11 shrink-0",
+        lg: "h-13 rounded-md px-6 has-[>svg]:px-4",
+        icon: "size-12 shrink-0",
+        iconCompact: "h-fit w-fit px-1",
+        playful: "h-12 px-4 has-[>svg]:px-4 border-2 border-b-4 border-primary-button-background",
       },
     },
     defaultVariants: {

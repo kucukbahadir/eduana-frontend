@@ -14,23 +14,27 @@ import TeacherDashboard from "./pages/dashboards/teacherDashboard";
 import CourseOverview from "./pages/courseOverview";
 import CourseDetail from "./pages/courseDetail";
 import Notifications from "./pages/notifications.jsx";
-import NoPage from "./pages/noPage";
-import StudentManagement from "@/pages/studentMagementPage.jsx";
-import ClassManagement from "@/pages/classePage.jsx";
+import NotFound from "./pages/notFound";
+import StudentManagement from "@/pages/student/manage/index.jsx";
+import Progress from "./pages/parent/progress/index";
+import CertificatesOverview from "./pages/parent/certificates";
 import LessonPreparation from "@/pages/lessonPrep.jsx";
 import StudentEvaluationTable from "@/pages/studentEvaluationPage.jsx";
-
+import Classes from "@/pages/class";
+import Class from "@/pages/class/[id]";
 
 createRoot(document.getElementById("root")).render(
   <StrictMode>
     <BrowserRouter>
-      <Navbar />
-      <main className="p-4">
+      <main className="flex flex-col min-h-screen">
+        <Navbar />
         <Routes>
           <Route path="/" element={<App />} />
           <Route path="/login" element={<TabbedLogin />} />
           <Route path="/dashboard/student" element={<StudentDashboard />} />
           <Route path="/dashboard/parent" element={<ParentDashboard />} />
+          <Route path="/progress" element={<Progress />} />
+          <Route path="/certificates" element={<CertificatesOverview />} />
           <Route path="/dashboard/admin" element={<AdminDashboard />} />
           <Route path="/dashboard/coordinator" element={<CoordinatorDashboard />} />
           <Route path="/dashboard/teacher" element={<TeacherDashboard />} />
@@ -38,10 +42,11 @@ createRoot(document.getElementById("root")).render(
           <Route path="/courses/:id/manage" element={<CourseDetail />} />
           <Route path="/notifications" element={<Notifications />} />
           <Route path="/students/manage" element={<StudentManagement />} />
-          <Route path="/classes/manage" element={<ClassManagement />} />
+          <Route path="/classes" element={<Classes />} />
+          <Route path="/classes/:id" element={<Class />} />
           <Route path="/lesson-preparation" element={<LessonPreparation />} />
-          <Route path="/evaluation" element={<StudentEvaluationTable/>} />
-          <Route path="*" element={<NoPage />} />
+          <Route path="/evaluation" element={<StudentEvaluationTable />} />
+          <Route path="*" element={<NotFound />} />
         </Routes>
       </main>
     </BrowserRouter>
