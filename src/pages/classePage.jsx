@@ -1,11 +1,10 @@
 import { useEffect, useState } from "react";
-import Table from "@/components/uiDashboard/Table.jsx";
-import Card from "@/components/uiDashboard/Card.jsx";
-import { Button } from "@/components/ui/button";
 import CoursesService from "@/services/coursesService.js";
-import { useNavigate } from "react-router";
+import Card from "@/components/uiDashboard/Card.jsx";
+import Table from "@/components/uiDashboard/Table.jsx";
+import { Button } from "@/components/ui/button.jsx";
 
-export function TeacherCourses() {
+const ClassManagement = () => {
   const [courses, setCourses] = useState([]); // Default to an empty array
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -32,12 +31,6 @@ export function TeacherCourses() {
     fetchCourses();
   }, []);
 
-  const navigate = useNavigate(); // Initialize useNavigate
-
-  // Function to handle the button click and navigate to the next lesson
-  const handleButtonClick = () => {
-    navigate("/courses");  // Redirect to the "/courses" page
-  };
   return (
     <div className="flex flex-col gap-4">
       <h1 className="text-primary">Courses</h1>
@@ -72,9 +65,11 @@ export function TeacherCourses() {
           )}
         </Card>
       </div>
-      <Button variant={"primary"} className={"w-fit"} onClick={handleButtonClick}>
+      <Button variant={"primary"} className={"w-fit"}>
         View more →
       </Button>
     </div>
   );
 }
+
+export default ClassManagement;
