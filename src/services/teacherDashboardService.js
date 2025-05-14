@@ -1,23 +1,21 @@
-export default class TeacherDashboardService {
+const backendUrl = import.meta.env.VITE_BACKEND_URL || "http://localhost:3000/";
 
+export default class TeacherDashboardService {
   static async getAllClasses() {
-    try{
-      const response = await fetch(`http://localhost:3000/api/teachers/classes`, {
-        method: "GET", // Explicitly specify the GET method
+    try {
+      const response = await fetch(`${backendUrl}api/teachers/classes`, {
+        method: "GET",
         headers: {
           Authorization: `Bearer ${localStorage.getItem("token")}`,
           "Content-Type": "application/json",
-        }
+        },
       });
 
-      // Check if the response is successful
       if (!response.ok) {
         throw new Error(`Error ${response.status}: ${response.statusText}`);
       }
 
-      const data = await response.json();
-
-      return data;
+      return await response.json();
     } catch (error) {
       console.error("Error fetching courses for teacher:", error.message);
       throw new Error("Failed to fetch courses. Please try again later.");
@@ -26,18 +24,19 @@ export default class TeacherDashboardService {
 
   static async getAllStudents() {
     try {
-      const response = await fetch(`http://localhost:3000/api/teachers/students`, {
+      const response = await fetch(`${backendUrl}api/teachers/students`, {
         method: "GET",
         headers: {
           Authorization: `Bearer ${localStorage.getItem("token")}`,
           "Content-Type": "application/json",
-        }
+        },
       });
+
       if (!response.ok) {
         throw new Error(`Error ${response.status}: ${response.statusText}`);
       }
-      const data = await response.json();
-      return data;
+
+      return await response.json();
     } catch (error) {
       console.error("Error fetching students for teacher:", error.message);
       throw new Error("Failed to fetch students. Please try again later.");
@@ -46,21 +45,22 @@ export default class TeacherDashboardService {
 
   static async getLessonInfo(id) {
     try {
-      const response = await fetch(`http://localhost:3000/api/teachers/course/${id}/info`, {
+      const response = await fetch(`${backendUrl}api/teachers/course/${id}/info`, {
         method: "GET",
         headers: {
           Authorization: `Bearer ${localStorage.getItem("token")}`,
           "Content-Type": "application/json",
-        }
+        },
       });
+
       if (!response.ok) {
         throw new Error(`Error ${response.status}: ${response.statusText}`);
       }
-      const data = await response.json();
-      return data;
+
+      return await response.json();
     } catch (error) {
-      console.error("Error fetching courses for teacher:", error.message);
-      throw new Error("Failed to fetch courses. Please try again later.");
+      console.error("Error fetching lesson info:", error.message);
+      throw new Error("Failed to fetch lesson info. Please try again later.");
     }
   }
 }

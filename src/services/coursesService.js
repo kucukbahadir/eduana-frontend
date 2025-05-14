@@ -1,8 +1,10 @@
+const backendUrl = import.meta.env.VITE_BACKEND_URL || "http://localhost:3000/";
+
 export default class CoursesService {
 
   static async getAllCourses() {
     try {
-      const response = await fetch(`http://localhost:3000/api/teachers/courses`, {
+      const response = await fetch(`${backendUrl}api/teachers/courses`, {
         method: "GET", // Explicitly specify the GET method
         headers: {
           Authorization: `Bearer ${localStorage.getItem("token")}`,
