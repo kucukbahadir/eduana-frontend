@@ -23,6 +23,7 @@ import StudentEvaluationTable from "@/pages/studentEvaluationPage.jsx";
 import Classes from "@/pages/class";
 import Class from "@/pages/class/[id]";
 import LessonView from "@/pages/lesson/LessonView";
+import { Toaster } from "./components/ui/sonner";
 
 createRoot(document.getElementById("root")).render(
   <StrictMode>
@@ -51,6 +52,7 @@ createRoot(document.getElementById("root")).render(
           <Route path="*" element={<NotFound />} />
         </Routes>
       </main>
+      <Toaster />
     </BrowserRouter>
   </StrictMode>
 );

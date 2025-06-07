@@ -1,9 +1,9 @@
 import { useState, useEffect, useMemo } from "react";
-import { classesData, curriculumData, scheduleData, campScheduleData, isCoderCamp } from "./data";
-import ClassFilter from "./components/ClassFilter";
+import { classesData, curriculumData, scheduleData } from "./data";
 import ClassCard from "./components/ClassCard";
-import { FilterX, Clock, CalendarDays, CalendarRange, Calendar, ClockAlert, ClockFading, Hourglass, BellElectric } from "lucide-react";
+import { FilterX, Clock, CalendarDays, Calendar, ClockFading, Hourglass, BellElectric, SearchIcon } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
 
 const STORAGE_KEY = "classManagement";
 
@@ -15,82 +15,45 @@ const Classes = () => {
     const savedClasses = localStorage.getItem(STORAGE_KEY);
     return savedClasses ? JSON.parse(savedClasses) : classesData;
   });
-  const [filterType, setFilterType] = useState("");
   const [searchQuery, setSearchQuery] = useState("");
 
   // Check if any filters are active
-  const hasActiveFilters = filterType || searchQuery;
-
-  // Function to clear all filters
-  const clearAllFilters = () => {
-    setFilterType("");
-    setSearchQuery("");
-  };
+  const hasActiveFilters = searchQuery ? true : false;
 
   useEffect(() => {
     localStorage.setItem(STORAGE_KEY, JSON.stringify(classes));
   }, [classes]);
-
-  // Get the next upcoming lesson or activity for a specific class
+  // Get the next upcoming lesson for a specific class
   const getNextUpcomingEvent = (classData) => {
     const now = new Date();
 
-    if (isCoderCamp(classData)) {
-      // For camps, check upcoming activities
-      const campActivities = campScheduleData
-        .filter((schedule) => schedule.classId === classData.id)
-        .map((schedule) => ({
-          startTime: new Date(schedule.startTime),
-          id: schedule.id,
-        }))
-        .filter((schedule) => schedule.startTime > now)
-        .sort((a, b) => a.startTime - b.startTime);
+    // For regular courses, check upcoming lessons
+    const lessonsSchedule = scheduleData
+      .filter((schedule) => schedule.classId === classData.id)
+      .map((schedule) => ({
+        startDateTime: new Date(schedule.startDateTime),
+        id: schedule.id,
+      }))
+      .filter((schedule) => schedule.startDateTime > now)
+      .sort((a, b) => a.startDateTime - b.startDateTime);
 
-      return campActivities[0] || null;
-    } else {
-      // For regular courses, check upcoming lessons
-      const lessonsSchedule = scheduleData
-        .filter((schedule) => schedule.classId === classData.id)
-        .map((schedule) => ({
-          startDate: new Date(schedule.startDate),
-          id: schedule.id,
-        }))
-        .filter((schedule) => schedule.startDate > now)
-        .sort((a, b) => a.startDate - b.startDate);
-
-      return lessonsSchedule[0] || null;
-    }
+    return lessonsSchedule[0] || null;
   };
-
-  // Get the currently ongoing lesson or activity for a specific class
+  // Get the currently ongoing lesson for a specific class
   const getCurrentOngoingEvent = (classData) => {
     const now = new Date();
 
-    if (isCoderCamp(classData)) {
-      // For camps, check ongoing activities
-      const campActivities = campScheduleData
-        .filter((schedule) => schedule.classId === classData.id)
-        .map((schedule) => ({
-          startTime: new Date(schedule.startTime),
-          endTime: new Date(schedule.endTime),
-          id: schedule.id,
-        }))
-        .filter((schedule) => schedule.startTime <= now && schedule.endTime >= now);
+    // For regular courses, check ongoing lessons
+    const lessonsSchedule = scheduleData
+      .filter((schedule) => schedule.classId === classData.id)
+      .map((schedule) => ({
+        startDateTime: new Date(schedule.startDateTime),
+        endDateTime: new Date(schedule.endDateTime),
+        id: schedule.id,
+      }))
+      .filter((schedule) => schedule.startDateTime <= now && schedule.endDateTime >= now);
 
-      return campActivities[0] || null;
-    } else {
-      // For regular courses, check ongoing lessons
-      const lessonsSchedule = scheduleData
-        .filter((schedule) => schedule.classId === classData.id)
-        .map((schedule) => ({
-          startDate: new Date(schedule.startDate),
-          endDate: new Date(schedule.endDate),
-          id: schedule.id,
-        }))
-        .filter((schedule) => schedule.startDate <= now && schedule.endDate >= now);
-
-      return lessonsSchedule[0] || null;
-    }
+    return lessonsSchedule[0] || null;
   };
 
   // Group classes by time categories
@@ -124,22 +87,6 @@ const Classes = () => {
       );
     }
 
-    // Apply type filter if selected
-    if (filterType) {
-      switch (filterType) {
-        case "regular":
-          // Only show regular courses (non-camp)
-          result = result.filter((classData) => classData.type === "regular");
-          break;
-        case "camp":
-          // Only show camp courses
-          result = result.filter((classData) => classData.type === "camp");
-          break;
-        default:
-          break;
-      }
-    }
-
     // Categorize classes by their next event time
     const ongoing = []; // New category for ongoing lessons
     const today = [];
@@ -147,9 +94,8 @@ const Classes = () => {
     const thisWeek = [];
     const beyond = [];
     const noUpcoming = [];
-
     result.forEach((classItem) => {
-      // Check if there's a currently ongoing lesson or activity
+      // Check if there's a currently ongoing lesson
       const currentEvent = getCurrentOngoingEvent(classItem);
       if (currentEvent) {
         ongoing.push(classItem);
@@ -163,8 +109,8 @@ const Classes = () => {
         return;
       }
 
-      // Use the appropriate date property based on event type
-      const eventDateObj = nextEvent.startTime || nextEvent.startDate;
+      // Use startDateTime for lesson events
+      const eventDateObj = nextEvent.startDateTime;
       const eventTime = eventDateObj.getTime();
 
       // Check if the event is today (before midnight tonight)
@@ -188,12 +134,11 @@ const Classes = () => {
       return classItems.sort((a, b) => {
         const eventA = getNextUpcomingEvent(a);
         const eventB = getNextUpcomingEvent(b);
-
         if (!eventA) return 1;
         if (!eventB) return -1;
 
-        const dateA = eventA.startTime || eventA.startDate;
-        const dateB = eventB.startTime || eventB.startDate;
+        const dateA = eventA.startDateTime;
+        const dateB = eventB.startDateTime;
 
         return dateA - dateB;
       });
@@ -207,7 +152,7 @@ const Classes = () => {
       beyond: sortByNextEvent(beyond),
       noUpcoming: noUpcoming,
     };
-  }, [searchQuery, filterType]);
+  }, [searchQuery]);
 
   // Render class cards with a category header
   const renderCategorySection = (classes, title, icon) => {
@@ -233,13 +178,13 @@ const Classes = () => {
     <div className="flex flex-col gap-4 max-w-5xl w-full mx-auto bg-background p-5">
       <div className="flex justify-between items-end">
         <h1>Classes</h1>
-        <Button variant="link" className="h-fit px-0! gap-2" onClick={clearAllFilters} disabled={!hasActiveFilters}>
+        <Button variant="link" className="h-fit px-0! gap-2" onClick={() => setSearchQuery("")} disabled={!hasActiveFilters}>
           <FilterX size={16} className="mr-1" /> Clear Filters
         </Button>
       </div>
       <hr />
 
-      <ClassFilter filterType={filterType} setFilterType={setFilterType} searchQuery={searchQuery} setSearchQuery={setSearchQuery} />
+      <Input icon={SearchIcon} placeholder="Search classes..." className="w-full" value={searchQuery} onChange={(e) => setSearchQuery(e.target.value)} />
 
       {[
         ...categorizedClasses.ongoing, // Include ongoing category
@@ -252,13 +197,13 @@ const Classes = () => {
         <div className="mt-4">
           {/* When no custom sorting, show classes categorized by time */}
           <>
-            {renderCategorySection(categorizedClasses.ongoing, "Ongoing", <BellElectric size={18} className="text-destructive" />)}
+            {renderCategorySection(categorizedClasses.ongoing, "Ongoing", <BellElectric size={18} className="text-primary-button" />)}
 
             {renderCategorySection(categorizedClasses.today, "Today", <Hourglass size={18} className="text-success" />)}
 
             {renderCategorySection(categorizedClasses.tomorrow, "Tomorrow", <Clock size={18} className="text-warning" />)}
 
-            {renderCategorySection(categorizedClasses.thisWeek, "This Week", <ClockFading size={18} className="text-primary-button" />)}
+            {renderCategorySection(categorizedClasses.thisWeek, "This Week", <ClockFading size={18} className="text-muted-foreground" />)}
 
             {renderCategorySection(categorizedClasses.beyond, "Later", <CalendarDays size={18} className="text-muted-foreground" />)}
 

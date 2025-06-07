@@ -1,6 +1,28 @@
 import { fakerNL as faker } from "@faker-js/faker";
 import { students } from "../parent/progress/data/studentData";
 
+// Helper function to create a date with specific offset in days from today
+const getDateWithOffset = (dayOffset, withTime = false) => {
+  const date = new Date();
+  date.setDate(date.getDate() + dayOffset);
+  
+  if (!withTime) {
+    // Format as YYYY-MM-DD
+    return date.toISOString().split('T')[0]; 
+  } 
+  
+  // Otherwise return with time included
+  return date.toISOString();
+};
+
+// Helper function to add time to a date string
+const addTimeToDate = (dateStr, hours, minutes) => {
+  const date = new Date(dateStr);
+  date.setHours(hours, minutes, 0, 0);
+  return date.toISOString();
+};
+
+// Base classes data without specific start/end dates
 export const classesData = [
   // Regular Courses (RC)
   {
@@ -9,8 +31,6 @@ export const classesData = [
     location: "Amsterdam East",
     period: "1",
     type: "regular",
-    startDate: "2025-03-21",
-    endDate: "2025-05-09",
     curriculumId: 1,
     students: students,
   },
@@ -20,8 +40,6 @@ export const classesData = [
     location: "Amsterdam East",
     period: "1",
     type: "regular",
-    startDate: "2025-03-22",
-    endDate: "2025-04-26",
     curriculumId: 2,
     students: students,
   },
@@ -31,9 +49,7 @@ export const classesData = [
     location: "The Hague",
     period: "1",
     type: "regular",
-    startDate: "2025-03-20",
-    endDate: "2025-04-24",
-    curriculumId: 3,
+    curriculumId: 1,
     students: students,
   },
   {
@@ -42,9 +58,7 @@ export const classesData = [
     location: "Amstelveen",
     period: "1",
     type: "regular",
-    startDate: "2025-03-23",
-    endDate: "2025-04-27",
-    curriculumId: 4,
+    curriculumId: 2,
     students: students,
   },
   {
@@ -53,44 +67,7 @@ export const classesData = [
     location: "Amsterdam East",
     period: "1",
     type: "regular",
-    startDate: "2025-03-24",
-    endDate: "2025-04-28",
-    curriculumId: 5,
-    students: students,
-  },
-
-  // Coder Camps (CC) - New addition
-  {
-    id: 101,
-    name: "NLAMS01-20250421-CC-00100",
-    location: "Amsterdam East",
-    period: "2",
-    type: "camp",
-    startDate: "2025-04-21",
-    endDate: "2025-04-25",
-    curriculumId: null,
-    students: students,
-  },
-  {
-    id: 102,
-    name: "NLDH02-20250505-CC-00100",
-    location: "The Hague",
-    period: "2",
-    type: "camp",
-    startDate: "2025-05-05",
-    endDate: "2025-05-09",
-    curriculumId: null,
-    students: students,
-  },
-  {
-    id: 103,
-    name: "NLAMS02-20250714-CC-00100",
-    location: "Amstelveen",
-    period: "3",
-    type: "camp",
-    startDate: "2025-07-14",
-    endDate: "2025-07-18",
-    curriculumId: null,
+    curriculumId: 1,
     students: students,
   },
 ];
@@ -422,630 +399,84 @@ export const lessonsData = [
       dutch: "https://play.kahoot.it/v2/lobby?quizId=coding-debugging-nl"
     }
   },
-
-  // Curriculum 3: Essential Fundamental Electronic Skills
-  { 
-    id: 15, 
-    name: "Basic Circuit Theory",
-    keywords: [
-      { term: "Circuit", explanation: "A complete path through which electric current can flow" },
-      { term: "Current", explanation: "The flow of electric charge in a circuit, measured in amperes (A)" },
-      { term: "Voltage", explanation: "The electric potential difference between two points, measured in volts (V)" },
-      { term: "Resistance", explanation: "Opposition to the flow of electric current, measured in ohms (Ω)" }
-    ],
-    learningObjectives: [
-      { objective: "Understand basic electrical concepts", descriptions: ["Define voltage, current, and resistance", "Explain the relationship between these quantities"] },
-      { objective: "Build simple circuits", descriptions: ["Create working circuits with power sources, components, and conductors", "Verify circuit functionality using measurement tools"] },
-      { objective: "Read and draw circuit diagrams", descriptions: ["Interpret standard electrical symbols", "Create diagrams that accurately represent physical circuits"] }
-    ],
-    slidesLink: {
-      english: "https://eduana.com/resources/electronics/circuit-theory-en.pdf",
-      dutch: "https://eduana.com/resources/electronics/circuit-theory-nl.pdf"
-    },
-    kahootLink: {
-      english: "https://play.kahoot.it/v2/lobby?quizId=electronics-circuit-theory-en",
-      dutch: "https://play.kahoot.it/v2/lobby?quizId=electronics-circuit-theory-nl"
-    }
-  },
-  { 
-    id: 16, 
-    name: "Resistors and Ohm's Law",
-    keywords: [
-      { term: "Ohm's Law", explanation: "A fundamental law stating that the current through a conductor is directly proportional to voltage and inversely proportional to resistance (V = I × R)" },
-      { term: "Series Circuit", explanation: "A circuit where components are connected end-to-end, creating a single path for current" },
-      { term: "Parallel Circuit", explanation: "A circuit where components are connected across common points, creating multiple paths for current" },
-      { term: "Color Code", explanation: "A system using colored bands to indicate resistance values and tolerance of resistors" }
-    ],
-    learningObjectives: [
-      { objective: "Apply Ohm's Law", descriptions: ["Calculate voltage, current, or resistance when two quantities are known", "Solve problems involving power and energy"] },
-      { objective: "Work with resistors", descriptions: ["Read resistor color codes accurately", "Select appropriate resistors for specific applications"] },
-      { objective: "Analyze series and parallel circuits", descriptions: ["Calculate total resistance in different circuit configurations", "Predict current and voltage distribution in circuits"] }
-    ],
-    slidesLink: {
-      english: "https://eduana.com/resources/electronics/resistors-ohms-law-en.pdf",
-      dutch: "https://eduana.com/resources/electronics/resistors-ohms-law-nl.pdf"
-    },
-    kahootLink: {
-      english: "https://play.kahoot.it/v2/lobby?quizId=electronics-resistors-en",
-      dutch: "https://play.kahoot.it/v2/lobby?quizId=electronics-resistors-nl"
-    }
-  },
-  { 
-    id: 17, 
-    name: "Capacitors and Inductors",
-    keywords: [
-      { term: "Capacitor", explanation: "A passive two-terminal electrical component that stores potential energy in an electric field" },
-      { term: "Inductor", explanation: "A passive two-terminal electrical component that stores energy in a magnetic field when current flows through it" },
-      { term: "Capacitance", explanation: "The ability of a body to store an electrical charge, measured in farads (F)" },
-      { term: "Inductance", explanation: "The property of an electrical conductor by which a change in current induces an electromotive force, measured in henries (H)" }
-    ],
-    learningObjectives: [
-      { objective: "Understand capacitor function and types", descriptions: ["Explain how capacitors store and release energy", "Identify different types of capacitors and their applications"] },
-      { objective: "Work with inductors in circuits", descriptions: ["Demonstrate how inductors affect current flow", "Build circuits utilizing inductor properties"] },
-      { objective: "Calculate time constants", descriptions: ["Compute RC and RL time constants", "Design circuits with specific charging and discharging behaviors"] }
-    ],
-    slidesLink: {
-      english: "https://eduana.com/resources/electronics/capacitors-inductors-en.pdf",
-      dutch: "https://eduana.com/resources/electronics/capacitors-inductors-nl.pdf"
-    },
-    kahootLink: {
-      english: "https://play.kahoot.it/v2/lobby?quizId=electronics-capacitors-inductors-en",
-      dutch: "https://play.kahoot.it/v2/lobby?quizId=electronics-capacitors-inductors-nl"
-    }
-  },
-  { 
-    id: 18, 
-    name: "Diodes and Transistors",
-    keywords: [
-      { term: "Diode", explanation: "A semiconductor device that allows current to flow in one direction only" },
-      { term: "Transistor", explanation: "A semiconductor device used to amplify or switch electronic signals" },
-      { term: "Forward Bias", explanation: "The condition where a diode allows current to flow through it" },
-      { term: "Gain", explanation: "The ratio of the output to input signal in a transistor circuit" }
-    ],
-    learningObjectives: [
-      { objective: "Apply diodes in circuit design", descriptions: ["Use diodes for rectification and protection", "Analyze diode behavior in different circuit configurations"] },
-      { objective: "Work with transistors as switches", descriptions: ["Design basic transistor switching circuits", "Calculate appropriate resistor values for reliable switching"] },
-      { objective: "Implement transistor amplifiers", descriptions: ["Build common-emitter amplifier circuits", "Measure voltage and current gain in amplifier configurations"] }
-    ],
-    slidesLink: {
-      english: "https://eduana.com/resources/electronics/diodes-transistors-en.pdf",
-      dutch: "https://eduana.com/resources/electronics/diodes-transistors-nl.pdf"
-    },
-    kahootLink: {
-      english: "https://play.kahoot.it/v2/lobby?quizId=electronics-diodes-transistors-en",
-      dutch: "https://play.kahoot.it/v2/lobby?quizId=electronics-diodes-transistors-nl"
-    }
-  },
-  { 
-    id: 19, 
-    name: "Digital Logic Gates",
-    keywords: [
-      { term: "Logic Gate", explanation: "An electronic device implementing a Boolean function, producing a logic-level output based on the inputs" },
-      { term: "Truth Table", explanation: "A table showing all possible input combinations and their corresponding outputs for a logic circuit" },
-      { term: "Boolean Algebra", explanation: "A branch of algebra used to analyze and simplify digital circuits" },
-      { term: "Integrated Circuit", explanation: "A set of electronic circuits on a small flat piece of semiconductor material" }
-    ],
-    learningObjectives: [
-      { objective: "Understand basic logic gates", descriptions: ["Identify AND, OR, NOT, NAND, NOR, XOR, and XNOR gates", "Draw symbols and create truth tables for each gate"] },
-      { objective: "Implement combinational logic circuits", descriptions: ["Design circuits to perform specific logical operations", "Simplify logic expressions using Boolean algebra"] },
-      { objective: "Build and test logic circuits", descriptions: ["Assemble functional circuits using IC chips", "Troubleshoot common issues in digital circuits"] }
-    ],
-    slidesLink: {
-      english: "https://eduana.com/resources/electronics/logic-gates-en.pdf",
-      dutch: "https://eduana.com/resources/electronics/logic-gates-nl.pdf"
-    },
-    kahootLink: {
-      english: "https://play.kahoot.it/v2/lobby?quizId=electronics-logic-gates-en",
-      dutch: "https://play.kahoot.it/v2/lobby?quizId=electronics-logic-gates-nl"
-    }
-  },
-  { 
-    id: 20, 
-    name: "Arduino Basics",
-    keywords: [
-      { term: "Microcontroller", explanation: "A small computer on a single integrated circuit containing a processor, memory, and programmable input/output peripherals" },
-      { term: "Sketch", explanation: "The name for a program written for Arduino boards" },
-      { term: "Digital I/O", explanation: "Input/output pins that can be set to either HIGH (5V) or LOW (0V) states" },
-      { term: "Analog Input", explanation: "Pins that can read varying voltage levels, typically from 0 to 5 volts" }
-    ],
-    learningObjectives: [
-      { objective: "Set up the Arduino development environment", descriptions: ["Install necessary software and drivers", "Configure the IDE for different Arduino boards"] },
-      { objective: "Write basic Arduino programs", descriptions: ["Create programs with setup() and loop() functions", "Implement digital input and output operations"] },
-      { objective: "Interface with sensors and actuators", descriptions: ["Read data from digital and analog sensors", "Control motors, LEDs, and other output devices"] }
-    ],
-    slidesLink: {
-      english: "https://eduana.com/resources/electronics/arduino-basics-en.pdf",
-      dutch: "https://eduana.com/resources/electronics/arduino-basics-nl.pdf"
-    },
-    kahootLink: {
-      english: "https://play.kahoot.it/v2/lobby?quizId=electronics-arduino-basics-en",
-      dutch: "https://play.kahoot.it/v2/lobby?quizId=electronics-arduino-basics-nl"
-    }
-  },
-  { 
-    id: 21, 
-    name: "Object-Oriented Programming",
-    keywords: [
-      { term: "Class", explanation: "A blueprint for creating objects that defines properties and behaviors" },
-      { term: "Object", explanation: "An instance of a class that contains data and methods" },
-      { term: "Inheritance", explanation: "A mechanism where a new class inherits properties and behaviors from an existing class" },
-      { term: "Encapsulation", explanation: "The bundling of data and methods that operate on that data within a single unit" }
-    ],
-    learningObjectives: [
-      { objective: "Create and use classes effectively", descriptions: ["Define classes with appropriate attributes and methods", "Instantiate objects and access their properties and methods"] },
-      { objective: "Implement inheritance hierarchies", descriptions: ["Create parent and child classes with proper relationships", "Override methods in derived classes"] },
-      { objective: "Apply OOP design principles", descriptions: ["Design programs using encapsulation, inheritance, and polymorphism", "Implement abstraction to manage complexity"] }
-    ],
-    slidesLink: {
-      english: "https://eduana.com/resources/coding-advanced/oop-en.pdf",
-      dutch: "https://eduana.com/resources/coding-advanced/oop-nl.pdf"
-    },
-    kahootLink: {
-      english: "https://play.kahoot.it/v2/lobby?quizId=advanced-oop-en",
-      dutch: "https://play.kahoot.it/v2/lobby?quizId=advanced-oop-nl"
-    }
-  },
-  { 
-    id: 22, 
-    name: "Data Structures",
-    keywords: [
-      { term: "Linked List", explanation: "A linear collection of elements where each element points to the next element" },
-      { term: "Stack", explanation: "A linear data structure that follows the Last In, First Out (LIFO) principle" },
-      { term: "Queue", explanation: "A linear data structure that follows the First In, First Out (FIFO) principle" },
-      { term: "Tree", explanation: "A hierarchical data structure with a root value and subtrees of children with a parent node" }
-    ],
-    learningObjectives: [
-      { objective: "Understand fundamental data structures", descriptions: ["Compare different data structures and their applications", "Select appropriate data structures for specific problems"] },
-      { objective: "Implement common data structures", descriptions: ["Create linked lists, stacks, queues, and trees from scratch", "Use built-in data structures in programming languages efficiently"] },
-      { objective: "Analyze trade-offs between data structures", descriptions: ["Evaluate time and space complexity of operations", "Compare performance characteristics of different implementations"] }
-    ],
-    slidesLink: {
-      english: "https://eduana.com/resources/coding-advanced/data-structures-en.pdf",
-      dutch: "https://eduana.com/resources/coding-advanced/data-structures-nl.pdf"
-    },
-    kahootLink: {
-      english: "https://play.kahoot.it/v2/lobby?quizId=advanced-data-structures-en",
-      dutch: "https://play.kahoot.it/v2/lobby?quizId=advanced-data-structures-nl"
-    }
-  },
-  { 
-    id: 23, 
-    name: "Algorithms and Complexity",
-    keywords: [
-      { term: "Time Complexity", explanation: "A measure of the amount of time an algorithm takes to complete as a function of the input size" },
-      { term: "Space Complexity", explanation: "The amount of memory space required by an algorithm to run as a function of the input size" },
-      { term: "Big O Notation", explanation: "A mathematical notation that describes the limiting behavior of a function when the argument tends towards a particular value or infinity" },
-      { term: "Algorithm Efficiency", explanation: "How well an algorithm performs in terms of time and space resource usage" }
-    ],
-    learningObjectives: [
-      { objective: "Analyze algorithm performance", descriptions: ["Calculate time and space complexity using Big O notation", "Identify bottlenecks in algorithm implementations"] },
-      { objective: "Implement sorting and searching algorithms", descriptions: ["Code efficient sorting algorithms like quicksort and mergesort", "Implement binary search and understand its advantages"] },
-      { objective: "Optimize algorithms for better performance", descriptions: ["Refactor code to improve efficiency", "Apply optimization techniques to reduce complexity"] }
-    ],
-    slidesLink: {
-      english: "https://eduana.com/resources/coding-advanced/algorithms-complexity-en.pdf",
-      dutch: "https://eduana.com/resources/coding-advanced/algorithms-complexity-nl.pdf"
-    },
-    kahootLink: {
-      english: "https://play.kahoot.it/v2/lobby?quizId=advanced-algorithms-en",
-      dutch: "https://play.kahoot.it/v2/lobby?quizId=advanced-algorithms-nl"
-    }
-  },
-  { 
-    id: 24, 
-    name: "API Integration",
-    keywords: [
-      { term: "API", explanation: "Application Programming Interface - a set of definitions and protocols for building and integrating application software" },
-      { term: "REST", explanation: "Representational State Transfer - an architectural style for designing networked applications" },
-      { term: "JSON", explanation: "JavaScript Object Notation - a lightweight data interchange format that is easy for humans to read and write" },
-      { term: "Authentication", explanation: "The process of verifying the identity of a user or system" }
-    ],
-    learningObjectives: [
-      { objective: "Understand API fundamentals", descriptions: ["Explain how APIs enable software communication", "Differentiate between API types (REST, SOAP, GraphQL)"] },
-      { objective: "Make HTTP requests to external APIs", descriptions: ["Implement GET, POST, PUT, and DELETE requests", "Handle API responses and error conditions"] },
-      { objective: "Authenticate and secure API interactions", descriptions: ["Implement API keys and OAuth authentication", "Manage sensitive data in API communications"] }
-    ],
-    slidesLink: {
-      english: "https://eduana.com/resources/coding-advanced/api-integration-en.pdf",
-      dutch: "https://eduana.com/resources/coding-advanced/api-integration-nl.pdf"
-    },
-    kahootLink: {
-      english: "https://play.kahoot.it/v2/lobby?quizId=advanced-api-en",
-      dutch: "https://play.kahoot.it/v2/lobby?quizId=advanced-api-nl"
-    }
-  },
-  { 
-    id: 25, 
-    name: "Database Interaction",
-    keywords: [
-      { term: "Database", explanation: "An organized collection of structured information or data stored electronically in a computer system" },
-      { term: "SQL", explanation: "Structured Query Language - a domain-specific language used for managing and manipulating relational databases" },
-      { term: "CRUD", explanation: "Create, Read, Update, Delete - the four basic operations of persistent storage" },
-      { term: "ORM", explanation: "Object-Relational Mapping - a technique for converting data between incompatible type systems in object-oriented programming languages" }
-    ],
-    learningObjectives: [
-      { objective: "Connect to databases from code", descriptions: ["Establish connections to different types of databases", "Configure connection parameters and handle connection errors"] },
-      { objective: "Perform CRUD operations through code", descriptions: ["Write code to create, read, update, and delete data", "Use prepared statements to prevent SQL injection"] },
-      { objective: "Implement data models using ORM", descriptions: ["Define model classes that map to database tables", "Perform database operations using ORM methods instead of raw SQL"] }
-    ],
-    slidesLink: {
-      english: "https://eduana.com/resources/coding-advanced/database-interaction-en.pdf",
-      dutch: "https://eduana.com/resources/coding-advanced/database-interaction-nl.pdf"
-    },
-    kahootLink: {
-      english: "https://play.kahoot.it/v2/lobby?quizId=advanced-database-en",
-      dutch: "https://play.kahoot.it/v2/lobby?quizId=advanced-database-nl"
-    }
-  },
-  { 
-    id: 26, 
-    name: "Design Patterns",
-    keywords: [
-      { term: "Design Pattern", explanation: "A reusable solution to a commonly occurring problem within a given context in software design" },
-      { term: "Singleton", explanation: "A creational design pattern that ensures a class has only one instance and provides a global point of access to it" },
-      { term: "Factory Method", explanation: "A creational pattern that defines an interface for creating an object but lets subclasses decide which class to instantiate" },
-      { term: "Observer", explanation: "A behavioral pattern where an object (subject) maintains a list of dependents (observers) and notifies them of state changes" }
-    ],
-    learningObjectives: [
-      { objective: "Understand common design patterns", descriptions: ["Recognize patterns in the creational, structural, and behavioral categories", "Explain how patterns solve specific design problems"] },
-      { objective: "Implement design patterns in code", descriptions: ["Apply appropriate design patterns to real-world problems", "Adapt patterns to fit specific requirements"] },
-      { objective: "Evaluate pattern trade-offs", descriptions: ["Weigh the benefits and drawbacks of using specific patterns", "Combine patterns effectively in larger systems"] }
-    ],
-    slidesLink: {
-      english: "https://eduana.com/resources/coding-advanced/design-patterns-en.pdf",
-      dutch: "https://eduana.com/resources/coding-advanced/design-patterns-nl.pdf"
-    },
-    kahootLink: {
-      english: "https://play.kahoot.it/v2/lobby?quizId=advanced-design-patterns-en",
-      dutch: "https://play.kahoot.it/v2/lobby?quizId=advanced-design-patterns-nl"
-    }
-  },
-  { 
-    id: 27, 
-    name: "HTML Basics",
-    keywords: [
-      { term: "HTML", explanation: "HyperText Markup Language - the standard markup language for documents designed to be displayed in a web browser" },
-      { term: "Element", explanation: "An individual component of an HTML document, usually consisting of a start tag, content, and an end tag" },
-      { term: "Attribute", explanation: "Additional information about an element that modifies its behavior or provides metadata" },
-      { term: "Semantic HTML", explanation: "Using HTML elements that clearly describe their meaning to both the browser and the developer" }
-    ],
-    learningObjectives: [
-      { objective: "Create well-structured HTML documents", descriptions: ["Write HTML with proper document structure", "Use appropriate HTML elements for content"] },
-      { objective: "Apply HTML semantics effectively", descriptions: ["Choose semantic elements to improve accessibility and SEO", "Structure content with headers, sections, articles, etc."] },
-      { objective: "Validate and troubleshoot HTML", descriptions: ["Use validation tools to check for errors", "Debug common HTML issues"] }
-    ],
-    slidesLink: {
-      english: "https://eduana.com/resources/web-dev/html-basics-en.pdf",
-      dutch: "https://eduana.com/resources/web-dev/html-basics-nl.pdf"
-    },
-    kahootLink: {
-      english: "https://play.kahoot.it/v2/lobby?quizId=web-html-en",
-      dutch: "https://play.kahoot.it/v2/lobby?quizId=web-html-nl"
-    }
-  },
-  { 
-    id: 28, 
-    name: "CSS Styling",
-    keywords: [
-      { term: "CSS", explanation: "Cascading Style Sheets - a style sheet language used for describing the presentation of a document written in HTML" },
-      { term: "Selector", explanation: "The part of a CSS rule that identifies which elements in the document will be styled" },
-      { term: "Specificity", explanation: "The algorithm that determines which CSS rule is applied when multiple rules could style the same element" },
-      { term: "Box Model", explanation: "A CSS concept that describes how elements are rendered as rectangular boxes with content, padding, border, and margin areas" }
-    ],
-    learningObjectives: [
-      { objective: "Apply CSS using different methods", descriptions: ["Implement inline, internal, and external CSS", "Use CSS variables for consistent styling"] },
-      { objective: "Master CSS selectors and properties", descriptions: ["Apply various selectors to target specific elements", "Use common CSS properties for layout and visual styling"] },
-      { objective: "Understand the CSS box model", descriptions: ["Manipulate element dimensions with margin, padding, and border", "Control element positioning and display behavior"] }
-    ],
-    slidesLink: {
-      english: "https://eduana.com/resources/web-dev/css-styling-en.pdf",
-      dutch: "https://eduana.com/resources/web-dev/css-styling-nl.pdf"
-    },
-    kahootLink: {
-      english: "https://play.kahoot.it/v2/lobby?quizId=web-css-en",
-      dutch: "https://play.kahoot.it/v2/lobby?quizId=web-css-nl"
-    }
-  },
-  { 
-    id: 29, 
-    name: "JavaScript Fundamentals",
-    keywords: [
-      { term: "JavaScript", explanation: "A high-level, interpreted programming language that enables interactive web pages" },
-      { term: "DOM", explanation: "Document Object Model - a programming interface for web documents that represents the page as nodes and objects" },
-      { term: "Event", explanation: "An action that occurs in the browser that can be detected and responded to with JavaScript" },
-      { term: "Callback", explanation: "A function passed as an argument to another function, to be executed after the first function completes" }
-    ],
-    learningObjectives: [
-      { objective: "Write basic JavaScript code for web pages", descriptions: ["Create variables, functions, and control structures", "Include JavaScript in HTML documents"] },
-      { objective: "Manipulate the DOM with JavaScript", descriptions: ["Select and modify HTML elements", "Create and remove elements dynamically"] },
-      { objective: "Handle browser events", descriptions: ["Respond to user interactions like clicks and form submissions", "Implement event listeners and callbacks"] }
-    ],
-    slidesLink: {
-      english: "https://eduana.com/resources/web-dev/js-fundamentals-en.pdf",
-      dutch: "https://eduana.com/resources/web-dev/js-fundamentals-nl.pdf"
-    },
-    kahootLink: {
-      english: "https://play.kahoot.it/v2/lobby?quizId=web-javascript-en",
-      dutch: "https://play.kahoot.it/v2/lobby?quizId=web-javascript-nl"
-    }
-  },
-  { 
-    id: 30, 
-    name: "Responsive Design",
-    keywords: [
-      { term: "Responsive Design", explanation: "An approach to web design that makes web pages render well on different devices and window or screen sizes" },
-      { term: "Media Query", explanation: "A CSS technique that applies different styles for different devices/screen sizes" },
-      { term: "Viewport", explanation: "The visible area of a web page on a display device" },
-      { term: "Flexible Grid", explanation: "A layout system that uses relative units like percentages rather than fixed units like pixels" }
-    ],
-    learningObjectives: [
-      { objective: "Implement responsive layouts", descriptions: ["Design pages that adapt to different screen sizes", "Use flexible grids and responsive units"] },
-      { objective: "Create mobile-first designs", descriptions: ["Start with mobile layouts and progressively enhance for larger screens", "Optimize performance for mobile devices"] },
-      { objective: "Use media queries effectively", descriptions: ["Write media queries for different breakpoints", "Apply specific styles based on device characteristics"] }
-    ],
-    slidesLink: {
-      english: "https://eduana.com/resources/web-dev/responsive-design-en.pdf",
-      dutch: "https://eduana.com/resources/web-dev/responsive-design-nl.pdf"
-    },
-    kahootLink: {
-      english: "https://play.kahoot.it/v2/lobby?quizId=web-responsive-en",
-      dutch: "https://play.kahoot.it/v2/lobby?quizId=web-responsive-nl"
-    }
-  },
-  { 
-    id: 31, 
-    name: "DOM Manipulation",
-    keywords: [
-      { term: "DOM Tree", explanation: "A hierarchical representation of all elements on a web page as a tree-like structure" },
-      { term: "Event Bubbling", explanation: "The process where an event triggered on a nested element 'bubbles up' through its ancestors in the DOM" },
-      { term: "Event Delegation", explanation: "A technique of adding event listeners to a parent element instead of adding them to descendant elements" },
-      { term: "Node", explanation: "A generic term for any type of object in the DOM hierarchy" }
-    ],
-    learningObjectives: [
-      { objective: "Traverse and manipulate DOM elements", descriptions: ["Navigate through DOM nodes effectively", "Change element properties and attributes"] },
-      { objective: "Create dynamic content", descriptions: ["Insert, modify, and remove elements programmatically", "Manipulate element styles and classes"] },
-      { objective: "Implement advanced event handling", descriptions: ["Use event delegation for efficient event listening", "Understand event propagation and prevent default behaviors"] }
-    ],
-    slidesLink: {
-      english: "https://eduana.com/resources/web-dev/dom-manipulation-en.pdf",
-      dutch: "https://eduana.com/resources/web-dev/dom-manipulation-nl.pdf"
-    },
-    kahootLink: {
-      english: "https://play.kahoot.it/v2/lobby?quizId=web-dom-en",
-      dutch: "https://play.kahoot.it/v2/lobby?quizId=web-dom-nl"
-    }
-  },
-  { 
-    id: 32, 
-    name: "Web APIs",
-    keywords: [
-      { term: "Fetch API", explanation: "A modern interface for making HTTP requests to servers from web browsers" },
-      { term: "JSON", explanation: "JavaScript Object Notation - a lightweight data format used for data interchange between a server and web application" },
-      { term: "Local Storage", explanation: "A web API that allows storing key-value pairs in a web browser with no expiration date" },
-      { term: "Geolocation API", explanation: "A browser API that provides access to geographical location information from the device" }
-    ],
-    learningObjectives: [
-      { objective: "Use the Fetch API for data retrieval", descriptions: ["Make API requests to external services", "Handle responses and process returned data"] },
-      { objective: "Implement client-side storage", descriptions: ["Store and retrieve data using localStorage and sessionStorage", "Manage user preferences and cached content"] },
-      { objective: "Work with browser APIs", descriptions: ["Integrate geolocation, notifications, and other browser capabilities", "Understand security considerations when using browser APIs"] }
-    ],
-    slidesLink: {
-      english: "https://eduana.com/resources/web-dev/web-apis-en.pdf",
-      dutch: "https://eduana.com/resources/web-dev/web-apis-nl.pdf"
-    },
-    kahootLink: {
-      english: "https://play.kahoot.it/v2/lobby?quizId=web-apis-en",
-      dutch: "https://play.kahoot.it/v2/lobby?quizId=web-apis-nl"
-    }
-  }
 ];
 
-// New scheduleData that links classes with lessons and their scheduled times
+// New scheduleData that links classes with lessons and their scheduled times using dynamic dates
 export const scheduleData = [
   // Class 1 (Amsterdam East, Essential Robotics Skills)
-  { id: 1, classId: 1, lessonId: 1, startDate: "2025-03-21T15:30:00", endDate: "2025-03-21T17:30:00" },
-  { id: 2, classId: 1, lessonId: 2, startDate: "2025-03-28T15:30:00", endDate: "2025-03-28T17:30:00" },
-  { id: 3, classId: 1, lessonId: 3, startDate: "2025-04-04T15:30:00", endDate: "2025-04-04T17:30:00" },
-  { id: 4, classId: 1, lessonId: 4, startDate: "2025-04-11T15:30:00", endDate: "2025-04-11T17:30:00" },
-  { id: 5, classId: 1, lessonId: 5, startDate: "2025-04-18T15:30:00", endDate: "2025-04-18T17:30:00" },
-  { id: 6, classId: 1, lessonId: 6, startDate: "2025-04-25T15:30:00", endDate: "2025-04-25T17:30:00" },
-  { id: 7, classId: 1, lessonId: 7, startDate: "2025-05-02T15:30:00", endDate: "2025-05-02T17:30:00" },
-  { id: 8, classId: 1, lessonId: 8, startDate: "2025-05-09T15:30:00", endDate: "2025-05-09T17:30:00" },
+  { id: 1, classId: 1, lessonId: 1, startDateTime: addTimeToDate(getDateWithOffset(-21), 15, 30), endDateTime: addTimeToDate(getDateWithOffset(-21), 17, 30) }, // Today
+  { id: 2, classId: 1, lessonId: 2, startDateTime: addTimeToDate(getDateWithOffset(-14), 15, 30), endDateTime: addTimeToDate(getDateWithOffset(-14), 17, 30) }, // Next week
+  { id: 3, classId: 1, lessonId: 3, startDateTime: addTimeToDate(getDateWithOffset(-7), 15, 30), endDateTime: addTimeToDate(getDateWithOffset(-7), 17, 30) },
+  { id: 4, classId: 1, lessonId: 4, startDateTime: addTimeToDate(getDateWithOffset(0), 8, 30), endDateTime: addTimeToDate(getDateWithOffset(0), 17, 30) },
+  { id: 5, classId: 1, lessonId: 5, startDateTime: addTimeToDate(getDateWithOffset(7), 15, 30), endDateTime: addTimeToDate(getDateWithOffset(7), 17, 30) },
+  { id: 6, classId: 1, lessonId: 6, startDateTime: addTimeToDate(getDateWithOffset(14), 15, 30), endDateTime: addTimeToDate(getDateWithOffset(14), 17, 30) },
+  { id: 7, classId: 1, lessonId: 7, startDateTime: addTimeToDate(getDateWithOffset(21), 15, 30), endDateTime: addTimeToDate(getDateWithOffset(21), 17, 30) },
+  { id: 8, classId: 1, lessonId: 8, startDateTime: addTimeToDate(getDateWithOffset(28), 15, 30), endDateTime: addTimeToDate(getDateWithOffset(28), 17, 30) },
 
   // Class 2 (Amsterdam East, Essential Coding Skills)
-  { id: 9, classId: 2, lessonId: 9, startDate: "2025-03-22T10:00:00", endDate: "2025-03-22T12:00:00" },
-  { id: 10, classId: 2, lessonId: 10, startDate: "2025-03-29T10:00:00", endDate: "2025-03-29T12:00:00" },
-  { id: 11, classId: 2, lessonId: 11, startDate: "2025-04-05T10:00:00", endDate: "2025-04-05T12:00:00" },
-  { id: 12, classId: 2, lessonId: 12, startDate: "2025-04-12T10:00:00", endDate: "2025-04-12T12:00:00" },
-  { id: 13, classId: 2, lessonId: 13, startDate: "2025-04-19T10:00:00", endDate: "2025-04-19T12:00:00" },
-  { id: 14, classId: 2, lessonId: 14, startDate: "2025-04-26T10:00:00", endDate: "2025-04-26T12:00:00" },
+  { id: 9, classId: 2, lessonId: 9, startDateTime: addTimeToDate(getDateWithOffset(0), 20, 0), endDateTime: addTimeToDate(getDateWithOffset(0), 22, 0) }, // Tomorrow
+  { id: 10, classId: 2, lessonId: 10, startDateTime: addTimeToDate(getDateWithOffset(8), 10, 0), endDateTime: addTimeToDate(getDateWithOffset(8), 12, 0) },
+  { id: 11, classId: 2, lessonId: 11, startDateTime: addTimeToDate(getDateWithOffset(15), 10, 0), endDateTime: addTimeToDate(getDateWithOffset(15), 12, 0) },
+  { id: 12, classId: 2, lessonId: 12, startDateTime: addTimeToDate(getDateWithOffset(22), 10, 0), endDateTime: addTimeToDate(getDateWithOffset(22), 12, 0) },
+  { id: 13, classId: 2, lessonId: 13, startDateTime: addTimeToDate(getDateWithOffset(29), 10, 0), endDateTime: addTimeToDate(getDateWithOffset(29), 12, 0) },
+  { id: 14, classId: 2, lessonId: 14, startDateTime: addTimeToDate(getDateWithOffset(36), 10, 0), endDateTime: addTimeToDate(getDateWithOffset(36), 12, 0) },
 
-  // Class 3 (The Hague, Essential Fundamental Electronic Skills)
-  { id: 15, classId: 3, lessonId: 15, startDate: "2025-03-20T14:00:00", endDate: "2025-03-20T16:00:00" },
-  { id: 16, classId: 3, lessonId: 16, startDate: "2025-03-27T14:00:00", endDate: "2025-03-27T16:00:00" },
-  { id: 17, classId: 3, lessonId: 17, startDate: "2025-04-03T14:00:00", endDate: "2025-04-03T16:00:00" },
-  { id: 18, classId: 3, lessonId: 18, startDate: "2025-04-10T14:00:00", endDate: "2025-04-10T16:00:00" },
-  { id: 19, classId: 3, lessonId: 19, startDate: "2025-04-17T14:00:00", endDate: "2025-04-17T16:00:00" },
-  { id: 20, classId: 3, lessonId: 20, startDate: "2025-04-24T14:00:00", endDate: "2025-04-24T16:00:00" },
+  // Class 3 (The Hague, Essential Robotics Skills)
+  { id: 15, classId: 3, lessonId: 1, startDateTime: addTimeToDate(getDateWithOffset(1), 8, 0), endDateTime: addTimeToDate(getDateWithOffset(1), 10, 0) }, // 2 days from now
+  { id: 16, classId: 3, lessonId: 2, startDateTime: addTimeToDate(getDateWithOffset(9), 14, 0), endDateTime: addTimeToDate(getDateWithOffset(9), 16, 0) },
+  { id: 17, classId: 3, lessonId: 3, startDateTime: addTimeToDate(getDateWithOffset(16), 14, 0), endDateTime: addTimeToDate(getDateWithOffset(16), 16, 0) },
+  { id: 18, classId: 3, lessonId: 4, startDateTime: addTimeToDate(getDateWithOffset(23), 14, 0), endDateTime: addTimeToDate(getDateWithOffset(23), 16, 0) },
+  { id: 19, classId: 3, lessonId: 5, startDateTime: addTimeToDate(getDateWithOffset(30), 14, 0), endDateTime: addTimeToDate(getDateWithOffset(30), 16, 0) },
+  { id: 20, classId: 3, lessonId: 6, startDateTime: addTimeToDate(getDateWithOffset(37), 14, 0), endDateTime: addTimeToDate(getDateWithOffset(37), 16, 0) },
 
-  // Class 4 (Amstelveen, Advanced Coding Skills)
-  { id: 21, classId: 4, lessonId: 21, startDate: "2025-03-23T13:00:00", endDate: "2025-03-23T15:00:00" },
-  { id: 22, classId: 4, lessonId: 22, startDate: "2025-03-30T13:00:00", endDate: "2025-03-30T15:00:00" },
-  { id: 23, classId: 4, lessonId: 23, startDate: "2025-04-06T13:00:00", endDate: "2025-04-06T15:00:00" },
-  { id: 24, classId: 4, lessonId: 24, startDate: "2025-04-13T13:00:00", endDate: "2025-04-13T15:00:00" },
-  { id: 25, classId: 4, lessonId: 25, startDate: "2025-04-20T13:00:00", endDate: "2025-04-20T15:00:00" },
-  { id: 26, classId: 4, lessonId: 26, startDate: "2025-04-27T13:00:00", endDate: "2025-04-27T15:00:00" },
+  // Class 4 (Amstelveen, Essential Coding Skills)
+  { id: 21, classId: 4, lessonId: 9, startDateTime: addTimeToDate(getDateWithOffset(1), 10, 0), endDateTime: addTimeToDate(getDateWithOffset(3), 12, 0) }, // 3 days from now
+  { id: 22, classId: 4, lessonId: 10, startDateTime: addTimeToDate(getDateWithOffset(10), 13, 0), endDateTime: addTimeToDate(getDateWithOffset(10), 15, 0) },
+  { id: 23, classId: 4, lessonId: 11, startDateTime: addTimeToDate(getDateWithOffset(17), 13, 0), endDateTime: addTimeToDate(getDateWithOffset(17), 15, 0) },
+  { id: 24, classId: 4, lessonId: 12, startDateTime: addTimeToDate(getDateWithOffset(24), 13, 0), endDateTime: addTimeToDate(getDateWithOffset(24), 15, 0) },
+  { id: 25, classId: 4, lessonId: 13, startDateTime: addTimeToDate(getDateWithOffset(31), 13, 0), endDateTime: addTimeToDate(getDateWithOffset(31), 15, 0) },
+  { id: 26, classId: 4, lessonId: 14, startDateTime: addTimeToDate(getDateWithOffset(38), 13, 0), endDateTime: addTimeToDate(getDateWithOffset(38), 15, 0) },
 
-  // Class 5 (Amsterdam East, Web Development Fundamentals)
-  { id: 27, classId: 5, lessonId: 27, startDate: "2025-03-24T16:00:00", endDate: "2025-03-24T18:00:00" },
-  { id: 28, classId: 5, lessonId: 28, startDate: "2025-03-31T16:00:00", endDate: "2025-03-31T18:00:00" },
-  { id: 29, classId: 5, lessonId: 29, startDate: "2025-04-07T16:00:00", endDate: "2025-04-07T18:00:00" },
-  { id: 30, classId: 5, lessonId: 30, startDate: "2025-04-14T16:00:00", endDate: "2025-04-14T18:00:00" },
-  { id: 31, classId: 5, lessonId: 31, startDate: "2025-04-21T16:00:00", endDate: "2025-04-21T18:00:00" },
-  { id: 32, classId: 5, lessonId: 32, startDate: "2025-04-28T16:00:00", endDate: "2025-04-28T18:00:00" },
+  // Class 5 (Amsterdam East, Essential Robotics Skills)
+  { id: 27, classId: 5, lessonId: 1, startDateTime: addTimeToDate(getDateWithOffset(6), 16, 0), endDateTime: addTimeToDate(getDateWithOffset(6), 18, 0) }, // 6 days from now (next week)
+  { id: 28, classId: 5, lessonId: 2, startDateTime: addTimeToDate(getDateWithOffset(13), 16, 0), endDateTime: addTimeToDate(getDateWithOffset(13), 18, 0) },
+  { id: 29, classId: 5, lessonId: 3, startDateTime: addTimeToDate(getDateWithOffset(20), 16, 0), endDateTime: addTimeToDate(getDateWithOffset(20), 18, 0) },
+  { id: 30, classId: 5, lessonId: 4, startDateTime: addTimeToDate(getDateWithOffset(27), 16, 0), endDateTime: addTimeToDate(getDateWithOffset(27), 18, 0) },
+  { id: 31, classId: 5, lessonId: 5, startDateTime: addTimeToDate(getDateWithOffset(34), 16, 0), endDateTime: addTimeToDate(getDateWithOffset(34), 18, 0) },
+  { id: 32, classId: 5, lessonId: 6, startDateTime: addTimeToDate(getDateWithOffset(41), 16, 0), endDateTime: addTimeToDate(getDateWithOffset(41), 18, 0) },
 ];
 
 export const curriculumData = [
   { id: 1, name: "Essential Robotics Skills", level: "1", lessonIds: [1, 2, 3, 4, 5, 6, 7, 8] },
   { id: 2, name: "Essential Coding Skills", level: "2", lessonIds: [9, 10, 11, 12, 13, 14] },
-  { id: 3, name: "Essential Fundamental Electronic Skills", level: "1", lessonIds: [15, 16, 17, 18, 19, 20] },
-  { id: 4, name: "Advanced Coding Skills", level: "2", lessonIds: [21, 22, 23, 24, 25, 26] },
-  { id: 5, name: "Web Development Fundamentals", level: "2", lessonIds: [27, 28, 29, 30, 31, 32] },
 ];
 
-// Activity types for Coder Camps
-export const activityTypesData = [
-  { id: 1, name: "Programming" },
-  { id: 2, name: "Robotics" },
-  { id: 3, name: "Digital Arts" },
-  { id: 4, name: "Break" },
-  { id: 5, name: "Project" },
-];
-
-// Camp activities
-export const campActivitiesData = [
-  { id: 1, name: "Scratch Game Design", description: "Creating interactive stories and games with Scratch", typeId: 1 },
-  { id: 2, name: "Kodu Game Lab", description: "3D game design with visual programming", typeId: 1 },
-  { id: 3, name: "Lunch Break", description: "Time for lunch and relaxation", typeId: 4 },
-  { id: 4, name: "Morning Break", description: "Short refreshment break", typeId: 4 },
-  { id: 5, name: "Afternoon Break", description: "Short refreshment break", typeId: 4 },
-  { id: 6, name: "Minecraft Education", description: "Learning coding concepts through Minecraft", typeId: 1 },
-  { id: 7, name: "Robotics Workshop", description: "Hands-on experience with educational robots", typeId: 2 },
-  { id: 8, name: "App Inventor", description: "Creating mobile applications", typeId: 1 },
-  { id: 9, name: "Digital Art & Animation", description: "Creating digital artwork and animations", typeId: 3 },
-  { id: 10, name: "Project Presentation", description: "Students present their weekly projects", typeId: 5 },
-];
-
-// Camp activities schedule - daily activities for the whole week
-export const campScheduleData = [
-  // Camp 101 (Amsterdam East) - Week of April 21-25, 2025
-  // Monday
-  { id: 1001, classId: 101, activityId: 1, startTime: "2025-04-21T09:00:00", endTime: "2025-04-21T10:30:00" },
-  { id: 1002, classId: 101, activityId: 4, startTime: "2025-04-21T10:30:00", endTime: "2025-04-21T10:45:00" },
-  { id: 1003, classId: 101, activityId: 1, startTime: "2025-04-21T10:45:00", endTime: "2025-04-21T12:00:00" },
-  { id: 1004, classId: 101, activityId: 3, startTime: "2025-04-21T12:00:00", endTime: "2025-04-21T13:00:00" },
-  { id: 1005, classId: 101, activityId: 7, startTime: "2025-04-21T13:00:00", endTime: "2025-04-21T15:00:00" },
-  { id: 1006, classId: 101, activityId: 5, startTime: "2025-04-21T15:00:00", endTime: "2025-04-21T15:15:00" },
-  { id: 1007, classId: 101, activityId: 7, startTime: "2025-04-21T15:15:00", endTime: "2025-04-21T16:30:00" },
-
-  // Tuesday
-  { id: 1008, classId: 101, activityId: 2, startTime: "2025-04-22T09:00:00", endTime: "2025-04-22T10:30:00" },
-  { id: 1009, classId: 101, activityId: 4, startTime: "2025-04-22T10:30:00", endTime: "2025-04-22T10:45:00" },
-  { id: 1010, classId: 101, activityId: 2, startTime: "2025-04-22T10:45:00", endTime: "2025-04-22T12:00:00" },
-  { id: 1011, classId: 101, activityId: 3, startTime: "2025-04-22T12:00:00", endTime: "2025-04-22T13:00:00" },
-  { id: 1012, classId: 101, activityId: 6, startTime: "2025-04-22T13:00:00", endTime: "2025-04-22T15:00:00" },
-  { id: 1013, classId: 101, activityId: 5, startTime: "2025-04-22T15:00:00", endTime: "2025-04-22T15:15:00" },
-  { id: 1014, classId: 101, activityId: 6, startTime: "2025-04-22T15:15:00", endTime: "2025-04-22T16:30:00" },
-
-  // Wednesday
-  { id: 1015, classId: 101, activityId: 8, startTime: "2025-04-23T09:00:00", endTime: "2025-04-23T10:30:00" },
-  { id: 1016, classId: 101, activityId: 4, startTime: "2025-04-23T10:30:00", endTime: "2025-04-23T10:45:00" },
-  { id: 1017, classId: 101, activityId: 8, startTime: "2025-04-23T10:45:00", endTime: "2025-04-23T12:00:00" },
-  { id: 1018, classId: 101, activityId: 3, startTime: "2025-04-23T12:00:00", endTime: "2025-04-23T13:00:00" },
-  { id: 1019, classId: 101, activityId: 9, startTime: "2025-04-23T13:00:00", endTime: "2025-04-23T15:00:00" },
-  { id: 1020, classId: 101, activityId: 5, startTime: "2025-04-23T15:00:00", endTime: "2025-04-23T15:15:00" },
-  { id: 1021, classId: 101, activityId: 9, startTime: "2025-04-23T15:15:00", endTime: "2025-04-23T16:30:00" },
-
-  // Thursday
-  { id: 1022, classId: 101, activityId: 1, startTime: "2025-04-24T09:00:00", endTime: "2025-04-24T10:30:00" },
-  { id: 1023, classId: 101, activityId: 4, startTime: "2025-04-24T10:30:00", endTime: "2025-04-24T10:45:00" },
-  { id: 1024, classId: 101, activityId: 2, startTime: "2025-04-24T10:45:00", endTime: "2025-04-24T12:00:00" },
-  { id: 1025, classId: 101, activityId: 3, startTime: "2025-04-24T12:00:00", endTime: "2025-04-24T13:00:00" },
-  { id: 1026, classId: 101, activityId: 7, startTime: "2025-04-24T13:00:00", endTime: "2025-04-24T15:00:00" },
-  { id: 1027, classId: 101, activityId: 5, startTime: "2025-04-24T15:00:00", endTime: "2025-04-24T15:15:00" },
-  { id: 1028, classId: 101, activityId: 8, startTime: "2025-04-24T15:15:00", endTime: "2025-04-24T16:30:00" },
-
-  // Friday
-  { id: 1029, classId: 101, activityId: 6, startTime: "2025-04-25T09:00:00", endTime: "2025-04-25T10:30:00" },
-  { id: 1030, classId: 101, activityId: 4, startTime: "2025-04-25T10:30:00", endTime: "2025-04-25T10:45:00" },
-  { id: 1031, classId: 101, activityId: 9, startTime: "2025-04-25T10:45:00", endTime: "2025-04-25T12:00:00" },
-  { id: 1032, classId: 101, activityId: 3, startTime: "2025-04-25T12:00:00", endTime: "2025-04-25T13:00:00" },
-  { id: 1033, classId: 101, activityId: 10, startTime: "2025-04-25T13:00:00", endTime: "2025-04-25T16:30:00" },
-
-  // Camp 102 (The Hague)
-  // Monday
-  { id: 2001, classId: 102, activityId: 1, startTime: "2025-05-05T09:00:00", endTime: "2025-05-05T10:30:00" },
-  { id: 2002, classId: 102, activityId: 4, startTime: "2025-05-05T10:30:00", endTime: "2025-05-05T10:45:00" },
-  { id: 2003, classId: 102, activityId: 1, startTime: "2025-05-05T10:45:00", endTime: "2025-05-05T12:00:00" },
-  { id: 2004, classId: 102, activityId: 3, startTime: "2025-05-05T12:00:00", endTime: "2025-05-05T13:00:00" },
-  { id: 2005, classId: 102, activityId: 6, startTime: "2025-05-05T13:00:00", endTime: "2025-05-05T15:00:00" },
-  { id: 2006, classId: 102, activityId: 5, startTime: "2025-05-05T15:00:00", endTime: "2025-05-05T15:15:00" },
-  { id: 2007, classId: 102, activityId: 6, startTime: "2025-05-05T15:15:00", endTime: "2025-05-05T16:30:00" },
-
-  // Camp 103 (Amstelveen)
-  // Monday
-  { id: 3001, classId: 103, activityId: 2, startTime: "2025-07-14T09:00:00", endTime: "2025-07-14T10:30:00" },
-  { id: 3002, classId: 103, activityId: 4, startTime: "2025-07-14T10:30:00", endTime: "2025-07-14T10:45:00" },
-  { id: 3003, classId: 103, activityId: 2, startTime: "2025-07-14T10:45:00", endTime: "2025-07-14T12:00:00" },
-  { id: 3004, classId: 103, activityId: 3, startTime: "2025-07-14T12:00:00", endTime: "2025-07-14T13:00:00" },
-  { id: 3005, classId: 103, activityId: 8, startTime: "2025-07-14T13:00:00", endTime: "2025-07-14T15:00:00" },
-  { id: 3006, classId: 103, activityId: 5, startTime: "2025-07-14T15:00:00", endTime: "2025-07-14T15:15:00" },
-  { id: 3007, classId: 103, activityId: 8, startTime: "2025-07-14T15:15:00", endTime: "2025-07-14T16:30:00" },
-];
-
-// Helper functions to work with both regular courses and camps
+// Helper functions to work with lessons and classes
 
 /**
- * Determines if a class is a Coder Camp
- * @param {Object} classItem - A class object from classesData
- * @returns {boolean} True if the class is a camp, false otherwise
- */
-export const isCoderCamp = (classItem) => {
-  return classItem?.type === "camp";
-};
-
-/**
- * Gets the appropriate schedule items for a class (lessons for regular courses, activities for camps)
+ * Gets the lesson schedule for a class
  * @param {number} classId - The ID of the class
- * @returns {Array} The scheduled items with all relevant data
+ * @returns {Array} The scheduled lessons with all relevant data
  */
 export const getClassScheduleItems = (classId) => {
-  const classItem = classesData.find((c) => c.id === classId);
+  return scheduleData
+    .filter((schedule) => schedule.classId === classId)
+    .map((schedule) => {
+      const lesson = lessonsData.find((lesson) => lesson.id === schedule.lessonId);
 
-  if (!classItem) {
-    return [];
-  }
-
-  if (isCoderCamp(classItem)) {
-    // Return camp activities schedule
-    return campScheduleData
-      .filter((schedule) => schedule.classId === classId)
-      .map((schedule) => {
-        const activity = campActivitiesData.find((activity) => activity.id === schedule.activityId);
-        const activityType = activityTypesData.find((type) => type.id === activity.typeId);
-
-        return {
-          ...schedule,
-          title: activity.name,
-          description: activity.description,
-          startDate: schedule.startTime,
-          endDate: schedule.endTime,
-          type: "activity",
-          category: activityType.name
-        };
-      })
-      .sort((a, b) => new Date(a.startTime) - new Date(b.startTime));
-  } else {
-    // Return regular course lessons schedule
-    return scheduleData
-      .filter((schedule) => schedule.classId === classId)
-      .map((schedule) => {
-        const lesson = lessonsData.find((lesson) => lesson.id === schedule.lessonId);
-
-        return {
-          ...schedule,
-          title: lesson.name,
-          type: "lesson"
-        };
-      })
-      .sort((a, b) => new Date(a.startDate) - new Date(b.startDate));
-  }
+      return {
+        ...schedule,
+        title: lesson.name,
+        type: "lesson"
+      };
+    })
+    .sort((a, b) => new Date(a.startDateTime) - new Date(b.startDateTime));
 };
 
 /**
- * Gets the next upcoming schedule item for a class
+ * Gets the next upcoming lesson for a class
  * @param {number} classId - The ID of the class
- * @returns {Object|null} The next schedule item or null if none found
+ * @returns {Object|null} The next lesson or null if none found
  */
 export const getNextScheduleItem = (classId) => {
   const now = new Date();
@@ -1053,16 +484,16 @@ export const getNextScheduleItem = (classId) => {
 
   return (
     scheduleItems.find((item) => {
-      const startDate = new Date(item.startDate || item.startTime);
-      return startDate > now;
+      const startDateTime = new Date(item.startDateTime);
+      return startDateTime > now;
     }) || null
   );
 };
 
 /**
- * Gets the currently active schedule item for a class
+ * Gets the currently active lesson for a class
  * @param {number} classId - The ID of the class
- * @returns {Object|null} The active schedule item or null if none found
+ * @returns {Object|null} The active lesson or null if none found
  */
 export const getActiveScheduleItem = (classId) => {
   const now = new Date();
@@ -1070,17 +501,17 @@ export const getActiveScheduleItem = (classId) => {
 
   return (
     scheduleItems.find((item) => {
-      const startDate = new Date(item.startDate || item.startTime);
-      const endDate = new Date(item.endDate || item.endTime);
-      return startDate <= now && endDate >= now;
+      const startDateTime = new Date(item.startDateTime);
+      const endDateTime = new Date(item.endDateTime);
+      return startDateTime <= now && endDateTime >= now;
     }) || null
   );
 };
 
 /**
- * Gets class information in a consistent format regardless of type
+ * Gets class information for regular courses
  * @param {number} classId - The ID of the class
- * @returns {Object} Class information with type-specific details
+ * @returns {Object} Class information with curriculum details
  */
 export const getClassInfo = (classId) => {
   const classItem = classesData.find((c) => c.id === classId);
@@ -1089,30 +520,16 @@ export const getClassInfo = (classId) => {
     return null;
   }
 
-  if (isCoderCamp(classItem)) {
-    return {
-      ...classItem,
-      name: classItem.name,
-      type: "camp",
-      startDate: classItem.startDate,
-      endDate: classItem.endDate,
-      scheduleItems: getClassScheduleItems(classId),
-      displayName: `Coder Camp`,
-      activitiesCount: campScheduleData.filter((s) => s.classId === classId).length,
-      uniqueActivitiesCount: [...new Set(campScheduleData.filter((s) => s.classId === classId).map((s) => s.activityId))].length,
-    };
-  } else {
-    const curriculum = curriculumData.find((c) => c.id === classItem.curriculumId);
-    return {
-      ...classItem,
-      type: "regular",
-      startDate: classItem.startDate,
-      endDate: classItem.endDate,
-      scheduleItems: getClassScheduleItems(classId),
-      level: curriculum ? curriculum.level : null, // Get level from curriculum
-      displayName: curriculum ? curriculum.name : classItem.name,
-      lessonsCount: scheduleData.filter((s) => s.classId === classId).length,
-      curriculum: curriculum,
-    };
-  }
+  const curriculum = curriculumData.find((c) => c.id === classItem.curriculumId);
+  return {
+    ...classItem,
+    type: "regular",
+    startDateTime: classItem.startDateTime,
+    endDateTime: classItem.endDateTime,
+    scheduleItems: getClassScheduleItems(classId),
+    level: curriculum ? curriculum.level : null,
+    displayName: curriculum ? curriculum.name : classItem.name,
+    lessonsCount: scheduleData.filter((s) => s.classId === classId).length,
+    curriculum: curriculum,
+  };
 };

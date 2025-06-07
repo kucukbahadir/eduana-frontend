@@ -2,7 +2,7 @@ import { faker } from "@faker-js/faker";
 import { useState, useEffect } from "react";
 import { useParams, Link } from "react-router";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Button, buttonVariants } from "@/components/ui/button";
+import { buttonVariants } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
@@ -12,16 +12,15 @@ import { Switch } from "@/components/ui/switch";
 import {
   BookOpen,
   Users,
+  Calendar,
   Clock,
   CheckCircle,
   FileText,
   Star,
-  ChevronRight,
   Notebook,
   BarChart,
   ChevronLeft,
   CalendarClock,
-  Calendar,
   MapPinned,
   ListCheck,
   NotebookPen,
@@ -31,10 +30,18 @@ import {
   School,
   ChartNoAxesColumn,
   LoaderCircle,
+  Timer,
 } from "lucide-react";
 
 // Temporary mock data - will come from API in production
 import { classesData, curriculumData, lessonsData, scheduleData } from "@/pages/class/data.js";
+
+// Tabs for Lessons
+const lessonTabs = [
+  { id: "overview", name: "Overview", icon: BookOpen },
+  { id: "attendance", name: "Attendance", icon: Users },
+  { id: "summary", name: "Summary", icon: ChartNoAxesColumn },
+];
 
 // Rating criteria for student evaluation
 const evaluationCriteria = [
@@ -42,7 +49,7 @@ const evaluationCriteria = [
   { id: "understanding", name: "Understanding" },
   { id: "collaboration", name: "Collaboration" },
   { id: "problemSolving", name: "Problem Solving" },
-  { id: "completion", name: "Task Completion" },
+  { id: "taskCompletion", name: "Task Completion" },
 ];
 
 // Reusable info list item component
@@ -148,27 +155,23 @@ const InfoSection = ({ title, items }) => (
 const LessonSidebar = ({ lesson, schedule, classData, curriculum, students, onStartLesson }) => {
   // Prepare data for each section
   const lessonItems = [
-    { icon: CalendarClock, label: "Date", value: new Date(schedule.startDate).toLocaleDateString() },
-    { icon: Clock, label: "Start Time", value: new Date(schedule.startDate).toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" }) },
-    { icon: Clock, label: "End Time", value: new Date(schedule.endDate).toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" }) },
+    { icon: CalendarClock, label: "Date", value: new Date(schedule.startDateTime).toLocaleDateString(undefined, { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' }) },
+    { icon: Timer, label: "Duration", value: `${Math.ceil((new Date(schedule.endDateTime) - new Date(schedule.startDateTime)) / (1000 * 60))} minutes` },
+    { icon: Clock, label: "Start Time", value: new Date(schedule.startDateTime).toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" }) },
+    { icon: Clock, label: "End Time", value: new Date(schedule.endDateTime).toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" }) },
   ];
 
   const classItems = [
     { icon: School, label: "Name", value: classData.name },
     { icon: MapPinned, label: "Location", value: classData.location },
     { icon: Users, label: "Students", value: students.length },
-    {
-      icon: CalendarClock,
-      label: "Start Date",
-      value: new Date(scheduleData.find((sped) => parseInt(classData.id, 10) === sped.classId).startDate).toLocaleDateString(),
-    },
-    { icon: CalendarClock, label: "End Date", value: new Date(schedule.endDate).toLocaleDateString() },
+    { icon: CalendarClock, label: "Weeks", value: scheduleData.filter((sped) => parseInt(classData.id, 10) === sped.classId).length },
+    { icon: Calendar, label: "Period", value: classData.period },
   ];
 
   const curriculumItems = [
     { icon: Notebook, label: "Name", value: curriculum?.name },
     { icon: BarChart, label: "Level", value: curriculum?.level },
-    { icon: Calendar, label: "Period", value: classData.period },
   ];
 
   return (
@@ -176,12 +179,6 @@ const LessonSidebar = ({ lesson, schedule, classData, curriculum, students, onSt
       <InfoSection title="Lesson" items={lessonItems} />
       <InfoSection title="Class" items={classItems} />
       <InfoSection title="Curriculum" items={curriculumItems} />
-
-      <div className="flex items-end h-full">
-        <Button variant={"primary"} className={"rounded-full w-full"}>
-          <ChevronRight /> Start Taking Attendance
-        </Button>
-      </div>
     </Card>
   );
 };
@@ -200,9 +197,15 @@ const OverviewTab = ({ lesson, schedule, classData, curriculum, students, teache
 );
 
 // Reusable switch component for attendance
-const AttendanceSwitch = ({ checked, onChange, disabled = false, variant = "success" }) => (
-  <Switch checked={checked} onCheckedChange={onChange} disabled={disabled} className={`data-[state=checked]:bg-${variant}! mx-auto`} />
-);
+const AttendanceSwitch = ({ checked, onChange, disabled = false, variant = "success" }) => {
+  const colorVariants = {
+    success: "data-[state=checked]:bg-success!",
+    destructive: "data-[state=checked]:bg-destructive!",
+    warning: "data-[state=checked]:bg-warning!",
+  };
+
+  return <Switch checked={checked} onCheckedChange={onChange} disabled={disabled} className={`${colorVariants[variant]} mx-auto`} />;
+};
 
 // Component for attendance table
 const AttendanceTable = ({ students, attendance, handleToggleAttendance }) => (
@@ -232,7 +235,11 @@ const AttendanceTable = ({ students, attendance, handleToggleAttendance }) => (
             <TableCell>{student.previousExperience}</TableCell>
             <TableCell>{student.parentPhone}</TableCell>
             <TableCell className="text-center">
-              <AttendanceSwitch checked={attendance[student.id]?.present} onChange={() => handleToggleAttendance(student.id, "present")} variant="success" />
+              <AttendanceSwitch
+                checked={attendance[student.id]?.present}
+                onChange={() => handleToggleAttendance(student.id, "present", !attendance[student.id]?.present)}
+                variant="success"
+              />
             </TableCell>
             <TableCell className="text-center">
               <AttendanceSwitch
@@ -276,7 +283,7 @@ const RatingSelector = ({ value, onChange }) => (
 // Component for student evaluations
 const EvaluationTable = ({ students, attendance, evaluations, handleEvaluationChange }) => {
   const presentStudents = students.filter((student) => attendance[student.id]?.present);
-  if (presentStudents.length === 0) return null; // Return null if no students are present
+  if (presentStudents.length === 0) return null; // Don't show the card if no students are present
 
   return (
     <Card className={"p-6 gap-4 rounded-md w-full"}>
@@ -314,14 +321,6 @@ const EvaluationTable = ({ students, attendance, evaluations, handleEvaluationCh
   );
 };
 
-// Component for the Attendance tab content
-const AttendanceTab = ({ students, attendance, evaluations, handleToggleAttendance, handleEvaluationChange }) => (
-  <div className="flex flex-col gap-1 bg-muted p-1 rounded-lg">
-    <AttendanceTable students={students} attendance={attendance} handleToggleAttendance={handleToggleAttendance} />
-    <EvaluationTable students={students} attendance={attendance} evaluations={evaluations} handleEvaluationChange={handleEvaluationChange} />
-  </div>
-);
-
 // Stat card component
 const StatCard = ({ value, label }) => (
   <div className="flex flex-col gap-2 items-center justify-center bg-muted rounded-lg p-10">
@@ -351,7 +350,7 @@ const StatisticsCards = ({ students, attendance, evaluations }) => {
   return (
     <div className="grid grid-cols-2 gap-4">
       <StatCard value={`${Object.values(attendance).filter((a) => a.present).length}/${students.length}`} label="Students Attended" />
-      <StatCard value={calculateAverageRating()} label="Average Rating" />
+      <StatCard value={calculateAverageRating()*2 } label="Average Rating out of 10" />
     </div>
   );
 };
@@ -397,7 +396,7 @@ const SummaryEvaluationTable = ({ students, attendance, evaluations }) => {
 
 // Component for the Summary tab content
 const SummaryTab = ({ students, attendance, evaluations }) => (
-  <div className="flex flex-col gap-1 bg-muted p-1 rounded-lg">
+  <div className="flex flex-col gap-1 bg-muted rounded-lg">
     <Card className={"p-6 gap-4 rounded-md w-full"}>
       <SectionHeader icon={CheckCircle} title="Statistics" />
       <div className="grid gap-6">
@@ -485,16 +484,16 @@ const LessonView = () => {
         ...prev[studentId],
         [field]: !prev[studentId][field],
       };
-      
+
       // If we're toggling present to false, also set late and excused to false
-      if (field === 'present' && !updatedState.present) {
+      if (field === "present" && !updatedState.present) {
         updatedState.late = false;
         updatedState.excused = false;
       }
-      
+
       return {
         ...prev,
-        [studentId]: updatedState
+        [studentId]: updatedState,
       };
     });
   };
@@ -526,23 +525,15 @@ const LessonView = () => {
           <ChevronLeft /> Back to class
         </Link>
       </div>
-      <hr />
-
-      {/* Main tabbed content */}
+      <hr />        {/* Main tabbed content */}
       <Tabs value={activeTab} onValueChange={setActiveTab}>
         <TabsList className="grid w-full grid-cols-3">
-          <TabsTrigger value="overview">
-            <BookOpen className="mr-2" />
-            Overview
-          </TabsTrigger>
-          <TabsTrigger value="attendance">
-            <Users className="mr-2" />
-            Students
-          </TabsTrigger>
-          <TabsTrigger value="summary">
-            <ChartNoAxesColumn className="mr-2" />
-            Summary
-          </TabsTrigger>
+          {lessonTabs.map((tab) => (
+            <TabsTrigger key={tab.id} value={tab.id}>
+              {tab.icon && <tab.icon className="mr-2" />}
+              {tab.name}
+            </TabsTrigger>
+          ))}
         </TabsList>
 
         {/* Overview Tab */}
@@ -560,13 +551,10 @@ const LessonView = () => {
 
         {/* Attendance Tab */}
         <TabsContent value="attendance">
-          <AttendanceTab
-            students={students}
-            attendance={attendance}
-            evaluations={evaluations}
-            handleToggleAttendance={handleToggleAttendance}
-            handleEvaluationChange={handleEvaluationChange}
-          />
+          <div className="flex flex-col gap-1 bg-muted p-1 rounded-lg">
+            <AttendanceTable students={students} attendance={attendance} handleToggleAttendance={handleToggleAttendance} />
+            <EvaluationTable students={students} attendance={attendance} evaluations={evaluations} handleEvaluationChange={handleEvaluationChange} />
+          </div>
         </TabsContent>
 
         {/* Summary Tab */}
