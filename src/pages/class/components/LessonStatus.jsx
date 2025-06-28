@@ -7,31 +7,29 @@ import { useState, useEffect } from "react";
 /**
  * Component for displaying active or next lesson information
  * @param {Object} props
- * @param {Array} props.allLessons - All scheduled lessons for this class
+ * @param {Array} props.sessions - All scheduled sessions for this class
  */
-const LessonStatus = ({ allLessons }) => {
+const LessonStatus = ({ sessions }) => {
   // Internal state to track current active and next lessons
   const [activeLesson, setActiveLesson] = useState(null);
   const [nextLesson, setNextLesson] = useState(null);
 
   // Update active and next lessons based on current time
   useEffect(() => {
-    if (!allLessons || !allLessons.length) return;
+    if (!sessions || !sessions.length) return;
 
-    let timeoutId = null;
-
-    // Function to determine active and next lessons
+    let timeoutId = null; // Function to determine active and next lessons
     const updateLessonStatus = () => {
       const now = new Date();
 
       // Find active lesson (current time is between start and end)
-      const currentActiveLesson = allLessons.find((lesson) => new Date(lesson.startDate) <= now && new Date(lesson.endDate) >= now);
+      const currentActiveLesson = sessions.find((session) => new Date(session.start_time) <= now && new Date(session.end_time) >= now);
 
       // Find next lesson (start time is in the future)
       // Sort by start time to get the closest upcoming lesson
-      const upcomingLessons = allLessons.filter((lesson) => new Date(lesson.startDate) > now).sort((a, b) => new Date(a.startDate) - new Date(b.startDate));
+      const upcomingSessions = sessions.filter((session) => new Date(session.start_time) > now).sort((a, b) => new Date(a.start_time) - new Date(b.start_time));
 
-      const currentNextLesson = upcomingLessons.length > 0 ? upcomingLessons[0] : null;
+      const currentNextLesson = upcomingSessions.length > 0 ? upcomingSessions[0] : null;
 
       console.log("Active Lesson:", currentActiveLesson);
       console.log("Next Lesson:", currentNextLesson);
@@ -55,16 +53,14 @@ const LessonStatus = ({ allLessons }) => {
 
     // Helper function to calculate when the next status change will occur
     const getNextStatusChangeTime = (now, activeLesson, nextLesson) => {
-      const times = [];
-
-      // If there's an active lesson, it will end at some point
+      const times = []; // If there's an active lesson, it will end at some point
       if (activeLesson) {
-        times.push(new Date(activeLesson.endDate));
+        times.push(new Date(activeLesson.end_time));
       }
 
       // If there's a next lesson, it will start at some point
       if (nextLesson) {
-        times.push(new Date(nextLesson.startDate));
+        times.push(new Date(nextLesson.start_time));
       }
 
       // Find the earliest time in the future
@@ -81,10 +77,10 @@ const LessonStatus = ({ allLessons }) => {
         clearTimeout(timeoutId);
       }
     };
-  }, [allLessons]);
+  }, [sessions]);
 
   if (!activeLesson && !nextLesson) {
-    return
+    return;
   }
 
   return (
@@ -97,8 +93,8 @@ const LessonStatus = ({ allLessons }) => {
         ) : (
           <span className="text-muted-foreground">No upcoming lessons</span>
         )}
-      </div>
-      <Link to={"lessons/" + (activeLesson ? activeLesson.id : nextLesson.id)} className={buttonVariants({ variant: activeLesson ? "default" : "secondary" })}>
+      </div>{" "}
+      <Link to={"sessions/" + (activeLesson ? activeLesson.id : nextLesson.id)} className={buttonVariants({ variant: activeLesson ? "default" : "secondary" })}>
         <ChevronRight /> {activeLesson ? "Join Active Lesson" : "Go To Lesson"}
       </Link>
     </Card>
@@ -116,7 +112,7 @@ const ActiveLessonContent = ({ lesson }) => {
 
     const updateRemainingTime = () => {
       const now = Date.now();
-      const endTime = new Date(lesson.endDate).getTime();
+      const endTime = new Date(lesson.end_time).getTime();
       const timeDiff = endTime - now;
 
       // Check if lesson has ended
@@ -140,11 +136,9 @@ const ActiveLessonContent = ({ lesson }) => {
     };
 
     // Calculate initial time
-    updateRemainingTime();
-
-    // Only set up interval if lesson hasn't ended
+    updateRemainingTime(); // Only set up interval if lesson hasn't ended
     const now = Date.now();
-    const endTime = new Date(lesson.endDate).getTime();
+    const endTime = new Date(lesson.end_time).getTime();
 
     if (endTime > now) {
       // Update every second for countdown display
@@ -156,13 +150,13 @@ const ActiveLessonContent = ({ lesson }) => {
         clearInterval(intervalId);
       }
     };
-  }, [lesson.endDate]);
+  }, [lesson.end_time]);
 
   return (
     <>
       <span className="text-warning font-medium">Currently Active</span>
-      <h2 className="font-extrabold">{lesson.name}</h2>
-      <span className="text-muted-foreground">{new Date(lesson.startDate).toLocaleString("en-US", { dateStyle: "full", timeStyle: "short" })}</span>{" "}
+      <h2 className="font-extrabold">{lesson.lesson.title}</h2>
+      <span className="text-muted-foreground">{new Date(lesson.start_time).toLocaleString("en-US", { dateStyle: "full", timeStyle: "short" })}</span>{" "}
       <span className="text-warning text-sm">
         Lesson ends in {remainingTime.hours > 0 ? `${remainingTime.hours}h ` : ""}
         {remainingTime.minutes}m {remainingTime.seconds}s
@@ -179,10 +173,9 @@ const NextLessonContent = ({ lesson }) => {
 
   useEffect(() => {
     let timerId = null;
-
     const updateTimeDisplay = () => {
       const now = Date.now();
-      const startTime = new Date(lesson.startDate).getTime();
+      const startTime = new Date(lesson.start_time).getTime();
       const timeDiff = startTime - now;
 
       // If lesson has already started, clear timer and return
@@ -255,12 +248,12 @@ const NextLessonContent = ({ lesson }) => {
         clearTimeout(timerId);
       }
     };
-  }, [lesson.startDate]);
+  }, [lesson.start_time]);
   return (
     <>
       <span className="text-muted-foreground">Next Lesson</span>
-      <h2 className="font-extrabold">{lesson.name}</h2>
-      <span className="text-muted-foreground">{new Date(lesson.startDate).toLocaleString("en-US", { dateStyle: "full", timeStyle: "short" })}</span>
+      <h2 className="font-extrabold">{lesson.lesson.title}</h2>
+      <span className="text-muted-foreground">{new Date(lesson.start_time).toLocaleString("en-US", { dateStyle: "full", timeStyle: "short" })}</span>
       <span className="text-muted-foreground text-sm">Lesson will start in {timeDisplay}</span>
     </>
   );

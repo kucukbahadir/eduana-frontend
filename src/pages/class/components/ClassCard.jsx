@@ -1,6 +1,6 @@
 import { Link } from "react-router";
 import { buttonVariants } from "@/components/ui/button";
-import { MapPinned, Notebook, BarChart, Calendar, Brain, Activity } from "lucide-react";
+import { MapPinned, BarChart, Notebook, CalendarClock } from "lucide-react";
 import Category from "./Category";
 
 /**
@@ -10,16 +10,31 @@ import Category from "./Category";
  * @param {Object} props.curriculum - Curriculum data object
  */
 const ClassCard = ({ classData, curriculum }) => {
+  const nextUpcomingEvent = classData.sessions ? classData.sessions.find((session) => new Date(session.start_time) > new Date()) : null;
+  console.log("ClassCard props:", { classData, curriculum, nextUpcomingEvent });
 
   return (
     <div className="flex flex-col gap-2">
-      <Link to={`${classData.id}`} className={buttonVariants({ variant: "outline" }) + " flex flex-col items-start h-fit p-4 gap-2! rounded-xl"}>
-        <h3>{classData.name}</h3>
+      <Link to={`${classData.id}`} className={buttonVariants({ variant: "outline" }) + " flex flex-col items-start h-fit p-4 gap-2! rounded-xl capitalize"}>
+        <h3>{curriculum?.program_type}</h3>
         <div className="flex gap-4 items-center text-sm text-muted-foreground">
-          <Category name="Location" value={classData.location} icon={<MapPinned size={16} />} />
-          <Category name="Curriculum" value={curriculum?.name} icon={<Notebook size={16} />} />
-          <Category name="Level" value={curriculum?.level} icon={<BarChart size={16} />} />
-          <Category name="Period" value={classData.period} icon={<Calendar size={16} />} />
+          <Category name="Location" value={classData.location ? classData.location.name : "IM DA BIGGEST BIRD"} icon={<MapPinned size={16} />} />
+          <Category
+            name="Duration"
+            value={
+              new Date(classData.sessions[0].start_time).toLocaleDateString("en-US", {
+                year: "numeric",
+                month: "long",
+                day: "numeric",
+              }) + " - " + new Date(classData.sessions[classData.sessions.length - 1].end_time).toLocaleDateString("en-US", {
+                year: "numeric",
+                month: "long",
+                day: "numeric",
+              })
+            }
+            icon={<CalendarClock size={16} />}
+          />
+          <Category name="Level" value={curriculum?.difficulty_level} icon={<BarChart size={16} />} />
         </div>
       </Link>
     </div>

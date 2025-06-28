@@ -8,9 +8,9 @@ import { useParams } from "react-router";
 /**
  * Component for displaying a list of lessons with their status
  * @param {Object} props
- * @param {Array} props.lessons - Array of lesson objects
+ * @param {Array} props.sessions - Array of session objects
  */
-const LessonsList = ({ lessons }) => {
+const LessonsList = ({ sessions }) => {
   // Force re-render every minute to update lesson statuses
   const [, setRefreshTrigger] = useState(0);
 
@@ -25,14 +25,16 @@ const LessonsList = ({ lessons }) => {
 
   return (
     <Card className={"h-fit p-4 gap-2 grow"}>
-      <h3 className="mb-2">Lessons</h3>
-      {lessons.length < 1 ? (
-        <span className="text-muted-foreground">No lessons available</span>
+      <h3 className="mb-2">Sessions</h3>
+      {sessions.length < 1 ? (
+        <span className="text-muted-foreground">No sessions available</span>
       ) : (
         <div className="grid grid-cols-2 gap-2">
-          {lessons.map((lesson, index) => (
-            <LessonItem key={lesson.id || index} lesson={lesson} index={index} />
-          ))}
+          {sessions
+            .sort((a, b) => new Date(a.start_time) - new Date(b.start_time))
+            .map((session, index) => (
+              <LessonItem key={session.id || index} session={session} index={index} />
+            ))}
         </div>
       )}
     </Card>
@@ -42,7 +44,7 @@ const LessonsList = ({ lessons }) => {
 /**
  * Individual lesson item component
  */
-const LessonItem = ({ lesson, index }) => {
+const LessonItem = ({ session, index }) => {
   const { id: classId } = useParams();
   const [status, setStatus] = useState("upcoming");
 
@@ -53,18 +55,18 @@ const LessonItem = ({ lesson, index }) => {
     // Check status every second for active lessons
     const timer = setInterval(updateLessonStatus, 1000);
     return () => clearInterval(timer);
-  }, [lesson.startDate, lesson.endDate]);
+  }, [session.start_time, session.end_time]);
 
   // Function to determine the current status
   function updateLessonStatus() {
     const now = Date.now();
-    const startDate = new Date(lesson.startDate).getTime();
-    const endDate = new Date(lesson.endDate).getTime();
+    const start_time = new Date(session.start_time).getTime();
+    const end_time = new Date(session.end_time).getTime();
 
     let newStatus;
-    if (startDate <= now && endDate >= now) {
+    if (start_time <= now && end_time >= now) {
       newStatus = "active";
-    } else if (endDate < now) {
+    } else if (end_time < now) {
       newStatus = "completed";
     } else {
       newStatus = "upcoming";
@@ -89,17 +91,17 @@ const LessonItem = ({ lesson, index }) => {
 
   return (
     <Link
-      to={`/classes/${classId}/lessons/${lesson.id}`}
+      to={`/classes/${classId}/sessions/${session.id}`}
       className={buttonVariants({ variant: "secondary" }) + " !shadow-none text-start justify-start !h-fit !py-3"}
     >
       {getStatusIcon()}
       <div className="flex justify-between items-center w-full">
         <div className="flex flex-col">
-          <span>{lesson.name}</span>
-          <span className="ml-auto text-xs font-normal text-muted-foreground">
-            {new Date(lesson.startDate).toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })} /{" "}
-            {new Date(lesson.endDate).toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })} —{" "}
-            {new Date(lesson.startDate).toLocaleDateString("en-US", { weekday: "long", year: "numeric", month: "long", day: "numeric" })}
+          <span>{session.lesson.title}</span>
+          <span className="text-xs font-normal text-muted-foreground">
+            {new Date(session.start_time).toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })} /{" "}
+            {new Date(session.end_time).toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })} —{" "}
+            {new Date(session.start_time).toLocaleDateString("en-US", { weekday: "long", year: "numeric", month: "long", day: "numeric" })}
           </span>
         </div>
         <ChevronRight />
