@@ -18,6 +18,9 @@ const Navbar = () => {
           <Link to="/classes" className={buttonVariants({ variant: "link" })}>
             Classes
           </Link>
+          <Link to="/games" className={buttonVariants({ variant: "link" })}>
+            Games
+          </Link>
         </div>
         <div className="flex items-center gap-0">
           <Input icon={Search} placeholder="Search" wrapperClassName={"hidden lg:block mr-2"} className={"h-11"} />
