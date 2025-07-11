@@ -2,6 +2,7 @@ import { Link } from "react-router";
 import { buttonVariants } from "@/components/ui/button";
 import { MapPinned, BarChart, Notebook, CalendarClock } from "lucide-react";
 import Category from "./Category";
+import React from 'react';
 
 /**
  * Component for displaying a class card with relevant information
@@ -9,9 +10,8 @@ import Category from "./Category";
  * @param {Object} props.classData - Class data object
  * @param {Object} props.curriculum - Curriculum data object
  */
-const ClassCard = ({ classData, curriculum }) => {
+const ClassCard = React.memo(({ classData, curriculum }) => {
   const nextUpcomingEvent = classData.sessions ? classData.sessions.find((session) => new Date(session.start_time) > new Date()) : null;
-  console.log("ClassCard props:", { classData, curriculum, nextUpcomingEvent });
 
   return (
     <div className="flex flex-col gap-2">
@@ -39,6 +39,11 @@ const ClassCard = ({ classData, curriculum }) => {
       </Link>
     </div>
   );
-};
+}, (prevProps, nextProps) => {
+  return (
+    prevProps.classData.id === nextProps.classData.id &&
+    prevProps.curriculum?.id === nextProps.curriculum?.id
+  );
+});
 
 export default ClassCard;

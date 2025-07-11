@@ -17,8 +17,6 @@ const errorMessages = {
 };
 
 const fetchClass = async (classId) => {
-  await new Promise((resolve) => setTimeout(resolve, 800)); // simulate api call delay
-
   const response = await fetch(`http://localhost:3000/api/classes/${classId}`);
 
   if (!response.ok) {

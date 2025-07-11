@@ -222,6 +222,7 @@ const LessonView = () => {
                 students={students}
                 sessionId={sessionId}
                 initialEvaluations={initialEvaluationData}
+                attendance={initialAttendanceData}
               />
             )}
           </Suspense>

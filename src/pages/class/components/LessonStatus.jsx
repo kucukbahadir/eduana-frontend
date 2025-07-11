@@ -2,7 +2,7 @@ import { Link } from "react-router";
 import { Card } from "@/components/ui/card";
 import { buttonVariants } from "@/components/ui/button";
 import { ChevronRight } from "lucide-react";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 
 /**
  * Component for displaying active or next lesson information
@@ -10,77 +10,86 @@ import { useState, useEffect } from "react";
  * @param {Array} props.sessions - All scheduled sessions for this class
  */
 const LessonStatus = ({ sessions }) => {
-  // Internal state to track current active and next lessons
   const [activeLesson, setActiveLesson] = useState(null);
   const [nextLesson, setNextLesson] = useState(null);
 
-  // Update active and next lessons based on current time
+  // Helper function to calculate when the next status change will occur
+  const getNextStatusChangeTime = useCallback((now, activeLesson, nextLesson) => {
+    const times = [];
+    
+    if (activeLesson) {
+      times.push(new Date(activeLesson.end_time));
+    }
+
+    if (nextLesson) {
+      times.push(new Date(nextLesson.start_time));
+    }
+
+    const futureTimes = times.filter((time) => time > now);
+    return futureTimes.length > 0 ? futureTimes.sort((a, b) => a - b)[0] : null;
+  }, []);
+
+  // Move updateLessonStatus function outside and make it a useCallback
+  const updateLessonStatus = useCallback(() => {
+    if (!sessions || !sessions.length) return;
+
+    const now = new Date();
+
+    // Find active lesson
+    const currentActiveLesson = sessions.find((session) => 
+      new Date(session.start_time) <= now && new Date(session.end_time) >= now
+    );
+
+    // Find next lesson
+    const upcomingSessions = sessions
+      .filter((session) => new Date(session.start_time) > now)
+      .sort((a, b) => new Date(a.start_time) - new Date(b.start_time));
+
+    const currentNextLesson = upcomingSessions.length > 0 ? upcomingSessions[0] : null;
+
+    setActiveLesson(currentActiveLesson);
+    setNextLesson(currentNextLesson);
+  }, [sessions]);
+
+  // Optimized timer management
   useEffect(() => {
     if (!sessions || !sessions.length) return;
 
-    let timeoutId = null; // Function to determine active and next lessons
-    const updateLessonStatus = () => {
+    let timeoutId = null;
+
+    const scheduleNextUpdate = () => {
       const now = new Date();
-
-      // Find active lesson (current time is between start and end)
-      const currentActiveLesson = sessions.find((session) => new Date(session.start_time) <= now && new Date(session.end_time) >= now);
-
-      // Find next lesson (start time is in the future)
-      // Sort by start time to get the closest upcoming lesson
-      const upcomingSessions = sessions.filter((session) => new Date(session.start_time) > now).sort((a, b) => new Date(a.start_time) - new Date(b.start_time));
-
-      const currentNextLesson = upcomingSessions.length > 0 ? upcomingSessions[0] : null;
-
-      console.log("Active Lesson:", currentActiveLesson);
-      console.log("Next Lesson:", currentNextLesson);
-
-      setActiveLesson(currentActiveLesson);
-      setNextLesson(currentNextLesson);
-
-      // Calculate when the next status change will happen
-      const nextChangeTime = getNextStatusChangeTime(now, currentActiveLesson, currentNextLesson);
-
+      const nextChangeTime = getNextStatusChangeTime(now, activeLesson, nextLesson);
+      
       if (nextChangeTime) {
-        // Schedule the next update at the exact moment the status changes
         const timeUntilChange = nextChangeTime.getTime() - now.getTime();
-        // Add 100ms buffer to ensure we capture the change
-        timeoutId = setTimeout(updateLessonStatus, Math.max(timeUntilChange + 100, 1000));
+        // Schedule update at the exact moment of change, with minimum 1 second interval
+        timeoutId = setTimeout(() => {
+          updateLessonStatus();
+          scheduleNextUpdate();
+        }, Math.max(timeUntilChange + 100, 1000));
       } else {
         // No upcoming changes, check again in 5 minutes
-        timeoutId = setTimeout(updateLessonStatus, 5 * 60 * 1000);
+        timeoutId = setTimeout(() => {
+          updateLessonStatus();
+          scheduleNextUpdate();
+        }, 5 * 60 * 1000);
       }
-    };
-
-    // Helper function to calculate when the next status change will occur
-    const getNextStatusChangeTime = (now, activeLesson, nextLesson) => {
-      const times = []; // If there's an active lesson, it will end at some point
-      if (activeLesson) {
-        times.push(new Date(activeLesson.end_time));
-      }
-
-      // If there's a next lesson, it will start at some point
-      if (nextLesson) {
-        times.push(new Date(nextLesson.start_time));
-      }
-
-      // Find the earliest time in the future
-      const futureTimes = times.filter((time) => time > now);
-      return futureTimes.length > 0 ? futureTimes.sort((a, b) => a - b)[0] : null;
     };
 
     // Initial update
     updateLessonStatus();
+    scheduleNextUpdate();
 
-    // Cleanup timeout on unmount or dependency change
     return () => {
       if (timeoutId) {
         clearTimeout(timeoutId);
       }
     };
-  }, [sessions]);
+  }, [sessions, updateLessonStatus, getNextStatusChangeTime, activeLesson, nextLesson]);
 
   if (!activeLesson && !nextLesson) {
-    return;
+    return null;
   }
 
   return (
@@ -93,8 +102,11 @@ const LessonStatus = ({ sessions }) => {
         ) : (
           <span className="text-muted-foreground">No upcoming lessons</span>
         )}
-      </div>{" "}
-      <Link to={"sessions/" + (activeLesson ? activeLesson.id : nextLesson.id)} className={buttonVariants({ variant: activeLesson ? "default" : "secondary" })}>
+      </div>
+      <Link 
+        to={"sessions/" + (activeLesson ? activeLesson.id : nextLesson.id)} 
+        className={buttonVariants({ variant: activeLesson ? "default" : "secondary" })}
+      >
         <ChevronRight /> {activeLesson ? "Join Active Lesson" : "Go To Lesson"}
       </Link>
     </Card>
@@ -115,7 +127,6 @@ const ActiveLessonContent = ({ lesson }) => {
       const endTime = new Date(lesson.end_time).getTime();
       const timeDiff = endTime - now;
 
-      // Check if lesson has ended
       if (timeDiff <= 0) {
         setRemainingTime({ hours: 0, minutes: 0, seconds: 0 });
         if (intervalId) {
@@ -124,10 +135,7 @@ const ActiveLessonContent = ({ lesson }) => {
         return;
       }
 
-      // Calculate hours, minutes, seconds with proper rounding
-      // Convert milliseconds to seconds first to avoid rounding errors
       const totalSeconds = Math.ceil(timeDiff / 1000);
-
       const hours = Math.floor(totalSeconds / 3600);
       const minutes = Math.floor((totalSeconds % 3600) / 60);
       const seconds = totalSeconds % 60;
@@ -135,13 +143,12 @@ const ActiveLessonContent = ({ lesson }) => {
       setRemainingTime({ hours, minutes, seconds });
     };
 
-    // Calculate initial time
-    updateRemainingTime(); // Only set up interval if lesson hasn't ended
+    updateRemainingTime();
+    
     const now = Date.now();
     const endTime = new Date(lesson.end_time).getTime();
 
     if (endTime > now) {
-      // Update every second for countdown display
       intervalId = setInterval(updateRemainingTime, 1000);
     }
 
@@ -156,7 +163,12 @@ const ActiveLessonContent = ({ lesson }) => {
     <>
       <span className="text-warning font-medium">Currently Active</span>
       <h2 className="font-extrabold">{lesson.lesson.title}</h2>
-      <span className="text-muted-foreground">{new Date(lesson.start_time).toLocaleString("en-US", { dateStyle: "full", timeStyle: "short" })}</span>{" "}
+      <span className="text-muted-foreground">
+        {new Date(lesson.start_time).toLocaleString("en-US", { 
+          dateStyle: "full", 
+          timeStyle: "short" 
+        })}
+      </span>
       <span className="text-warning text-sm">
         Lesson ends in {remainingTime.hours > 0 ? `${remainingTime.hours}h ` : ""}
         {remainingTime.minutes}m {remainingTime.seconds}s
@@ -173,12 +185,12 @@ const NextLessonContent = ({ lesson }) => {
 
   useEffect(() => {
     let timerId = null;
+    
     const updateTimeDisplay = () => {
       const now = Date.now();
       const startTime = new Date(lesson.start_time).getTime();
       const timeDiff = startTime - now;
 
-      // If lesson has already started, clear timer and return
       if (timeDiff <= 0) {
         setTimeDisplay("Starting now");
         if (timerId) {
@@ -187,60 +199,45 @@ const NextLessonContent = ({ lesson }) => {
         return;
       }
 
-      // Convert to total seconds to avoid floating point issues
       const totalSeconds = Math.max(0, Math.ceil(timeDiff / 1000));
-
-      // Calculate with proper rounding
-      const days = Math.floor(totalSeconds / 86400); // 86400 seconds in a day
+      const days = Math.floor(totalSeconds / 86400);
       const hours = Math.floor((totalSeconds % 86400) / 3600);
       const minutes = Math.floor((totalSeconds % 3600) / 60);
       const seconds = totalSeconds % 60;
 
-      // Create a more detailed time display that shows more precision
       let newTimeDisplay = "";
-      let nextUpdateInterval = 1000; // Default to 1 second
+      let nextUpdateInterval = 1000;
 
       if (days > 0) {
         newTimeDisplay = `${days} ${days === 1 ? "day" : "days"}`;
-        // Add hours if there are any
         if (hours > 0) {
           newTimeDisplay += ` ${hours} ${hours === 1 ? "hour" : "hours"}`;
         }
-        // Update every hour when days remain
         nextUpdateInterval = 60 * 60 * 1000;
       } else if (hours > 0) {
         newTimeDisplay = `${hours} ${hours === 1 ? "hour" : "hours"}`;
-        // Add minutes if there are any
         if (minutes > 0) {
           newTimeDisplay += ` ${minutes} ${minutes === 1 ? "minute" : "minutes"}`;
         }
-        // Update every minute when hours remain (but less than a day)
         nextUpdateInterval = 60 * 1000;
       } else if (minutes > 5) {
         newTimeDisplay = `${minutes} ${minutes === 1 ? "minute" : "minutes"}`;
-        // Update every minute when more than 5 minutes remain
         nextUpdateInterval = 60 * 1000;
       } else if (minutes > 0) {
         newTimeDisplay = `${minutes} ${minutes === 1 ? "minute" : "minutes"}`;
-        // Add seconds when less than 5 minutes remaining
         if (seconds > 0) {
           newTimeDisplay += ` ${seconds} ${seconds === 1 ? "second" : "seconds"}`;
         }
-        // Update every second when less than 5 minutes remain
         nextUpdateInterval = 1000;
       } else {
         newTimeDisplay = `${seconds} ${seconds === 1 ? "second" : "seconds"}`;
-        // Update every second when less than a minute remains
         nextUpdateInterval = 1000;
       }
 
       setTimeDisplay(newTimeDisplay);
-
-      // Schedule next update with adaptive timing
       timerId = setTimeout(updateTimeDisplay, nextUpdateInterval);
     };
 
-    // Initial calculation
     updateTimeDisplay();
 
     return () => {
@@ -249,12 +246,20 @@ const NextLessonContent = ({ lesson }) => {
       }
     };
   }, [lesson.start_time]);
+
   return (
     <>
       <span className="text-muted-foreground">Next Lesson</span>
       <h2 className="font-extrabold">{lesson.lesson.title}</h2>
-      <span className="text-muted-foreground">{new Date(lesson.start_time).toLocaleString("en-US", { dateStyle: "full", timeStyle: "short" })}</span>
-      <span className="text-muted-foreground text-sm">Lesson will start in {timeDisplay}</span>
+      <span className="text-muted-foreground">
+        {new Date(lesson.start_time).toLocaleString("en-US", { 
+          dateStyle: "full", 
+          timeStyle: "short" 
+        })}
+      </span>
+      <span className="text-muted-foreground text-sm">
+        Lesson will start in {timeDisplay}
+      </span>
     </>
   );
 };

@@ -1,4 +1,4 @@
-import { useState, useMemo } from "react";
+import { useState, useMemo, useCallback, useRef, useEffect } from "react";
 import { useQuery } from "@tanstack/react-query";
 import ClassCard from "./components/ClassCard";
 import { Clock, CalendarDays, Calendar, ClockFading, Hourglass, BellElectric, SearchIcon, RefreshCcw, CalendarCheck } from "lucide-react";
@@ -11,10 +11,13 @@ const errorMessages = {
   "default": "An unexpected error occurred. Please try again later.",
 };
 
-const fetchClasses = async (teacherId) => {
-  await new Promise((resolve) => setTimeout(resolve, 2000)); // delay for demonstration purposes
+const fetchCategorizedClasses = async (teacherId, searchQuery = "") => {
+  const url = new URL(`http://localhost:3000/api/classes/teacher/${teacherId}/categorized`);
+  if (searchQuery.trim()) {
+    url.searchParams.append('search', searchQuery.trim());
+  }
 
-  const response = await fetch(`http://localhost:3000/api/teachers/${teacherId}/classes`);
+  const response = await fetch(url);
 
   if (!response.ok) {
     const errorStatus = response.status.toString();
@@ -25,150 +28,140 @@ const fetchClasses = async (teacherId) => {
   return response.json();
 };
 
+// Debounce hook for search optimization
+const useDebounce = (value, delay) => {
+  const [debouncedValue, setDebouncedValue] = useState(value);
+
+  useEffect(() => {
+    const handler = setTimeout(() => {
+      setDebouncedValue(value);
+    }, delay);
+
+    return () => {
+      clearTimeout(handler);
+    };
+  }, [value, delay]);
+
+  return debouncedValue;
+};
+
+// Client-side search filtering function
+const filterClassesBySearch = (classesData, searchQuery) => {
+  if (!searchQuery.trim()) return classesData;
+
+  const query = searchQuery.toLowerCase();
+  
+  const filterCategory = (classes) => {
+    return classes.filter(cls => 
+      cls.searchableText?.toLowerCase().includes(query) ||
+      cls.name?.toLowerCase().includes(query) ||
+      cls.curriculum?.title?.toLowerCase().includes(query) ||
+      cls.curriculum?.program_type?.toLowerCase().includes(query) ||
+      cls.location?.name?.toLowerCase().includes(query)
+    );
+  };
+
+  return {
+    ongoing: filterCategory(classesData.ongoing || []),
+    today: filterCategory(classesData.today || []),
+    tomorrow: filterCategory(classesData.tomorrow || []),
+    thisWeek: filterCategory(classesData.thisWeek || []),
+    beyond: filterCategory(classesData.beyond || []),
+    noUpcoming: filterCategory(classesData.noUpcoming || []),
+    metadata: classesData.metadata
+  };
+};
+
 const Classes = () => {
   const [searchQuery, setSearchQuery] = useState("");
+  const [debouncedSearchQuery, setDebouncedSearchQuery] = useState("");
+  const debounceTimeoutRef = useRef(null);
   const teacherId = import.meta.env.VITE_TEACHER_ID;
 
+  // Custom debounce with immediate local filtering
+  useEffect(() => {
+    if (debounceTimeoutRef.current) {
+      clearTimeout(debounceTimeoutRef.current);
+    }
+
+    if (searchQuery.trim()) {
+      debounceTimeoutRef.current = setTimeout(() => {
+        setDebouncedSearchQuery(searchQuery);
+      }, 500); // 500ms delay for server requests
+    } else {
+      setDebouncedSearchQuery("");
+    }
+
+    return () => {
+      if (debounceTimeoutRef.current) {
+        clearTimeout(debounceTimeoutRef.current);
+      }
+    };
+  }, [searchQuery]);
+
   const {
-    data: classes = [],
+    data: baseClassesData = {
+      ongoing: [],
+      today: [],
+      tomorrow: [],
+      thisWeek: [],
+      beyond: [],
+      noUpcoming: [],
+      metadata: { total: 0, calculatedAt: Date.now() }
+    },
     isLoading: loading,
     isRefetching: refetching,
     error,
     refetch,
   } = useQuery({
-    queryKey: ["classes", teacherId],
-    queryFn: () => fetchClasses(teacherId),
-    staleTime: 5 * 60 * 1000, // 5 minutes
-    cacheTime: 10 * 60 * 1000, // 10 minutes
+    queryKey: ["categorizedClasses", teacherId],
+    queryFn: () => fetchCategorizedClasses(teacherId),
+    staleTime: 1 * 60 * 1000,
+    gcTime: 3 * 60 * 1000,
+    refetchOnWindowFocus: false,
+    refetchOnMount: false,
+    refetchInterval: 2 * 60 * 1000,
   });
 
-  const getNextUpcomingEvent = (classData) => {
-    const now = new Date();
+  // Fetch search results only when debounced search query changes
+  const {
+    data: searchResultsData,
+    isLoading: searchLoading,
+  } = useQuery({
+    queryKey: ["categorizedClasses", teacherId, debouncedSearchQuery],
+    queryFn: () => fetchCategorizedClasses(teacherId, debouncedSearchQuery),
+    enabled: debouncedSearchQuery.trim().length > 0,
+    staleTime: 30 * 1000,
+    gcTime: 1 * 60 * 1000,
+    refetchOnWindowFocus: false,
+  });
 
-    if (!classData.sessions || classData.sessions.length === 0) {
-      return null;
+  // Use search results if available, otherwise filter base data locally
+  const displayData = useMemo(() => {
+    if (debouncedSearchQuery.trim() && searchResultsData) {
+      // Use server-filtered results for longer queries
+      return searchResultsData;
+    } else if (searchQuery.trim()) {
+      // Use client-side filtering for immediate feedback
+      return filterClassesBySearch(baseClassesData, searchQuery);
+    } else {
+      // Show all classes when no search
+      return baseClassesData;
     }
+  }, [baseClassesData, searchResultsData, searchQuery, debouncedSearchQuery]);
 
-    const upcomingSessions = classData.sessions
-      .map((session) => ({
-        startDateTime: new Date(session.start_time),
-        endDateTime: new Date(session.end_time),
-        id: session.id,
-      }))
-      .filter((session) => session.startDateTime > now)
-      .sort((a, b) => a.startDateTime - b.startDateTime);
+  const handleSearchChange = useCallback((e) => {
+    setSearchQuery(e.target.value);
+  }, []);
 
-    return upcomingSessions[0] || null;
-  };
-
-  const getCurrentOngoingEvent = (classData) => {
-    const now = new Date();
-
-    if (!classData.sessions || classData.sessions.length === 0) {
-      return null;
+  const handleRefresh = useCallback(() => {
+    refetch();
+    if (debouncedSearchQuery.trim()) {
+      // Also refresh search results if there's an active search
+      setDebouncedSearchQuery(prev => prev + " "); // Trigger refetch
+      setTimeout(() => setDebouncedSearchQuery(debouncedSearchQuery), 0);
     }
-
-    const ongoingSessions = classData.sessions
-      .map((session) => ({
-        startDateTime: new Date(session.start_time),
-        endDateTime: new Date(session.end_time),
-        id: session.id,
-      }))
-      .filter((session) => session.startDateTime <= now && session.endDateTime >= now);
-
-    return ongoingSessions[0] || null;
-  };
-
-  const categorizedClasses = useMemo(() => {
-    const now = new Date();
-
-    const endOfToday = new Date(now);
-    endOfToday.setHours(23, 59, 59, 999);
-
-    const twentyFourHoursFromNow = new Date(now.getTime() + 24 * 60 * 60 * 1000);
-    const sevenDaysFromNow = new Date(now.getTime() + 7 * 24 * 60 * 60 * 1000);
-
-    let result = [...classes];
-
-    if (searchQuery.trim()) {
-      const query = searchQuery.toLowerCase().trim();
-      result = result.filter(
-        (classData) =>
-          classData.name.toLowerCase().includes(query) ||
-          classData.location?.name.toLowerCase().includes(query) ||
-          classData.location?.address.toLowerCase().includes(query) ||
-          classData.curriculum?.title.toLowerCase().includes(query) ||
-          classData.curriculum?.program_type.toLowerCase().includes(query) ||
-          classData.curriculum?.difficulty_level.toLowerCase().includes(query)
-      );
-    }
-
-    // Categorize classes by their next event time
-    const ongoing = [];
-    const today = [];
-    const tomorrow = [];
-    const thisWeek = [];
-    const beyond = [];
-    const noUpcoming = [];
-
-    result.forEach((classItem) => {
-      const currentEvent = getCurrentOngoingEvent(classItem);
-      if (currentEvent) {
-        ongoing.push(classItem);
-        return;
-      }
-
-      const nextEvent = getNextUpcomingEvent(classItem);
-
-      if (!nextEvent) {
-        noUpcoming.push(classItem);
-        return;
-      }
-
-      // Use startDateTime for lesson events
-      const eventDateObj = nextEvent.startDateTime;
-      const eventTime = eventDateObj.getTime();
-
-      // Check if the event is today (before midnight tonight)
-      if (eventTime <= endOfToday.getTime()) {
-        today.push(classItem);
-      }
-      // Check if the event is within 24 hours but not today (tomorrow)
-      else if (eventTime <= twentyFourHoursFromNow.getTime()) {
-        tomorrow.push(classItem);
-      }
-      // Check if the event is within the week but not tomorrow
-      else if (eventTime <= sevenDaysFromNow.getTime()) {
-        thisWeek.push(classItem);
-      } else {
-        beyond.push(classItem);
-      }
-    });
-
-    // Sort each category by date of next event
-    const sortByNextEvent = (classItems) => {
-      return classItems.sort((a, b) => {
-        const eventA = getNextUpcomingEvent(a);
-        const eventB = getNextUpcomingEvent(b);
-        if (!eventA) return 1;
-        if (!eventB) return -1;
-
-        const dateA = eventA.startDateTime;
-        const dateB = eventB.startDateTime;
-
-        return dateA - dateB;
-      });
-    };
-
-    return {
-      ongoing: ongoing,
-      today: sortByNextEvent(today),
-      tomorrow: sortByNextEvent(tomorrow),
-      thisWeek: sortByNextEvent(thisWeek),
-      beyond: sortByNextEvent(beyond),
-      noUpcoming: noUpcoming,
-    };
-  }, [classes, searchQuery]);
+  }, [refetch, debouncedSearchQuery]);
 
   // Render class cards with a category header
   const renderCategorySection = (classes, title, icon) => {
@@ -189,7 +182,8 @@ const Classes = () => {
       </div>
     );
   };
-  if (loading || refetching) {
+
+  if (loading) {
     return (
       <div className="flex flex-col gap-4 max-w-5xl w-full mx-auto bg-background p-5">
         <div className="flex justify-between items-end">
@@ -205,7 +199,7 @@ const Classes = () => {
           <hr className="mb-4 mt-3" />
           <div className="space-y-3">
             {Array.from({ length: 3 }).map((_, index) => (
-              <div className="w-full h-24 rounded-md bg-muted animate-pulse" />
+              <div key={index} className="w-full h-24 rounded-md bg-muted animate-pulse" />
             ))}
           </div>
         </div>
@@ -213,38 +207,88 @@ const Classes = () => {
     );
   }
 
+  const totalClasses = [
+    ...displayData.ongoing,
+    ...displayData.today,
+    ...displayData.tomorrow,
+    ...displayData.thisWeek,
+    ...displayData.beyond,
+    ...displayData.noUpcoming,
+  ].length;
+
   return (
     <div className="flex flex-col gap-4 max-w-5xl w-full mx-auto bg-background p-5">
       <div className="flex justify-between items-end">
         <h1>Classes</h1>
-        <Button variant="link" className="h-fit px-0! gap-2" onClick={() => refetch()} disabled={loading}>
-          <RefreshCcw size={16} className="mr-1" /> Refresh
+        <Button 
+          variant="link" 
+          className="h-fit px-0! gap-2" 
+          onClick={handleRefresh} 
+          disabled={loading}
+        >
+          <RefreshCcw size={16} className={`mr-1 ${refetching ? 'animate-spin' : ''}`} /> 
+          Refresh
         </Button>
       </div>
       <hr />
 
-      <Input icon={SearchIcon} placeholder="Search classes..." className="w-full" value={searchQuery} onChange={(e) => setSearchQuery(e.target.value)} />
+      <div className="relative">
+        <Input 
+          icon={SearchIcon} 
+          placeholder="Search classes..." 
+          className="w-full" 
+          value={searchQuery} 
+          onChange={handleSearchChange}
+          // Never disable the input
+        />
+        {searchLoading && debouncedSearchQuery.trim() && (
+          <div className="absolute right-3 top-1/2 transform -translate-y-1/2">
+            <RefreshCcw size={16} className="animate-spin text-muted-foreground" />
+          </div>
+        )}
+      </div>
 
-      {[
-        ...categorizedClasses.ongoing,
-        ...categorizedClasses.today,
-        ...categorizedClasses.tomorrow,
-        ...categorizedClasses.thisWeek,
-        ...categorizedClasses.beyond,
-        ...categorizedClasses.noUpcoming,
-      ].length > 0 ? (
-        <div className="mt-4">
-          {renderCategorySection(categorizedClasses.ongoing, "Ongoing", <BellElectric size={18} className="text-primary-button" />)}
-          {renderCategorySection(categorizedClasses.today, "Today", <Hourglass size={18} className="text-success" />)}
-          {renderCategorySection(categorizedClasses.tomorrow, "Tomorrow", <Clock size={18} className="text-warning" />)}
-          {renderCategorySection(categorizedClasses.thisWeek, "This Week", <ClockFading size={18} className="text-muted-foreground" />)}
-          {renderCategorySection(categorizedClasses.beyond, "Later", <CalendarDays size={18} className="text-muted-foreground" />)}
-          {renderCategorySection(categorizedClasses.noUpcoming, "No Upcoming Events", <CalendarCheck size={18} className="text-muted-foreground" />)}
+      {error ? (
+        <div className="mt-8 text-center text-red-500">
+          <p className="text-lg">Error loading classes</p>
+          <p className="text-sm">{error.message}</p>
         </div>
-      ) : error ? (
-        <p className="text-red-500 text-center py-4">{error.message}</p>
+      ) : totalClasses > 0 ? (
+        <div className="mt-4">
+          {renderCategorySection(displayData.ongoing, "Ongoing", <BellElectric size={18} className="text-primary-button" />)}
+          {renderCategorySection(displayData.today, "Today", <Hourglass size={18} className="text-success" />)}
+          {renderCategorySection(displayData.tomorrow, "Tomorrow", <Clock size={18} className="text-warning" />)}
+          {renderCategorySection(displayData.thisWeek, "This Week", <CalendarDays size={18} className="text-info" />)}
+          {renderCategorySection(displayData.beyond, "Beyond This Week", <Calendar size={18} className="text-secondary" />)}
+          {renderCategorySection(displayData.noUpcoming, "No Upcoming Sessions", <ClockFading size={18} className="text-destructive" />)}
+          
+          {/* Search feedback */}
+          {searchQuery.trim() && (
+            <div className="mt-6 text-center text-sm text-muted-foreground">
+              {debouncedSearchQuery !== searchQuery ? (
+                <p>Typing... (server search in {Math.max(0, 500 - (Date.now() % 1000))}ms)</p>
+              ) : (
+                <p>
+                  Found {totalClasses} result{totalClasses !== 1 ? 's' : ''} for "{searchQuery}"
+                  {searchLoading && <span> • Updating...</span>}
+                </p>
+              )}
+            </div>
+          )}
+        </div>
       ) : (
-        <p className="text-muted-foreground text-center py-4">No classes found matching your criteria</p>
+        <div className="mt-8 text-center text-muted-foreground">
+          <CalendarCheck size={48} className="mx-auto mb-4 opacity-50" />
+          <p className="text-lg">No classes found</p>
+          <p className="text-sm">
+            {searchQuery.trim() ? `No classes match "${searchQuery}"` : "You don't have any classes assigned yet."}
+          </p>
+          {displayData.metadata?.total > 0 && (
+            <p className="text-xs mt-2">
+              Showing results from {displayData.metadata.total} total classes • Last updated: {new Date(displayData.metadata.calculatedAt).toLocaleTimeString()}
+            </p>
+          )}
+        </div>
       )}
     </div>
   );
