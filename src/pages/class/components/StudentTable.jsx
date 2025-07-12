@@ -2,7 +2,7 @@ import { Card } from "@/components/ui/card";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 
 // Column definitions for the student table
-export const studentColumns = ["Name", "Language", "Dietary Restrictions", "Allergies", "Previous Experience", "Parent Contact Number"];
+export const studentColumns = ["Name", "Language", "Dietary Restrictions", "Previous Experience", "Parent Contact Number"];
 
 /**
  * Component for displaying a table of students in a class
@@ -27,12 +27,11 @@ const StudentTable = ({ students }) => {
           <TableBody>
             {students.map((student, index) => (
               <TableRow key={index}>
-                <TableCell>{student.name}</TableCell>
-                <TableCell>{student.language}</TableCell>
-                <TableCell>{student.dietaryRestrictions}</TableCell>
-                <TableCell>{student.allergies}</TableCell>
-                <TableCell>{student.previousExperience}</TableCell>
-                <TableCell>{student.parentPhone}</TableCell>
+                <TableCell>{student.user.full_name}</TableCell>
+                <TableCell>{student.user.language_preference}</TableCell>
+                <TableCell>{student.user.diet_restrictions || "None"}</TableCell>
+                <TableCell>{student.user.experience || "None"}</TableCell>
+                <TableCell>{student.user.parent_phone_number || "None"}</TableCell>
               </TableRow>
             ))}
           </TableBody>

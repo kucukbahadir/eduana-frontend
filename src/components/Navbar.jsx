@@ -12,8 +12,14 @@ const Navbar = () => {
           <Link to="/" className={buttonVariants({ variant: "link" })}>
             Home
           </Link>
-          <Link to="/login" className={buttonVariants({ variant: "link" })}>
+          {/* <Link to="/login" className={buttonVariants({ variant: "link" })}>
             Login
+          </Link> */}
+          <Link to="/classes" className={buttonVariants({ variant: "link" })}>
+            Classes
+          </Link>
+          <Link to="/games" className={buttonVariants({ variant: "link" })}>
+            Games
           </Link>
         </div>
         <div className="flex items-center gap-0">

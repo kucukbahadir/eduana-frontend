@@ -22,33 +22,56 @@ import LessonPreparation from "@/pages/lessonPrep.jsx";
 import StudentEvaluationTable from "@/pages/studentEvaluationPage.jsx";
 import Classes from "@/pages/class";
 import Class from "@/pages/class/[id]";
+import LessonView from "@/pages/session/index.jsx";
+import { Toaster } from "@/components/ui/sonner";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import Game from "./pages/game";
+
+const queryClient = new QueryClient({
+  defaultOptions: {
+    queries: {
+      refetchOnWindowFocus: false,
+      retry: 1,
+      staleTime: 5 * 60 * 1000, // 5 minutes
+      cacheTime: 10 * 60 * 1000, // 10 minutes
+    },
+    mutations: {
+      retry: false,
+    },
+  },
+});
 
 createRoot(document.getElementById("root")).render(
   <StrictMode>
     <BrowserRouter>
-      <main className="flex flex-col min-h-screen">
-        <Navbar />
-        <Routes>
-          <Route path="/" element={<App />} />
-          <Route path="/login" element={<TabbedLogin />} />
-          <Route path="/dashboard/student" element={<StudentDashboard />} />
-          <Route path="/dashboard/parent" element={<ParentDashboard />} />
-          <Route path="/progress" element={<Progress />} />
-          <Route path="/certificates" element={<CertificatesOverview />} />
-          <Route path="/dashboard/admin" element={<AdminDashboard />} />
-          <Route path="/dashboard/coordinator" element={<CoordinatorDashboard />} />
-          <Route path="/dashboard/teacher" element={<TeacherDashboard />} />
-          <Route path="/courses" element={<CourseOverview />} />
-          <Route path="/courses/:id/manage" element={<CourseDetail />} />
-          <Route path="/notifications" element={<Notifications />} />
-          <Route path="/students/manage" element={<StudentManagement />} />
-          <Route path="/classes" element={<Classes />} />
-          <Route path="/classes/:id" element={<Class />} />
-          <Route path="/lesson-preparation" element={<LessonPreparation />} />
-          <Route path="/evaluation" element={<StudentEvaluationTable />} />
-          <Route path="*" element={<NotFound />} />
-        </Routes>
-      </main>
+      <QueryClientProvider client={queryClient}>
+        <main className="flex flex-col min-h-screen">
+          <Navbar />
+          <Routes>
+            <Route path="/" element={<App />} />
+            <Route path="/login" element={<TabbedLogin />} />
+            <Route path="/dashboard/student" element={<StudentDashboard />} />
+            <Route path="/dashboard/parent" element={<ParentDashboard />} />
+            <Route path="/progress" element={<Progress />} />
+            <Route path="/certificates" element={<CertificatesOverview />} />
+            <Route path="/dashboard/admin" element={<AdminDashboard />} />
+            <Route path="/dashboard/coordinator" element={<CoordinatorDashboard />} />
+            <Route path="/dashboard/teacher" element={<TeacherDashboard />} />
+            <Route path="/courses" element={<CourseOverview />} />
+            <Route path="/courses/:id/manage" element={<CourseDetail />} />
+            <Route path="/notifications" element={<Notifications />} />
+            <Route path="/students/manage" element={<StudentManagement />} />
+            <Route path="/classes" element={<Classes />} />
+            <Route path="/classes/:id" element={<Class />} />
+            <Route path="/classes/:classId/sessions/:sessionId" element={<LessonView />} />
+            <Route path="/lesson-preparation" element={<LessonPreparation />} />
+            <Route path="/evaluation" element={<StudentEvaluationTable />} />
+            <Route path="/games" element={<Game />} />
+            <Route path="*" element={<NotFound />} />
+          </Routes>
+        </main>
+        <Toaster richColors />
+      </QueryClientProvider>
     </BrowserRouter>
   </StrictMode>
 );

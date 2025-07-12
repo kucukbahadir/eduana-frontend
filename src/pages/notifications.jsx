@@ -66,7 +66,7 @@ function Notifications() {
   }
 
   return (
-    <div className="flex flex-col gap-2.5 p-5 max-w-2xl mx-auto">
+    <div className="flex flex-col gap-2.5 p-5 max-w-3xl w-full mx-auto">
       <h1>Notifications</h1>
 
       <div className="flex w-full gap-2.5 mt-2.5">
